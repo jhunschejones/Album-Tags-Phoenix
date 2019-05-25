@@ -3,30 +3,37 @@ defmodule AlbumTagsWeb.AppleMusicView do
   alias Jason
 
   def render("index.json", %{albums: albums}) do
-    %{albums: Enum.map(albums, &album_json/1)}
+    json_albums = Jason.decode!(albums)["results"]["albums"]["data"]
+
+    %{albums: Enum.map(json_albums, fn album -> album_json(album) end)}
   end
 
   def render("show.json", %{album: album}) do
-    # IO.inspect Jason.decode!(album)["data"]
-    # %{album: Jason.decode!(album)["data"]}
     json_album = Jason.decode!(album)["data"]
     data_element = List.first(json_album)
 
     %{album: album_json(data_element)}
   end
 
-  def isolate_song_data(all_songs) do
-    Enum.map(all_songs, fn x ->
+  # Private
+
+  defp isolate_song_data(all_songs) do
+    Enum.map(all_songs, fn song ->
         %{
-          name: x["attributes"]["name"],
-          duration: milliseconds_to_time(x["attributes"]["durationInMillis"]),
-          track_number: x["attributes"]["trackNumber"],
-          preview: List.first(x["attributes"]["previews"])["url"]
+          name: song["attributes"]["name"],
+          duration: milliseconds_to_time(song["attributes"]["durationInMillis"]),
+          track_number: song["attributes"]["trackNumber"],
+          preview: List.first(song["attributes"]["previews"])["url"]
         }
     end)
   end
 
-  def album_json(album) do
+  defp album_json(album) do
+    songs = case album["relationships"]["tracks"]["data"] do
+      nil -> nil
+      _ -> isolate_song_data(album["relationships"]["tracks"]["data"])
+    end
+
     %{
       appleAlbumID: album["id"],
       appleUrl: album["attributes"]["url"],
@@ -34,12 +41,12 @@ defmodule AlbumTagsWeb.AppleMusicView do
       artist: album["attributes"]["artistName"],
       releaseDate: album["attributes"]["releaseDate"],
       recordCompany: album["attributes"]["recordLabel"],
-      songs: isolate_song_data(album["relationships"]["tracks"]["data"]),
+      songs: songs,
       cover: album["attributes"]["artwork"]["url"]
     }
   end
 
-  def milliseconds_to_time(millis) do
+  defp milliseconds_to_time(millis) do
     total_seconds = Integer.floor_div(millis, 1000)
     minutes = Integer.floor_div(total_seconds,  60)
     seconds = total_seconds - (minutes * 60)

@@ -20,10 +20,10 @@ defmodule AlbumTagsWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api/v1", AlbumTagsWeb do
+  scope "/api", AlbumTagsWeb do
     pipe_through :api
 
-    get "/apple/search/:search_string", AppleMusicController, :search
+    get "/apple/search/", AppleMusicController, :search
     get "/apple/details/:id", AppleMusicController, :details
   end
 end
