@@ -3,37 +3,40 @@ defmodule AlbumTagsWeb.AppleMusicView do
   alias Jason
 
   def render("index.json", %{albums: albums}) do
-    json_albums = Jason.decode!(albums)["results"]["albums"]["data"]
-
-    %{albums: Enum.map(json_albums, fn album -> album_json(album) end)}
+    %{albums: albums
+        |> Jason.decode!
+        |> Map.get("results")
+        |> Map.get("albums")
+        |> Map.get("data")
+        |> Enum.map(&album_json &1)
+    }
   end
 
   def render("show.json", %{album: album}) do
-    json_album = Jason.decode!(album)["data"]
-    data_element = List.first(json_album)
-
-    %{album: album_json(data_element)}
+    %{album: album
+        |> Jason.decode!
+        |> Map.get("data")
+        |> List.first
+        |> album_json
+    }
   end
 
   # Private
 
+  defp isolate_song_data(all_songs) when is_nil(all_songs), do: nil
+
   defp isolate_song_data(all_songs) do
-    Enum.map(all_songs, fn song ->
-        %{
-          name: song["attributes"]["name"],
-          duration: milliseconds_to_time(song["attributes"]["durationInMillis"]),
-          track_number: song["attributes"]["trackNumber"],
-          preview: List.first(song["attributes"]["previews"])["url"]
-        }
-    end)
+    all_songs
+    |> Enum.map(fn song ->
+      %{
+        name: song["attributes"]["name"],
+        duration: milliseconds_to_time(song["attributes"]["durationInMillis"]),
+        track_number: song["attributes"]["trackNumber"],
+        preview: List.first(song["attributes"]["previews"])["url"]
+      } end)
   end
 
   defp album_json(album) do
-    songs = case album["relationships"]["tracks"]["data"] do
-      nil -> nil
-      _ -> isolate_song_data(album["relationships"]["tracks"]["data"])
-    end
-
     %{
       appleAlbumID: album["id"],
       appleUrl: album["attributes"]["url"],
@@ -41,7 +44,7 @@ defmodule AlbumTagsWeb.AppleMusicView do
       artist: album["attributes"]["artistName"],
       releaseDate: album["attributes"]["releaseDate"],
       recordCompany: album["attributes"]["recordLabel"],
-      songs: songs,
+      songs: isolate_song_data(album["relationships"]["tracks"]["data"]),
       cover: album["attributes"]["artwork"]["url"]
     }
   end
