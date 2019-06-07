@@ -5,39 +5,25 @@ defmodule AlbumTags.Albums do
 
   import Ecto.Query, warn: false
   alias AlbumTags.Repo
-
-  alias AlbumTags.Albums.Album
-  alias AlbumTags.Albums.AlbumTag
-  alias AlbumTags.Albums.AlbumConnection
+  alias AlbumTags.Albums.{Album, AlbumTag, AlbumConnection, Tag, Song}
 
   @doc """
-  Returns the list of albums.
-
-  ## Examples
-
-      iex> list_albums()
-      [%Album{}, ...]
-
+  Gets a single album by database id, preloading songs, tags, and lists.
   """
-  def list_albums do
-    Repo.all(Album)
+  def get_album!(id) do
+    Album
+    |> Repo.get!(id)
+    # |> Repo.preload([:songs, :tags, :lists])
   end
 
   @doc """
-  Gets a single album.
-
-  Raises `Ecto.NoResultsError` if the Album does not exist.
-
-  ## Examples
-
-      iex> get_album!(123)
-      %Album{}
-
-      iex> get_album!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets a single album by apple_album_id, preloading songs, tags, and lists.
   """
-  def get_album!(id), do: Repo.get!(Album, id)
+  def get_album_by(apple_album_id) do
+    Album
+    |> Repo.get_by!(apple_album_id: apple_album_id)
+    |> Repo.preload([:songs, :tags, :lists])
+  end
 
   @doc """
   Creates a album.
@@ -56,55 +42,6 @@ defmodule AlbumTags.Albums do
     |> Album.changeset(attrs)
     |> Repo.insert()
   end
-
-  @doc """
-  Updates a album.
-
-  ## Examples
-
-      iex> update_album(album, %{field: new_value})
-      {:ok, %Album{}}
-
-      iex> update_album(album, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_album(%Album{} = album, attrs) do
-    album
-    |> Album.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Album.
-
-  ## Examples
-
-      iex> delete_album(album)
-      {:ok, %Album{}}
-
-      iex> delete_album(album)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_album(%Album{} = album) do
-    Repo.delete(album)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking album changes.
-
-  ## Examples
-
-      iex> change_album(album)
-      %Ecto.Changeset{source: %Album{}}
-
-  """
-  def change_album(%Album{} = album) do
-    Album.changeset(album, %{})
-  end
-
-  alias AlbumTags.Albums.Tag
 
   @doc """
   Returns the list of tags.
@@ -216,109 +153,15 @@ defmodule AlbumTags.Albums do
     Tag.changeset(tag, %{})
   end
 
-  alias AlbumTags.Albums.Song
-
-  @doc """
-  Returns the list of songs.
-
-  ## Examples
-
-      iex> list_songs()
-      [%Song{}, ...]
-
-  """
-  def list_songs do
-    Repo.all(Song)
-  end
-
-  @doc """
-  Gets a single song.
-
-  Raises `Ecto.NoResultsError` if the Song does not exist.
-
-  ## Examples
-
-      iex> get_song!(123)
-      %Song{}
-
-      iex> get_song!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_song!(id), do: Repo.get!(Song, id)
-
-  @doc """
-  Creates a song.
-
-  ## Examples
-
-      iex> create_song(%{field: value})
-      {:ok, %Song{}}
-
-      iex> create_song(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_song(attrs \\ %{}) do
-    %Song{}
-    |> Song.changeset(attrs)
-    |> Repo.insert()
-  end
-
   @doc """
   Creates multiple songs associated with an album.
   """
   def create_songs(songs, album) do
-    song_changesets = Enum.map(songs, fn x -> Song.changeset(%Song{}, Map.put_new(x, :album_id, album.id)).changes end)
+    song_changesets = Enum.map(songs, fn x ->
+      Song.changeset(%Song{}, Map.put_new(x, :album_id, album.id)).changes
+    end)
 
     Repo.insert_all(Song, song_changesets)
-  end
-
-  @doc """
-  Updates a song.
-
-  ## Examples
-
-      iex> update_song(song, %{field: new_value})
-      {:ok, %Song{}}
-
-      iex> update_song(song, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_song(%Song{} = song, attrs) do
-    song
-    |> Song.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Song.
-
-  ## Examples
-
-      iex> delete_song(song)
-      {:ok, %Song{}}
-
-      iex> delete_song(song)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_song(%Song{} = song) do
-    Repo.delete(song)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking song changes.
-
-  ## Examples
-
-      iex> change_song(song)
-      %Ecto.Changeset{source: %Song{}}
-
-  """
-  def change_song(%Song{} = song) do
-    Song.changeset(song, %{})
   end
 
   @doc """
@@ -334,7 +177,22 @@ defmodule AlbumTags.Albums do
   Find all albums where a given album_id is either the parent_album OR child_album.
   """
   def get_album_connections(id) do
-    Repo.query("SELECT * FROM albums WHERE EXISTS(SELECT NULL FROM album_connections WHERE albums.id = album_connections.parent_album AND album_connections.child_album = $1) OR EXISTS(SELECT NULL FROM album_connections WHERE albums.id = album_connections.child_album AND album_connections.parent_album = $1)", [id])
+    parent_query =
+      from a in Album,
+      join: c in AlbumConnection,
+      on: c.parent_album == a.id,
+      select: a,
+      where: c.child_album == ^id
+
+    child_query =
+      from a in Album,
+      join: c in AlbumConnection,
+      on: c.child_album == a.id,
+      select: a,
+      where: c.parent_album == ^id,
+      union_all: ^parent_query
+
+    Repo.all(child_query)
   end
 
   @doc """

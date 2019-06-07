@@ -19,7 +19,8 @@ defmodule AlbumTags.Lists do
 
   """
   def list_lists do
-    Repo.all(List)
+    List
+    |> Repo.all()
   end
 
   @doc """
@@ -36,7 +37,20 @@ defmodule AlbumTags.Lists do
       ** (Ecto.NoResultsError)
 
   """
-  def get_list!(id), do: Repo.get!(List, id)
+  def get_list!(id) do
+    List
+    |> Repo.get!(id)
+    |> Repo.preload([albums: [:tags]])
+  end
+
+  @doc """
+  Gets all lists associated with a specific user_id
+  """
+  def get_list_by(%{user_id: user_id}) do
+    List
+    |> Repo.get_by!(user_id: user_id)
+    |> Repo.preload([albums: [:tags]])
+  end
 
   @doc """
   Creates a list.
