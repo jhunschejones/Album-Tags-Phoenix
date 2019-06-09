@@ -1,0 +1,9 @@
+js-files-to-compile:
+  # required components
+  - global.js
+  - cash.js
+  - component.js
+  - anime.min.js
+  # elements used in template
+  - sidenav.js
+  - modal.js

@@ -5,3 +5,6 @@ This project is an experimental re-write of the business layer of the [Album Tag
 
 ## Process
 I will be working with a local development instance of Postgres, then moving to a cloud database in production as the project progresses. The first step will be setting up the initial database migrations along with the models and all data relationships. I will also create a simple seed file to allow me to test migrating up and down while still having access to example data to see that everything is working as intended. After that is completed, I will fill out resourceful routing and controller code to preform as many of the basic functions of the app as possible. I am interested by the concept of 'contexts' introduced in Phoenix 1.4, and I will be exploring how these allow me to abstract more business logic out of my controllers than I might have done in v1.2.
+
+## Tooling
+To use the merge_assets script for compiling materialize resources, run `ruby ./assets/merge_assets.rb` from the root directory of the project.
