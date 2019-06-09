@@ -24,9 +24,4 @@ album_tags-*.tar
 
 .DS_store
 
-# do not check in materialize source files
-assets/materialize/js/*.js
-assets/materialize/sass/*.scss
-assets/materialize/sass/components
-
 closure-compiler-v20190528.jar

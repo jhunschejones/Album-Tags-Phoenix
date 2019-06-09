@@ -1,2 +1,3 @@
 priv/static/css/compiled_materialize.css linguist-vendored
 priv/static/js/compiled_materialize.js linguist-vendored
+assets/materialize/* linguist-vendored
