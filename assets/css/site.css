@@ -1,0 +1,19 @@
+#site-title-icon {
+  max-width: 25px;
+  margin-right: 2px;
+}
+
+#login-button {
+  margin-top: 10px;
+}
+
+#login-button i {
+  margin-right: 12px;
+}
+
+#album-search-input:focus {
+  /* input color when selected should still be materialize "grey lighten-5" */
+  background-color: #fafafa;
+  /* leave standard border bottom when typing input */
+  border-bottom: 1px solid rgb(158, 158, 158);
+}

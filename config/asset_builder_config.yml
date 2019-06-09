@@ -1,7 +1,9 @@
 closure-compiler-path: '../closure-compiler-v20190528.jar'
 # note that the following 3 directory config settings end with a '/'
 js-output-dir: '../priv/static/js/'
-js-input-dir: '../assets/materialize/js/'
+materialize-js-input-dir: '../assets/materialize/js/'
+custom-js-input-dir: '../assets/js/'
+custom-css-input-dir: '../assets/css/'
 css-output-dir: '../priv/static/css/'
 materialize-sass-file: '../assets/materialize/sass/materialize.scss'
 

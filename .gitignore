@@ -24,4 +24,6 @@ album_tags-*.tar
 
 .DS_store
 
+/assets/node_modules
+
 closure-compiler-v20190528.jar

@@ -1,0 +1,14 @@
+{
+  "name": "album-tags-phoenix-build-tools",
+  "version": "0.1.0",
+  "description": "Build tools to compile materialize assets for album-tags-phoenix",
+  "repository": "https://github.com/jhunschejones/Album-Tags-Phoenix",
+  "scripts": {
+    "minify-css": "uglifycss $FROM > $TO"
+  },
+  "author": "Joshua Hunsche Jones",
+  "license": "MIT",
+  "devDependencies": {
+    "uglifycss": "0.0.29"
+  }
+}

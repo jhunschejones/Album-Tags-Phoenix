@@ -7,28 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Album Tags</title>
 
+    <!-- MATERIALIZE AND CUSTOM STYLING FOR COMPONENTS IN TEMPLATE -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/compiled_materialize.css") %>"/>
-    <!-- CUSTOM STYLES -->
-    <style type="text/css">
-      #album-search-input:focus {
-        /* input color when selected should still be materialize "grey lighten-5" */
-        background-color: #fafafa;
-        /* leave standard border bottom when typing input */
-        border-bottom: 1px solid rgb(158, 158, 158);
-      }
-    </style>
   </head>
   <body class="grey lighten-5">
     <!-- TOP NAVBAR -->
     <nav id="main-nav">
       <div class="nav-wrapper grey darken-3">
-        <!-- <a href="#" class="brand-logo center">
-          <i class="material-icons" style="margin-right:12px;">library_music</i>
-          <span>Album Tags</span>
-        </a> -->
         <a href="/" class="brand-logo center">
-          <img style="max-width:25px;margin-right:2px;" src="./images/headphones_100.png">
+          <img id="site-title-icon" src="<%= Routes.static_path(@conn, "/images/headphones_100.png") %>">
           <span>Album Tags</span>
         </a>
         <ul id="nav-mobile" class="left">
@@ -39,7 +27,7 @@
 
     <!-- SLIDE-OUT NAV MENU -->
     <ul id="slide-out" class="sidenav">
-      <li style="margin-top:10px;"><a href="#"><i class="material-icons" style="margin-right:12px;">account_circle</i>Log In</a></li>
+      <li id="login-button"><a href="#"><i class="material-icons">account_circle</i>Log In</a></li>
       <li><div class="divider" style="margin-bottom:8px;"></div></li>
       <li><a href="/">Home</a></li>
       <li><a href="#">About</a></li>
@@ -66,32 +54,7 @@
     <!-- LOAD PAGE TEMPLATE -->
     <%= render @view_module, @view_template, assigns %>
 
-    <!-- MATERIALIZE JS FOR COMPONENTS IN TEMPLATE -->
+    <!-- MATERIALIZE AND CUSTOM JS FOR COMPONENTS IN TEMPLATE -->
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/compiled_materialize.js") %>"></script>
-    <script type="text/javascript">
-      document.addEventListener('DOMContentLoaded', function() {
-        var sidenav = document.getElementById("slide-out");
-        var searchModal = document.getElementById("search-modal");
-
-        // initialize sidenav
-        M.Sidenav.init(sidenav);
-        window.sidenav = M.Sidenav.getInstance(sidenav);
-
-        // initialize search modal
-        M.Modal.init(searchModal);
-        window.searchModal = M.Modal.getInstance(sidenav);
-
-        // open sidenav on menu button click
-        document.getElementById("open-sidenav").addEventListener("click", function(e) {
-          e.preventDefault();
-          window.sidenav.open();
-        });
-
-        // close sidenav when search modal is opened
-        document.getElementById("open-search-modal").addEventListener("click", function(e) {
-          window.sidenav.close();
-        });
-      });
-    </script>
   </body>
 </html>
