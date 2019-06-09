@@ -1,3 +1,10 @@
+closure-compiler-path: '../closure-compiler-v20190528.jar'
+# note that the following 3 directory config settings end with a '/'
+js-output-dir: '../priv/static/js/'
+js-input-dir: '../assets/materialize/js/'
+css-output-dir: '../priv/static/css/'
+materialize-sass-file: '../assets/materialize/sass/materialize.scss'
+
 js-files-to-compile:
   # required components
   - global.js
