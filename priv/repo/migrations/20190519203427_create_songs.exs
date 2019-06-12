@@ -5,7 +5,7 @@ defmodule AlbumTags.Repo.Migrations.CreateSongs do
     create table(:songs) do
       add :name, :string
       add :duration, :string
-      add :album_id, :integer
+      add :album_id, references(:albums, on_delete: :delete_all), null: false # delete all asociated songs wne an album is deleted
       add :preview, :string
       add :track_number, :integer
     end

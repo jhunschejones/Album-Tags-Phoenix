@@ -3,9 +3,10 @@ defmodule AlbumTags.Repo.Migrations.CreateAlbumTags do
 
   def up do
     create table(:album_tags) do
-      add :album_id, :integer
-      add :tag_id, :integer
-      add :user_id, :integer
+      # when an album, associated tag, or user is fully deleted, delete album_tags join table record
+      add :album_id, references(:albums, on_delete: :delete_all), null: false
+      add :tag_id, references(:tags, on_delete: :delete_all), null: false
+      add :user_id, references(:users, on_delete: :delete_all), null: false
 
       timestamps()
     end

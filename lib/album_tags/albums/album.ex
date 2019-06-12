@@ -10,7 +10,7 @@ defmodule AlbumTags.Albums.Album do
     field :record_company, :string
     field :release_date, :string
     field :title, :string
-    has_many :songs, AlbumTags.Albums.Song, on_delete: :delete_all
+    has_many :songs, AlbumTags.Albums.Song
     many_to_many :tags, AlbumTags.Albums.Tag, join_through: "album_tags"
     many_to_many :lists, AlbumTags.Lists.List, join_through: "album_lists"
 

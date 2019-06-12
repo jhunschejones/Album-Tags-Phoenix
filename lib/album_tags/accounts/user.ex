@@ -8,9 +8,9 @@ defmodule AlbumTags.Accounts.User do
     field :provider, :string
     field :token, :string
     field :profile_image, :string, default: ""
-    has_many :tags, AlbumTags.Albums.Tag, on_delete: :delete_all
-    has_many :lists, AlbumTags.Lists.List, on_delete: :delete_all
-    has_many :album_connections, AlbumTags.Albums.AlbumConnection, on_delete: :delete_all
+    has_many :tags, AlbumTags.Albums.Tag
+    has_many :lists, AlbumTags.Lists.List
+    has_many :album_connections, AlbumTags.Albums.AlbumConnection
 
     timestamps()
   end

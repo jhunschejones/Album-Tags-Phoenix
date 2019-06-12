@@ -3,9 +3,9 @@ defmodule AlbumTags.Repo.Migrations.CreateAlbumConnections do
 
   def up do
     create table(:album_connections) do
-      add :parent_album, :integer
-      add :child_album, :integer
-      add :user_id, :integer
+      add :parent_album, references(:albums, on_delete: :delete_all), null: false # when an album is deleted, delete connection record
+      add :child_album, references(:albums, on_delete: :delete_all), null: false # when an album is deleted, delete connection record
+      add :user_id, references(:users, on_delete: :delete_all), null: false # when a user is deleted, delete connection record
 
       timestamps()
     end
