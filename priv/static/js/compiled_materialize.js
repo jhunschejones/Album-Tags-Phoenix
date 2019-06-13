@@ -125,26 +125,8 @@ this.el,this._openingTrigger),this.options.preventScrolling&&(document.body.styl
 this.el.focus(),this};a.prototype.close=function(){if(this.isOpen)return this.isOpen=!1,a._modalsOpen--,this._nthModalOpened=0,"function"===typeof this.options.onCloseStart&&this.options.onCloseStart.call(this,this.el),this.el.classList.remove("open"),0===a._modalsOpen&&(document.body.style.overflow=""),this.options.dismissible&&(document.removeEventListener("keydown",this._handleKeydownBound),document.removeEventListener("focus",this._handleFocusBound,!0)),d.remove(this.el),d.remove(this.$overlay[0]),
 this._animateOut(),this};$jscomp.global.Object.defineProperties(a,{defaults:{configurable:!0,enumerable:!0,get:function(){return e}}});a._modalsOpen=0;a._count=0;M.Modal=a;M.jQueryLoaded&&M.initializeJqueryWrapper(a,"modal","M_Modal")})(cash,M.anime);
 
-document.addEventListener('DOMContentLoaded', function() {
-  var sidenav = document.getElementById("slide-out");
-  var searchModal = document.getElementById("search-modal");
+document.addEventListener("DOMContentLoaded",function(){var a=document.getElementById("slide-out"),b=document.getElementById("search-modal");M.Sidenav.init(a);window.sidenav=M.Sidenav.getInstance(a);M.Modal.init(b);window.searchModal=M.Modal.getInstance(a);document.getElementById("open-sidenav").addEventListener("click",function(a){a.preventDefault();window.sidenav.open()});document.getElementById("open-search-modal").addEventListener("click",function(a){window.sidenav.close()})});
 
-  // initialize sidenav
-  M.Sidenav.init(sidenav);
-  window.sidenav = M.Sidenav.getInstance(sidenav);
-
-  // initialize search modal
-  M.Modal.init(searchModal);
-  window.searchModal = M.Modal.getInstance(sidenav);
-
-  // open sidenav on menu button click
-  document.getElementById("open-sidenav").addEventListener("click", function(e) {
-    e.preventDefault();
-    window.sidenav.open();
-  });
-
-  // close sidenav when search modal is opened
-  document.getElementById("open-search-modal").addEventListener("click", function(e) {
-    window.sidenav.close();
-  });
-});
+(function(){function e(b,a){var c=document.createElement("input");c.type="hidden";c.name=b;c.value=a;return c}var h=function(){function b(a,c){c=c||{bubbles:!1,cancelable:!1,detail:void 0};var b=document.createEvent("CustomEvent");b.initCustomEvent(a,c.bubbles,c.cancelable,c.detail);return b}if("function"===typeof window.CustomEvent)return window.CustomEvent;b.prototype=window.Event.prototype;return b}();window.addEventListener("click",function(b){for(var a=b.target;a&&a.getAttribute;){var c=new h("phoenix.link.click",
+{bubbles:!0,cancelable:!0});if(!a.dispatchEvent(c))return b.preventDefault(),b.stopImmediatePropagation(),!1;if(a.getAttribute("data-method")){c=a.getAttribute("data-to");var g=e("_method",a.getAttribute("data-method")),k=e("_csrf_token",a.getAttribute("data-csrf")),d=document.createElement("form"),f=a.getAttribute("target");d.method="get"===a.getAttribute("data-method")?"get":"post";d.action=c;d.style.display="hidden";f&&(d.target=f);d.appendChild(k);d.appendChild(g);document.body.appendChild(d);
+d.submit();b.preventDefault();return!1}a=a.parentNode}},!1);window.addEventListener("phoenix.link.click",function(b){var a=b.target.getAttribute("data-confirm");a&&!window.confirm(a)&&b.preventDefault()},!1)})();

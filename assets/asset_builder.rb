@@ -42,7 +42,16 @@ class AssetBuilder
     temp_files = []
     File.write(File.join(File.dirname(__FILE__), "./newline.txt"), "\n")
     newline = File.join(File.dirname(__FILE__), "/newline.txt")
-    customjs = File.join(File.dirname(__FILE__), "./js/site.js")
+    customjs = minify_single_js_file(
+      file_path: File.join(File.dirname(__FILE__), "./js/site.js"),
+      file_name: "site.js",
+      output_dir: "../assets/js/"
+    )
+    phoenixjs = minify_single_js_file(
+      file_path: File.join(File.dirname(__FILE__), "./js/phoenix_html.js"),
+      file_name: "phoenix_html.js",
+      output_dir: "../assets/js/"
+    )
     output_file = File.join(File.dirname(__FILE__), @config["js-output-dir"] + "compiled_materialize.js")
     files = ""
 
@@ -64,7 +73,9 @@ class AssetBuilder
       if index != @config["js-files-to-compile"].length - 1
         files << (minified_file + " " + newline + " ")
       else
-        files << (minified_file + " " + newline + " " + customjs)
+        files << (minified_file + " " + newline + " " + customjs + " " + newline + " " + phoenixjs)
+        temp_files.push(customjs)
+        temp_files.push(phoenixjs)
       end
 
       # keep track of file paths to delete later
