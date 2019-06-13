@@ -7,6 +7,7 @@ defmodule AlbumTagsWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug AlbumTagsWeb.AuthPlug
   end
 
   pipeline :api do
@@ -27,4 +28,12 @@ defmodule AlbumTagsWeb.Router do
     get "/apple/search/", AppleMusicController, :search
     get "/apple/details/:id", AppleMusicController, :details
   end
+
+  scope "/auth", AlbumTagsWeb do #RanqWeb is app namespace
+     pipe_through :browser
+
+     get "/:provider", AuthController, :request
+     get "/:provider/callback", AuthController, :callback
+     delete "/logout", AuthController, :logout
+ end
 end

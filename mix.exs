@@ -20,7 +20,13 @@ defmodule AlbumTags.MixProject do
   def application do
     [
       mod: {AlbumTags.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpotion]
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :httpotion,
+        :ueberauth,
+        :ueberauth_google
+      ]
     ]
   end
 
@@ -43,7 +49,10 @@ defmodule AlbumTags.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:httpotion, "~> 3.1.2"}
+      {:httpotion, "~> 3.1.2"},
+      {:ueberauth, "~> 0.6.1"},
+      {:ueberauth_google, "~> 0.8.0"},
+      {:poison, "~> 4.0"} # required for `ueberauth_google`, using jason everywhere else
     ]
   end
 
