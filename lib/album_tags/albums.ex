@@ -6,23 +6,32 @@ defmodule AlbumTags.Albums do
   import Ecto.Query, warn: false
   alias AlbumTags.Repo
   alias AlbumTags.Albums.{Album, AlbumTag, AlbumConnection, Tag, Song}
+  alias AlbumTags.Lists
+
 
   @doc """
-  Gets a single album by database id, preloading songs, tags, and lists.
+  Preloads album and tags for a given, associated module (like a List)
+  """
+  def with_albums_and_tags(module) do
+    Repo.preload(module, [albums: [:tags]])
+  end
+
+  @doc """
+  Gets a single album by database id
   """
   def get_album!(id) do
     Album
     |> Repo.get!(id)
-    # |> Repo.preload([:songs, :tags, :lists])
   end
 
   @doc """
   Gets a single album by apple_album_id, preloading songs, tags, and lists.
   """
-  def get_album_by(apple_album_id) do
+  def get_album_by(%{apple_album_id: apple_album_id}) do
     Album
     |> Repo.get_by!(apple_album_id: apple_album_id)
-    |> Repo.preload([:songs, :tags, :lists])
+    |> Repo.preload([:songs, :tags])
+    |> Lists.with_lists()
   end
 
   @doc """

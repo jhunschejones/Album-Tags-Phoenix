@@ -6,8 +6,15 @@ defmodule AlbumTags.Lists do
   import Ecto.Query, warn: false
   alias AlbumTags.Repo
 
-  alias AlbumTags.Lists.List
-  alias AlbumTags.Lists.AlbumList
+  alias AlbumTags.Lists.{List, AlbumList}
+  alias AlbumTags.Albums
+
+  @doc """
+  Preloads lists for a given, associated module (like an Album)
+  """
+  def with_lists(module) do
+    Repo.preload(module, [:lists])
+  end
 
   @doc """
   Returns the list of lists.
@@ -25,22 +32,11 @@ defmodule AlbumTags.Lists do
 
   @doc """
   Gets a single list.
-
-  Raises `Ecto.NoResultsError` if the List does not exist.
-
-  ## Examples
-
-      iex> get_list!(123)
-      %List{}
-
-      iex> get_list!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_list!(id) do
     List
     |> Repo.get!(id)
-    |> Repo.preload([albums: [:tags]])
+    |> Albums.with_albums_and_tags()
   end
 
   @doc """
@@ -49,7 +45,7 @@ defmodule AlbumTags.Lists do
   def get_list_by(%{user_id: user_id}) do
     List
     |> Repo.get_by!(user_id: user_id)
-    |> Repo.preload([albums: [:tags]])
+    |> Albums.with_albums_and_tags()
   end
 
   @doc """
