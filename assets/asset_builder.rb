@@ -136,12 +136,17 @@ class AssetBuilder
 
   def minify_page_css
     # show progress
-    print "."
+    # print "."
 
     # execute minify command
     from = @config["custom-css-input-dir"] + @params[:assets] + ".css"
     to = "../priv/static/css/#{@params[:assets]}.min.css"
-    system("cd assets && FROM=#{from} TO=#{to} npm run --silent minify-css")
+
+    if Dir.pwd.include? "assets"
+      system("FROM=#{from} TO=#{to} npm run --silent minify-css")
+    else
+      system("cd assets && FROM=#{from} TO=#{to} npm run --silent minify-css")
+    end
   end
 end
 
