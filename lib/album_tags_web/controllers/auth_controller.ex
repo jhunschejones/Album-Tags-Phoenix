@@ -4,13 +4,16 @@ defmodule AlbumTagsWeb.AuthController do
   """
 
   use AlbumTagsWeb, :controller
-  alias AlbumTags.Accounts.User
-  alias AlbumTags.Repo
+  alias AlbumTags.Accounts
   plug Ueberauth # gives us the :request method for free
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    user_params = %{token: auth.credentials.token, email: auth.info.email, provider: "google"}
-    changeset = User.changeset(%User{}, user_params)
+    user_params = %{
+      token: auth.credentials.token,
+      email: auth.info.email,
+      provider: "google"
+    }
+    changeset = Accounts.change_user(user_params)
 
     login(conn, changeset)
   end
@@ -22,7 +25,7 @@ defmodule AlbumTagsWeb.AuthController do
   end
 
   defp login(conn, changeset) do
-    case insert_or_update_user(changeset) do
+    case Accounts.insert_or_update_user(changeset) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Welcome back")
@@ -33,14 +36,5 @@ defmodule AlbumTagsWeb.AuthController do
         |> put_flash(:error, "Error signing in")
         |> redirect(to: Routes.page_path(conn, :index))
     end
-  end
-
-  defp insert_or_update_user(changeset) do
-    case Repo.get_by(User, email: changeset.changes.email) do
-      nil ->
-        Repo.insert(changeset)
-      user ->
-        {:ok, user}
-      end
   end
 end
