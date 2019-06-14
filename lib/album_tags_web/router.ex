@@ -18,7 +18,7 @@ defmodule AlbumTagsWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/album", AlbumController, :index
+    get "/album/:id", AlbumController, :show
   end
 
   # Other scopes may use custom stacks.

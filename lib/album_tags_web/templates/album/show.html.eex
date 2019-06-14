@@ -1,0 +1,26 @@
+<div id="top-row" class="row">
+  <div id="album-cover-col" class="col s6">
+    <img id="album-cover" class="responsive-img" src="<%= album_cover(@album) %>" alt="album cover">
+  </div>
+  <div id="album-info-col" class="col s6">
+    <h6 id="title"><%= @album.title %></h6>
+    <h6 id="presented-by" class="grey-text"><em>As presented by:</em></h6>
+    <h6 id="artist"><%= @album.artist %></h6>
+    <h6 id="record-company" class="grey-text">
+      <em>& <%= @album.record_company %>, &copy <%= release_year(@album) %></em>
+    </h6>
+  </div>
+</div>
+
+<div id="songs-row" class="row">
+  <table>
+    <%= for song <- @album.songs do %>
+      <tr>
+        <td class="track-number grey-text">
+          <%= song.track_number %>
+        </td>
+        <td><%= song.name %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

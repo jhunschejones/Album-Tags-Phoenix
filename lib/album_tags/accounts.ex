@@ -41,6 +41,16 @@ defmodule AlbumTags.Accounts do
     |> Repo.insert()
   end
 
+
+  def insert_or_update_user(changeset) do
+    case Repo.get_by(User, email: changeset.changes.email) do
+      nil ->
+        Repo.insert(changeset)
+      user ->
+        {:ok, user}
+      end
+  end
+
   @doc """
   Updates a user.
 
@@ -77,14 +87,8 @@ defmodule AlbumTags.Accounts do
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
   """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+  def change_user(user_params) do
+    User.changeset(%User{}, user_params)
   end
 end
