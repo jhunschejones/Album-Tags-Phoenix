@@ -8,8 +8,11 @@
     <title>Album Tags</title>
 
     <!-- MATERIALIZE AND CUSTOM STYLING FOR COMPONENTS IN TEMPLATE -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/compiled_materialize.css") %>"/>
+    <%= if @page do %>
+      <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/#{@page}.min.css") %>"/>
+    <% end %>
   </head>
   <body class="grey lighten-5">
     <!-- TOP NAVBAR -->
@@ -66,5 +69,8 @@
 
     <!-- MATERIALIZE AND CUSTOM JS FOR COMPONENTS IN TEMPLATE -->
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/compiled_materialize.js") %>"></script>
+    <%= if @page do %>
+      <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/#{@page}.min.js") %>"></script>
+    <% end %>
   </body>
 </html>
