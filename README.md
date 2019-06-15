@@ -10,10 +10,8 @@ I will be working with a local development instance of Postgres, then moving to 
 This project includes a Ruby script called `asset_builder` for creating custom compiled versions of JavaScript and style resources, allowing the app to ship a more compact asset bundle to the user.
 
 #### Setup:
-1. Download [closure compiler](~https://developers.google.com/closure/compiler/docs/gettingstarted_app~) and update the path to the closure compiler jar file in `/config/asset_builder_config.yml`
-2. `brew install sass/sass/sass`
-3. `cd assets && npm install`
-4. Review the remaining path information in `asset_builder_config.yml` and update if needed
+1. `cd assets && npm install`
+2. Review the paths set in `asset_builder_config.yml` and update if needed
 
 #### Use:
 *these commands are written to be run from the project root directory*

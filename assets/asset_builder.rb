@@ -2,58 +2,46 @@ require "yaml"
 
 class AssetBuilder
   def initialize(user_input)
-    @params = {}
-    if user_input.length == 0
-      @params[:mode] = "all"
-      @params[:assets] = "materialize"
-    elsif user_input.length == 1
-      @params[:mode] = "all"
-      @params[:assets] = user_input[0]
-    elsif user_input.length == 2
-      @params[:assets] = user_input[0]
-      @params[:mode] = user_input[1]
-    else
-      throw "Unrecognized argument configuration"
-    end
-
-    @config = YAML.load_file(File.join(File.dirname(__FILE__), "../config/asset_builder_config.yml"))
+    @params = setup_params(user_input)
+    @config = YAML.load_file(absolute_path("../config/asset_builder_config.yml"))
 
     if @params[:assets] == "materialize"
-      compile_and_minify_materialize_javascripts unless @params[:mode] == "scss" || @params[:mode] == "css"
-      compile_materialize_sass unless @params[:mode] == "js"
-      minify_materialize_css unless @params[:mode] == "js"
+      compile_and_minify_materialize_js unless ["scss", "css"].include?(@params[:mode])
+      compile_and_minify_materialize_sass unless @params[:mode] == "js"
     else
-      file_name = @params[:assets] + ".js"
-      minify_single_js_file(
-        file_path: File.join(File.dirname(__FILE__), @config["custom-js-input-dir"] + file_name),
-        file_name: file_name,
-        output_dir: @config["js-output-dir"]
-      ) unless @params[:mode] == "scss" || @params[:mode] == "css"
-      minify_page_css unless @params[:mode] == "js"
+      if !["scss", "css"].include?(@params[:mode])
+        file_name = @params[:assets] + ".js"
+        minified_file = minify_single_js_file(
+          file_path: absolute_path(@config["custom-js-input-dir"] + file_name),
+          file_name: file_name
+        )
+        system("mv #{minified_file} #{@config["js-output-dir"] + file_name.split('.')[0] + ".min.js"}")
+      end
+      minify_css_file unless @params[:mode] == "js"
     end
-    # finish progress meter
-    puts "."
   end
 
   private
 
-  def compile_and_minify_materialize_javascripts
+  def compile_and_minify_materialize_js
     # set up
+    File.write(absolute_path("./newline.txt"), "\n")
+    newline = absolute_path("/newline.txt")
+    customjs = absolute_path(
+      minify_single_js_file(
+        file_path: "./js/site.js",
+        file_name: "site.js"
+      )
+    )
+    phoenixjs = absolute_path(
+      minify_single_js_file(
+        file_path: "./js/phoenix_html.js",
+        file_name: "phoenix_html.js"
+      )
+    )
+    output_file = absolute_path(@config["js-output-dir"] + "compiled_materialize.js")
     temp_files = []
-    File.write(File.join(File.dirname(__FILE__), "./newline.txt"), "\n")
-    newline = File.join(File.dirname(__FILE__), "/newline.txt")
-    customjs = minify_single_js_file(
-      file_path: File.join(File.dirname(__FILE__), "./js/site.js"),
-      file_name: "site.js",
-      output_dir: "../assets/js/"
-    )
-    phoenixjs = minify_single_js_file(
-      file_path: File.join(File.dirname(__FILE__), "./js/phoenix_html.js"),
-      file_name: "phoenix_html.js",
-      output_dir: "../assets/js/"
-    )
-    output_file = File.join(File.dirname(__FILE__), @config["js-output-dir"] + "compiled_materialize.js")
-    files = ""
+    input_files_list = ""
 
     # build command
     @config["js-files-to-compile"].each_with_index do |file, index|
@@ -62,91 +50,91 @@ class AssetBuilder
 
       # set up file info
       file_info = {
-        file_path: File.join(File.dirname(__FILE__), @config["materialize-js-input-dir"] + file),
-        file_name: file,
-        output_dir: @config["materialize-js-input-dir"]
+        file_path: "../assets/materialize/js/" + file,
+        file_name: file
       }
       # avoiding minifying files that are already minified
-      minified_file = file.include?(".min.js") ? file_info[:file_path] : minify_single_js_file(file_info)
+      minified_file = file.include?(".min.js") ? "./assets/materialize/js/#{file_info[:file_name]}" : absolute_path(minify_single_js_file(file_info))
 
       # put together system command with correct spacing and order
       if index != @config["js-files-to-compile"].length - 1
-        files << (minified_file + " " + newline + " ")
+        input_files_list << (minified_file + " " + newline + " ")
       else
-        files << (minified_file + " " + newline + " " + customjs + " " + newline + " " + phoenixjs)
+        input_files_list << (minified_file + " " + newline + " " + customjs + " " + newline + " " + phoenixjs)
         temp_files.push(customjs)
         temp_files.push(phoenixjs)
       end
 
-      # keep track of file paths to delete later
+      # keep track temp files to delete later
       temp_files.push(minified_file) unless file.include?(".min.js")
     end
 
     # execute compile
-    system("(cat #{files}) > #{output_file}")
+    system("(cat #{input_files_list}) > #{output_file}")
 
     # clean up
-    File.delete(File.join(File.dirname(__FILE__), "./newline.txt"))
-    temp_files.each do |temp_file|
-      File.delete(temp_file)
+    File.delete(absolute_path("./newline.txt"))
+    temp_files.each {|t| File.delete(t)}
+    # finish progress
+    puts "."
+  end
+
+  def minify_single_js_file(file_name:, file_path:)
+    # set up
+    minified_name = @params[:assets] == "materialize" ? "minimized-#{file_name}" : "#{@params[:assets]}.min.js"
+    to = @config["js-output-dir"] + minified_name
+
+    # execute minify from appropriate directory
+    if Dir.pwd.include? "assets"
+      system("FROM=#{file_path} TO=#{to} npm run --silent minify-js")
+    else
+      system("cd assets && FROM=#{file_path} TO=#{to} npm run --silent minify-js")
     end
+
+    to
   end
 
-  def minify_single_js_file(file_name:, file_path:, output_dir:)
+  def compile_and_minify_materialize_sass
     # set up
-    closure_compiler = File.join(File.dirname(__FILE__), @config["closure-compiler-path"])
-    minified_name = @params[:assets] == "materialize" ? "minimized-" + file_name : @params[:assets] + ".min.js"
-    to_file = File.join(File.dirname(__FILE__), output_dir + minified_name)
+    from = "../assets/materialize/sass/materialize.scss"
+    to = @config["css-output-dir"] + "compiled_materialize.css"
 
-    # execute minify to same file
-    system("java -jar #{closure_compiler} --jscomp_off=misplacedTypeAnnotation --js #{file_path} --js_output_file #{to_file}")
-
-    to_file
+    # execute compile and minimize
+    system("cd assets && FROM=#{from} TO=#{to} npm run --silent compile-scss")
   end
 
-  def compile_materialize_sass
-    # show progress
-    print "."
-
-    # set up
-    materialize_sass = File.join(File.dirname(__FILE__), @config["materialize-sass-file"])
-    compiled_css = File.join(File.dirname(__FILE__), @config["css-output-dir"] + "compiled_materialize.css")
-
-    # execute compile
-    system("sass #{materialize_sass} #{compiled_css}")
-
-    # clean up
-    File.delete(File.join(File.dirname(__FILE__), @config["css-output-dir"] + "compiled_materialize.css.map"))
-  end
-
-  def minify_materialize_css
-    # show progress
-    print "."
-
-    # execute minify command
-    from = "../priv/static/css/compiled_materialize.css"
-    to = "../priv/static/css/compiled_materialize.min.css"
-    system("cd assets && FROM=#{from} TO=#{to} npm run --silent minify-css")
-
-    # clean up
-    final_file = File.join(File.dirname(__FILE__), @config["css-output-dir"] + "compiled_materialize.css")
-    temp_file = File.join(File.dirname(__FILE__), @config["css-output-dir"] + "compiled_materialize.min.css")
-    system("mv #{temp_file} #{final_file}")
-  end
-
-  def minify_page_css
-    # show progress
-    # print "."
-
+  def minify_css_file
     # execute minify command
     from = @config["custom-css-input-dir"] + @params[:assets] + ".css"
-    to = "../priv/static/css/#{@params[:assets]}.min.css"
+    to = @config["css-output-dir"] + @params[:assets] + ".min.css"
 
     if Dir.pwd.include? "assets"
       system("FROM=#{from} TO=#{to} npm run --silent minify-css")
     else
       system("cd assets && FROM=#{from} TO=#{to} npm run --silent minify-css")
     end
+  end
+
+  def absolute_path(file)
+    File.join(File.dirname(__FILE__), file)
+  end
+
+  def setup_params(user_input)
+    params = {}
+    if user_input.length == 0
+      params[:mode] = "all"
+      params[:assets] = "materialize"
+    elsif user_input.length == 1
+      params[:mode] = "all"
+      params[:assets] = user_input[0]
+    elsif user_input.length == 2
+      params[:assets] = user_input[0]
+      params[:mode] = user_input[1]
+    else
+      throw "Unrecognized argument configuration"
+    end
+
+    params
   end
 end
 

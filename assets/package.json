@@ -5,11 +5,15 @@
   "repository": "https://github.com/jhunschejones/Album-Tags-Phoenix",
   "scripts": {
     "watch": "onchange '**/*.css' '**/*.js' -- ruby watch.rb {{changed}}",
-    "minify-css": "uglifycss $FROM > $TO"
+    "minify-css": "uglifycss $FROM > $TO",
+    "compile-scss": "node-sass --output-style compressed --omit-source-map-url --quiet $FROM $TO",
+    "minify-js": "google-closure-compiler --jscomp_off=misplacedTypeAnnotation --js=$FROM --js_output_file=$TO"
   },
   "author": "Joshua Hunsche Jones",
   "license": "MIT",
   "devDependencies": {
+    "google-closure-compiler": "^20190528.0.0",
+    "node-sass": "^4.12.0",
     "onchange": "^6.0.0",
     "uglifycss": "0.0.29"
   }
