@@ -1,0 +1,113 @@
+// DEFINE PAGE COLORS
+$background-grey: #fafafa;
+$modern-blue: #0091ea;
+
+#top-row {
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+#album-cover-col {
+  padding: 10px 10px 10px 10px;
+}
+
+.album-cover {
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px grey;
+}
+
+#album-info-col {
+  padding: 5px 2px;
+}
+
+#title {
+  font-size: 1.3em;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+#record-company {
+  font-size: 1.0em;
+  font-weight: 200;
+  margin: 0px;
+  padding: 0px;
+  line-height: normal;
+}
+
+#artist {
+  margin: 5px 0px;
+  font-size: 1.2em;
+  color: $modern-blue;
+  font-weight: 500;
+}
+
+
+.card {
+  /* override default box shadow to only be on the top of the card */
+  box-shadow: 0 -2px 1px 0px rgba(0,0,0,0.05);
+  .card-content {
+    /* change default padding for cards */
+    padding: 8px 12px;
+  }
+}
+
+// override defaults for tabs
+.tabs {
+  /* Color of underline indicator */
+  .indicator {background-color: #64b5f6;}
+  .tab {
+    a {
+      color: black;
+      &:hover {color: black;}
+    }
+    /* when a tab is active but not selected */
+    a.active {color: black;}
+    /* when a tab is active and selected */
+    a:focus.active {
+      color: black;
+      background-color: $background-grey;
+    }
+  }
+}
+
+#songs-card {
+  td {
+    padding: 8px 14px;
+  }
+  .track-number {
+    width: 10px;
+    padding-right: 0px;
+    padding-left: 2px;
+    font-weight: 200;
+    text-align: right;
+  }
+  .song-duration {
+    width: 30px;
+    font-weight: 200;
+  }
+}
+
+.connection {
+  max-width: 140px;
+  margin: 5px;
+  display: inline-block;
+}
+
+.fixed-action-btn ul {
+  bottom: 41px;
+}
+
+#tags {
+  margin-top: 5px;
+}
+
+#lists-ul {
+  text-decoration: none;
+  margin-left: 12px;
+  margin-top: 5px;
+}
+
+.close-toast {
+  right: 0px;
+}

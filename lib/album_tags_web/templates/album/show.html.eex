@@ -1,26 +1,99 @@
 <div id="top-row" class="row">
   <div id="album-cover-col" class="col s6">
-    <img id="album-cover" class="responsive-img" src="<%= album_cover(@album) %>" alt="album cover">
+    <img class="responsive-img album-cover" src="<%= album_cover(@album) %>" alt="album cover">
   </div>
   <div id="album-info-col" class="col s6">
     <h6 id="title"><%= @album.title %></h6>
-    <h6 id="presented-by" class="grey-text"><em>As presented by:</em></h6>
     <h6 id="artist"><%= @album.artist %></h6>
     <h6 id="record-company" class="grey-text">
-      <em>& <%= @album.record_company %>, &copy <%= release_year(@album) %></em>
+      <em><%= @album.record_company %>, &copy <%= release_year(@album) %></em>
     </h6>
   </div>
 </div>
 
-<div id="songs-row" class="row">
-  <table>
-    <%= for song <- @album.songs do %>
-      <tr>
-        <td class="track-number grey-text">
-          <%= song.track_number %>
-        </td>
-        <td><%= song.name %></td>
-      </tr>
-    <% end %>
-  </table>
+<div class="card">
+  <div class="card-tabs">
+    <ul class="tabs tabs-fixed-width grey lighten-5">
+      <li class="tab"><a class="active" href="#songs-card">Songs</a></li>
+      <li class="tab"><a href="#tags">Tags</a></li>
+      <li class="tab"><a href="#connections">Connections</a></li>
+      <li class="tab"><a href="#lists">Lists</a></li>
+    </ul>
+  </div>
+  <div class="card-content grey lighten-5">
+    <div id="songs-card">
+      <table>
+        <%= for song <- @album.songs do %>
+          <tr>
+            <td class="track-number grey-text">
+              <%= song.track_number %>
+            </td>
+            <td><%= song.name %></td>
+            <td class="song-duration grey-text">
+              <%= song.duration %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <div id="tags" class="col s12">
+      <%= for tag <- @album.tags do %>
+        <div class="chip tag <%= if tag.user_id == @user.id, do: 'user-tag' %>" data-value="<%= url_tag(tag) %>">
+          <%= tag.text %>
+        </div>
+      <% end %>
+      <div class="fixed-action-btn click-to-toggle">
+        <a id="tags-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
+          <i class="large material-icons">more_vert</i>
+        </a>
+        <ul>
+          <li><a id="show-all-tags" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
+          <li><a id="show-my-tags" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
+          <li><a id="search-tags" class="btn-floating light-blue accent-4"><i class="material-icons">search</i></a></li>
+          <li><a id="add-tags" class="btn-floating light-blue accent-4"><i class="material-icons">add</i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="connections" class="col s12">
+      <div class="row">
+        <%= for connected_album <- @album.connections do %>
+          <div class="connection <%= if connected_album.connection_owner == @user.id, do: 'user-connection' %>">
+            <a href="/album/<%= connected_album.apple_album_id %>">
+              <img class="responsive-img album-cover" src="<%= album_cover(connected_album) %>">
+            </a>
+          </div>
+        <% end %>
+      </div>
+      <div class="fixed-action-btn click-to-toggle">
+        <a id="connections-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
+          <i class="large material-icons">more_vert</i>
+        </a>
+        <ul>
+          <li><a id="show-all-connections" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
+          <li><a id="show-my-connections" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
+          <li><a id="add-connections" class="btn-floating light-blue accent-4"><i class="material-icons">add</i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="lists" class="col s12">
+      <ul id="lists-ul">
+        <%= for list <- @album.lists do %>
+          <li class="list <%= if list.user_id == @user.id, do: 'user-list' %>">
+            <%= list.title %>
+            <span class="grey-text"> - <%= list.user.name %></span>
+          </li>
+        <% end %>
+      </ul>
+      <div class="fixed-action-btn click-to-toggle">
+        <a id="lists-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
+          <i class="large material-icons">more_vert</i>
+        </a>
+        <ul>
+          <li><a id="show-all-lists" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
+          <li><a id="show-my-lists" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
+          <li><a id="add-lists" class="btn-floating light-blue accent-4"><i class="material-icons">add</i></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

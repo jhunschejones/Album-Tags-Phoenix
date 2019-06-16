@@ -19,4 +19,10 @@ defmodule AlbumTagsWeb.AlbumView do
 
     "#{month}/#{day}/#{year}"
   end
+
+  def url_tag(tag) do
+    tag.text
+    |> String.downcase()
+    |> URI.encode()
+  end
 end

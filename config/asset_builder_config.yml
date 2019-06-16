@@ -2,7 +2,7 @@
 js-output-dir: '../priv/static/js/'
 css-output-dir: '../priv/static/css/'
 custom-js-input-dir: '../assets/js/'
-custom-css-input-dir: '../assets/css/'
+custom-styles-input-dir: '../assets/styles/'
 
 js-files-to-compile:
   # required components
@@ -13,3 +13,9 @@ js-files-to-compile:
   # elements used in template
   - sidenav.js
   - modal.js
+  # elements on album page
+  - buttons.js
+  - cards.js
+  - tabs.js
+  # - chips.js # only needed for chips form
+  - toasts.js
