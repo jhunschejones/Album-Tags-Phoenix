@@ -1,8 +1,13 @@
-changed_file = [ARGV][0][0].split('/')[1].split('.')
+changed_file = ARGV[0].split('/')[1].split('.')
+action = ARGV[1]
 
-puts "#{changed_file.join('.')} was changed!"
+if action == "unlink"
+  return puts "'#{changed_file.join('.')}' was deleted. Make sure to clean up the /priv/static/css directory!"
+end
+
+puts "'#{changed_file.join('.')}' was changed!"
 
 # make extra sure the script is not processing files it was not intended for
-if (changed_file[1] == "css" || changed_file[1] == "js") && changed_file.length == 2 && changed_file[0] != "site" && changed_file[0] != "phoenix_html"
+if ["css", "js", "scss"].include?(changed_file[1]) && changed_file.length == 2 && !["site", "phoenix_html"].include?(changed_file[0])
   system("ruby asset_builder.rb #{changed_file[0]} #{changed_file[1]}")
 end

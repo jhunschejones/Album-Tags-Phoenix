@@ -4,7 +4,7 @@
   "description": "Build tools to compile materialize assets for album-tags-phoenix",
   "repository": "https://github.com/jhunschejones/Album-Tags-Phoenix",
   "scripts": {
-    "watch": "onchange '**/*.css' '**/*.js' -- ruby watch.rb {{changed}}",
+    "watch": "onchange '**/*.css' '**/*.js' '**/*.scss' -- ruby watch.rb {{changed}} {{event}}",
     "minify-css": "uglifycss $FROM > $TO",
     "compile-scss": "node-sass --output-style compressed --omit-source-map-url --quiet $FROM $TO",
     "minify-js": "google-closure-compiler --jscomp_off=misplacedTypeAnnotation --js=$FROM --js_output_file=$TO"

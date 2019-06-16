@@ -7,7 +7,7 @@ class AssetBuilder
 
     if @params[:assets] == "materialize"
       compile_and_minify_materialize_js unless ["scss", "css"].include?(@params[:mode])
-      compile_and_minify_materialize_sass unless @params[:mode] == "js"
+      compile_and_minify_sass_file unless @params[:mode] == "js"
     else
       if !["scss", "css"].include?(@params[:mode])
         file_name = @params[:assets] + ".js"
@@ -17,7 +17,8 @@ class AssetBuilder
         )
         system("mv #{minified_file} #{@config["js-output-dir"] + file_name.split('.')[0] + ".min.js"}")
       end
-      minify_css_file unless @params[:mode] == "js"
+      minify_css_file unless ["js", "scss"].include?(@params[:mode])
+      compile_and_minify_sass_file unless ["js", "css"].include?(@params[:mode])
     end
   end
 
@@ -54,7 +55,12 @@ class AssetBuilder
         file_name: file
       }
       # avoiding minifying files that are already minified
-      minified_file = file.include?(".min.js") ? "./assets/materialize/js/#{file_info[:file_name]}" : absolute_path(minify_single_js_file(file_info))
+      minified_file = case file.include?(".min.js") 
+                      when true
+                        "./assets/materialize/js/#{file_info[:file_name]}"
+                      when false
+                        absolute_path(minify_single_js_file(file_info))
+                      end
 
       # put together system command with correct spacing and order
       if index != @config["js-files-to-compile"].length - 1
@@ -94,20 +100,30 @@ class AssetBuilder
     to
   end
 
-  def compile_and_minify_materialize_sass
+  def compile_and_minify_sass_file
     # set up
-    from = "../assets/materialize/sass/materialize.scss"
-    to = @config["css-output-dir"] + "compiled_materialize.css"
+    if @params[:assets] == "materialize"
+      from = "../assets/materialize/sass/materialize.scss" 
+      to = @config["css-output-dir"] + "compiled_materialize.css"
+    else
+      from = @config["custom-styles-input-dir"] + @params[:assets] + ".scss"
+      to = @config["css-output-dir"] + @params[:assets] + ".min.css"
+    end
 
-    # execute compile and minimize
-    system("cd assets && FROM=#{from} TO=#{to} npm run --silent compile-scss")
+    # # execute compile and minimize from the correct directory
+    if Dir.pwd.include? "assets"
+      system("FROM=#{from} TO=#{to} npm run --silent compile-scss")
+    else
+      system("cd assets && FROM=#{from} TO=#{to} npm run --silent compile-scss")
+    end
   end
 
   def minify_css_file
     # execute minify command
-    from = @config["custom-css-input-dir"] + @params[:assets] + ".css"
+    from = @config["custom-styles-input-dir"] + @params[:assets] + ".css"
     to = @config["css-output-dir"] + @params[:assets] + ".min.css"
 
+    # minimize from the correct directory
     if Dir.pwd.include? "assets"
       system("FROM=#{from} TO=#{to} npm run --silent minify-css")
     else
