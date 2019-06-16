@@ -65,8 +65,8 @@
       container.setAttribute('id', 'toast-container');
 
       // Add event handler
-      container.addEventListener('touchstart', Toast._onDragStart);
-      container.addEventListener('touchmove', Toast._onDragMove);
+      container.addEventListener('touchstart', Toast._onDragStart, {passive: true});
+      container.addEventListener('touchmove', Toast._onDragMove, {passive: true});
       container.addEventListener('touchend', Toast._onDragEnd);
 
       container.addEventListener('mousedown', Toast._onDragStart);
