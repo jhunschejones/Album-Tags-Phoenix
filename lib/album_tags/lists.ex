@@ -13,7 +13,7 @@ defmodule AlbumTags.Lists do
   Preloads lists for a given, associated module (like an Album)
   """
   def with_lists(module) do
-    Repo.preload(module, [:lists])
+    Repo.preload(module, [lists: [:user]])
   end
 
   @doc """

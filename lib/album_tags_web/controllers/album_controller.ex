@@ -4,6 +4,7 @@ defmodule AlbumTagsWeb.AlbumController do
 
   def show(conn, %{"id" => apple_album_id}) do
     album = Albums.get_album_by(%{apple_album_id: apple_album_id})
-    render(conn, "show.html", album: album, page: "album")
+    data_for_page = %{album: album, page: "album", user: conn.assigns.current_user}
+    render(conn, "show.html", data_for_page)
   end
 end

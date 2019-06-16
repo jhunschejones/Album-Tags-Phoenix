@@ -28,10 +28,19 @@ defmodule AlbumTags.Albums do
   Gets a single album by apple_album_id, preloading songs, tags, and lists.
   """
   def get_album_by(%{apple_album_id: apple_album_id}) do
-    Album
-    |> Repo.get_by!(apple_album_id: apple_album_id)
+    case Repo.get_by(Album, apple_album_id: apple_album_id) do
+      nil ->
+        {:error, "No album found"}
+      album ->
+        get_album_with_associations(album)
+    end
+  end
+
+  def get_album_with_associations(%Album{} = album) do
+    album
     |> Repo.preload([:songs, :tags])
     |> Lists.with_lists()
+    |> get_album_connections()
   end
 
   @doc """
@@ -183,25 +192,29 @@ defmodule AlbumTags.Albums do
   end
 
   @doc """
-  Find all albums where a given album_id is either the parent_album OR child_album.
+  Find all albums where the id of the given album is either the parent_album OR child_album.
   """
-  def get_album_connections(id) do
+  def get_album_connections(%Album{} = album) do
     parent_query =
       from a in Album,
       join: c in AlbumConnection,
       on: c.parent_album == a.id,
-      select: a,
-      where: c.child_album == ^id
+      select: {a, c.user_id},
+      where: c.child_album == ^album.id
 
     child_query =
       from a in Album,
       join: c in AlbumConnection,
       on: c.child_album == a.id,
-      select: a,
-      where: c.parent_album == ^id,
-      union_all: ^parent_query
+      select: {a, c.user_id},
+      where: c.parent_album == ^album.id,
+      union: ^parent_query
 
-    Repo.all(child_query)
+    results = Enum.map(Repo.all(child_query), fn x -> 
+      {connected_album, user_id} = x
+      Map.put_new(connected_album, :connection_owner, user_id)
+    end)
+    %Album{album | connections: results}
   end
 
   @doc """
