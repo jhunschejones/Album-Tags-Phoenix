@@ -17,5 +17,5 @@ js-files-to-compile:
   - buttons.js
   - cards.js
   - tabs.js
-  # - chips.js # only needed for chips form
+  - chips.js # only needed for chips form
   - toasts.js

@@ -7,6 +7,7 @@ defmodule AlbumTagsWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug NavigationHistory.Tracker, history_size: 3 # limit to 3 entries needed to redirect prior to login sequence
     plug AlbumTagsWeb.AuthPlug
   end
 
@@ -18,7 +19,10 @@ defmodule AlbumTagsWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/album/:id", AlbumController, :show
+    resources "/albums", AlbumController, only: [:show]
+    resources "/tags", TagController, only: [:index, :create, :edit, :delete]
+    # resources "/connections", ConnectionController, only: [:create, :edit, :delete]
+    # resources "/lists", ConnectionController, only: [:index, :show, :create, :edit, :update, :delete]
   end
 
   # Other scopes may use custom stacks.

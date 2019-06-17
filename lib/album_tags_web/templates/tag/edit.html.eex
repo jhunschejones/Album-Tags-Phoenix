@@ -1,0 +1,19 @@
+<div id="tag-input-container" class="chips">
+  <input id="tag-input">
+</div>
+
+<div class="fixed-action-btn">
+  <%= link to: Routes.album_path(@conn, :show, @album.apple_album_id, card: "tags"), class: "btn-floating light-blue accent-4" do %>
+    <i class="large material-icons">arrow_back</i>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  var tagArray = JSON.parse(
+    "<%= javascript_escape raw tags_for_user(@album.tags, @user) %>"
+  )
+  var currentTags = []
+  for (let i = 0; i < tagArray.length; i++) {
+    currentTags.push({tag: tagArray[i]});
+  }
+</script>
