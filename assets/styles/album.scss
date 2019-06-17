@@ -94,8 +94,9 @@ $modern-blue: #0091ea;
   display: inline-block;
 }
 
+// distance between main FAB and next button up in expanded menu
 .fixed-action-btn ul {
-  bottom: 41px;
+  bottom: 40px;
 }
 
 #tags {

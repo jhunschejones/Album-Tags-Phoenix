@@ -6,6 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // to enable swipable tabs, also add materialize carousel js and scss
     // swipeable: true
   });
+
+  // go to card if one is indicated in the query parameter
+  var card = new URLSearchParams(window.location.search).get("card");
+  if (card) {
+    document.getElementById(`go-to-${card}-card`).click();
+    // then remove query param from url and history
+    window.history.replaceState(
+      {}, window.location, window.location.origin + window.location.pathname
+    )
+  }
 });
 
 // initialize floating action button
@@ -16,7 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
     hoverEnabled: false
   });
 
-  // close expanded fabs when user clicks outside
+  // slow down link to tags edit page to allow button animation to finish
+  document.getElementById("add-tags").addEventListener("click", function(e) {
+    e.preventDefault();
+    const _this = this;
+    setTimeout(function() {
+      return window.location = _this.href;
+    }, 50);
+  });
+
+  // close expanded fabs when user clicks somewhere not on the buttons
   document.addEventListener("click", function(e) {
     var clickedFAB = [
       "tags-fab-button", "show-all-tags", "show-my-tags", "add-tags",
@@ -31,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // intentionaly singular to match DOM classes
+  // intentionally singular to match DOM classes
   contentTypes = ["tag", "connection", "list"];
 
   for (let i = 0; i < contentTypes.length; i++) {
@@ -137,5 +156,3 @@ function toggleContentDisplayed(contentType) {
     document.getElementById(`show-all-${contentType}s`).classList.add("hide");
   }
 }
-
-

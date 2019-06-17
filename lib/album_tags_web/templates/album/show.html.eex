@@ -14,10 +14,18 @@
 <div class="card">
   <div class="card-tabs">
     <ul class="tabs tabs-fixed-width grey lighten-5">
-      <li class="tab"><a class="active" href="#songs-card">Songs</a></li>
-      <li class="tab"><a href="#tags">Tags</a></li>
-      <li class="tab"><a href="#connections">Connections</a></li>
-      <li class="tab"><a href="#lists">Lists</a></li>
+      <li class="tab">
+        <a id="go-to-songs-card" class="active" href="#songs-card">Songs</a>
+      </li>
+      <li class="tab">
+        <a id="go-to-tags-card" href="#tags">Tags</a>
+      </li>
+      <li class="tab">
+        <a id="go-to-connections-card" href="#connections">Connections</a>
+      </li>
+      <li class="tab">
+        <a id="go-to-lists-card" href="#lists">Lists</a>
+      </li>
     </ul>
   </div>
   <div class="card-content grey lighten-5">
@@ -50,7 +58,11 @@
           <li><a id="show-all-tags" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
           <li><a id="show-my-tags" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
           <li><a id="search-tags" class="btn-floating light-blue accent-4"><i class="material-icons">search</i></a></li>
-          <li><a id="add-tags" class="btn-floating light-blue accent-4"><i class="material-icons">add</i></a></li>
+          <li>
+            <%= link id: "add-tags", class: "btn-floating light-blue accent-4", to: Routes.tag_path(@conn, :edit, @album.apple_album_id) do %>
+              <i class="material-icons">add</i>
+            <% end %>
+          </li>
         </ul>
       </div>
     </div>
@@ -58,9 +70,9 @@
       <div class="row">
         <%= for connected_album <- @album.connections do %>
           <div class="connection <%= if connected_album.connection_owner == @user.id, do: 'user-connection' %>">
-            <a href="/album/<%= connected_album.apple_album_id %>">
+            <%= link to: Routes.album_path(@conn, :show, connected_album.apple_album_id) do %>
               <img class="responsive-img album-cover" src="<%= album_cover(connected_album) %>">
-            </a>
+            <% end %>
           </div>
         <% end %>
       </div>
