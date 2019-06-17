@@ -3,5 +3,15 @@
   "workbench.colorCustomizations": {
     "editorRuler.foreground": "#444444"
   },
-  "editor.fontSize": 13
+  "editor.fontSize": 13,
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext",
+    "scss",
+    "elixir"
+  ]
 }
