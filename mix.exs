@@ -52,6 +52,7 @@ defmodule AlbumTags.MixProject do
       {:httpotion, "~> 3.1.2"},
       {:ueberauth, "~> 0.6.1"},
       {:ueberauth_google, "~> 0.8.0"},
+      {:navigation_history, "~> 0.2.2"},
       {:poison, "~> 4.0"} # required for `ueberauth_google`, using jason everywhere else
     ]
   end

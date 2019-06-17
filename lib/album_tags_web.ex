@@ -23,6 +23,7 @@ defmodule AlbumTagsWeb do
 
       import Plug.Conn
       import AlbumTagsWeb.Gettext
+      import AlbumTagsWeb.AuthPlug, only: [authenticate_user: 2]
       alias AlbumTagsWeb.Router.Helpers, as: Routes
     end
   end

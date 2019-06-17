@@ -5,7 +5,7 @@ defmodule AlbumTagsWeb.AuthController do
 
   use AlbumTagsWeb, :controller
   alias AlbumTags.Accounts
-  plug Ueberauth # gives us the :request method for free
+  plug Ueberauth # gives us `request/2` for free
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
     user_params = %{
@@ -30,11 +30,24 @@ defmodule AlbumTagsWeb.AuthController do
         conn
         |> put_flash(:info, "Welcome back")
         |> put_session(:user_id, user.id)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> configure_session(renew: true) # sends cookie back to client with new identifier
+        |> redirect_back(2) # redirect to original page before login sequence
       {:error, _reason} ->
         conn
         |> put_flash(:error, "Error signing in")
         |> redirect(to: Routes.page_path(conn, :index))
     end
+  end
+
+  @doc """
+  This method can be called to redirect a user to a previous page they were 
+  visiting. Call with opts `2` to redirect back past the two requests made
+  when a user is logging in. Okay to pass in `[]` for opts to redirect to just
+  1 previous history entry. Note: a history limit is set in the browser pipeline
+  where `NavigationHistory` is plugged. 
+  """
+  def redirect_back(conn, opts) do
+    conn
+    |> redirect(to: NavigationHistory.last_path(conn, opts))
   end
 end
