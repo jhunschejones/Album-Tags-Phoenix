@@ -17,26 +17,27 @@ defmodule AlbumTags.Albums do
   end
 
   @doc """
-  Gets a single album by database id
+  Gets a single album by apple_album_id
   """
-  def get_album!(id) do
+  def get_existing_album_with_tags(apple_album_id) do
     Album
-    |> Repo.get!(id)
+    |> Repo.get_by(apple_album_id: apple_album_id)
+    |> Repo.preload([tags: [:user]])
   end
 
   @doc """
-  Gets a single album by apple_album_id, preloading songs, tags, and lists.
+  Gets a single album by apple_album_id, include associations if they exist.
   """
-  def get_album_by(%{apple_album_id: apple_album_id}) do
+  def get_album_with_all_associations(apple_album_id) do
     case Repo.get_by(Album, apple_album_id: apple_album_id) do
       nil ->
         {:error, "No album found"}
       album ->
-        get_album_with_associations(album)
+        get_album_associations(album)
     end
   end
 
-  def get_album_with_associations(%Album{} = album) do
+  def get_album_associations(%Album{} = album) do
     album
     |> Repo.preload([:songs, :tags])
     |> Lists.with_lists()
