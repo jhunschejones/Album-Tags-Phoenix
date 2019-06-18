@@ -1,0 +1,16 @@
+<h5 id="page-header">Add a new connection:</h5>
+
+<div id="connection-search-container">
+  <div class="input-field">
+    <input id="connection-search-input" type="text" placeholder="Search by album or artist...">
+  </div>
+</div>
+
+<div id="connection-search-results">
+</div>
+
+<div class="fixed-action-btn">
+  <%= link to: Routes.album_path(@conn, :show, @album.apple_album_id, card: "connections"), class: "btn-floating light-blue accent-4" do %>
+    <i class="large material-icons">arrow_back</i>
+  <% end %>
+</div>
