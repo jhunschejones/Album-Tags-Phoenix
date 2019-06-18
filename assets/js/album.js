@@ -27,13 +27,19 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // slow down link to tags edit page to allow button animation to finish
-  document.getElementById("add-tags").addEventListener("click", function(e) {
-    e.preventDefault();
-    const _this = this;
-    setTimeout(function() {
-      return window.location = _this.href;
-    }, 50);
-  });
+  const editButtons = ["add-connections", "add-tags"];
+
+  for (let i = 0; i < editButtons.length; i++) {
+    const b = editButtons[i];
+
+    document.getElementById(b).addEventListener("click", function(e) {
+      e.preventDefault();
+      const _this = this;
+      setTimeout(function() {
+        return window.location = _this.href;
+      }, 50);
+    });
+  }
 
   // close expanded fabs when user clicks somewhere not on the buttons
   document.addEventListener("click", function(e) {
