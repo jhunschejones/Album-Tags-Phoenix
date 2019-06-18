@@ -2,7 +2,7 @@ defmodule AlbumTagsWeb.TagController do
   use AlbumTagsWeb, :controller
   alias AlbumTags.Albums
 
-  plug :authenticate_user when action in [:create, :edit, :delete]
+  plug :authenticate_user when action in [:edit]
 
   # show all tags
   def index(conn, _params) do
@@ -12,17 +12,17 @@ defmodule AlbumTagsWeb.TagController do
 
   # show update tags page with form
   def edit(conn, %{"id" => apple_album_id}) do
-    album = Albums.get_existing_album_with_tags(apple_album_id)
+    album = Albums.get_album_with(apple_album_id, [:tags])
     data_for_page = %{album: album, page: "edit_tags", user: conn.assigns.current_user}
     render(conn, "edit.html", data_for_page)
   end
 
-  # recieve new tag input from form
+  # receive new tag input from form
   # def create(conn, %{"id" => apple_album_id} = params) do
   #   render(conn, "edit.html", page: nil)
   # end
 
-  # # recieve tag delete input from form
+  # # receive tag delete input from form
   # def delete(conn, %{"id" => apple_album_id} = params) do
   #   render(conn, "edit.html", page: nil)
   # end

@@ -7,41 +7,135 @@ defmodule AlbumTags.Albums do
   alias AlbumTags.Repo
   alias AlbumTags.Albums.{Album, AlbumTag, AlbumConnection, Tag, Song}
   alias AlbumTags.Lists
-
+  alias HTTPotion
+  alias Jason
 
   @doc """
   Preloads album and tags for a given, associated module (like a List)
   """
   def with_albums_and_tags(module) do
-    Repo.preload(module, [albums: [:tags]])
+    Repo.preload(module, [albums: [tags: [:user]]])
   end
 
   @doc """
-  Gets a single album by apple_album_id
+  Includes tags and their associated users for an album
   """
-  def get_existing_album_with_tags(apple_album_id) do
-    Album
-    |> Repo.get_by(apple_album_id: apple_album_id)
+  def album_with_tags(%Album{} = album) do
+    album
     |> Repo.preload([tags: [:user]])
   end
 
   @doc """
-  Gets a single album by apple_album_id, include associations if they exist.
+  Includes lists and their associated users for an album
   """
-  def get_album_with_all_associations(apple_album_id) do
-    case Repo.get_by(Album, apple_album_id: apple_album_id) do
-      nil ->
-        {:error, "No album found"}
-      album ->
-        get_album_associations(album)
-    end
+  def album_with_lists(%Album{} = album) do
+    album
+    |> Lists.with_lists()
   end
 
-  def get_album_associations(%Album{} = album) do
+  @doc """
+  Includes all associations for an album
+  """
+  def album_with_all_associations(%Album{} = album) do
     album
     |> Repo.preload([:songs, :tags])
     |> Lists.with_lists()
     |> get_album_connections()
+  end
+
+  @doc """
+  Includes connections and their associated users for an album
+  """
+  def album_with_connections(%Album{} = album) do
+    album
+    |> get_album_connections()
+  end
+
+  def get_album_with(apple_album_id, resources \\ []) do
+    case Repo.get_by(Album, apple_album_id: apple_album_id) do
+      nil ->
+        case resources do
+          # don't add the album to the database when it's just loaded on the album page
+          [] ->
+            get_apple_album_details(apple_album_id)
+          [_] ->
+            apple_data = get_apple_album_details(apple_album_id)
+
+            apple_data
+            |> Map.from_struct()
+            |> create_album!()
+            |> create_songs(apple_data.songs)
+            |> Map.put(:tags, [])
+            |> Map.put(:connections, [])
+            |> Map.put(:lists, [])
+        end
+      album ->
+        case resources do
+          [:tags] ->
+            album_with_tags(album)
+          [:connections] ->
+            album_with_connections(album)
+          [:lists] ->
+            album_with_lists(album)
+          _ ->
+            album_with_all_associations(album)
+        end
+    end
+  end
+
+  @doc """
+  Gets an album from the apple music api and returns an Album struct
+  """
+  def get_apple_album_details(apple_album_id) do
+    HTTPotion.get("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", headers: [Accept: "application/json", Authorization: "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"])
+    |> map_to_album_struct()
+  end
+
+  @doc """
+  Converts Apple Music response JSON into an Album struct
+  """
+  defp map_to_album_struct(apple_data) do
+    album = apple_data.body
+    |> Jason.decode!
+    |> Map.get("data")
+    |> List.first
+
+    %Album{
+      apple_album_id: String.to_integer(album["id"]),
+      apple_url: album["attributes"]["url"],
+      title: album["attributes"]["name"],
+      artist: album["attributes"]["artistName"],
+      release_date: album["attributes"]["releaseDate"],
+      record_company: album["attributes"]["recordLabel"],
+      songs: isolate_song_data(album["relationships"]["tracks"]["data"]),
+      cover: album["attributes"]["artwork"]["url"],
+      tags: [],
+      connections: [],
+      lists: []
+    }
+  end
+
+  defp isolate_song_data(all_songs) when is_nil(all_songs), do: []
+  defp isolate_song_data(all_songs) do
+    all_songs
+    |> Enum.map(fn song ->
+      %{
+        name: song["attributes"]["name"],
+        duration: milliseconds_to_time(song["attributes"]["durationInMillis"]),
+        track_number: song["attributes"]["trackNumber"],
+        preview: List.first(song["attributes"]["previews"])["url"]
+      } end)
+  end
+
+  defp milliseconds_to_time(millis) do
+    total_seconds = Integer.floor_div(millis, 1000)
+    minutes = Integer.floor_div(total_seconds,  60)
+    seconds = total_seconds - (minutes * 60)
+
+    case length(Integer.digits(seconds)) < 2 do
+      true  -> "#{minutes}:0#{seconds}"
+      false -> "#{minutes}:#{seconds}"
+    end
   end
 
   @doc """
@@ -56,10 +150,10 @@ defmodule AlbumTags.Albums do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_album(attrs \\ %{}) do
+  def create_album!(attrs \\ %{}) do
     %Album{}
     |> Album.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert!()
   end
 
   @doc """
@@ -126,24 +220,6 @@ defmodule AlbumTags.Albums do
   end
 
   @doc """
-  Updates a tag.
-
-  ## Examples
-
-      iex> update_tag(tag, %{field: new_value})
-      {:ok, %Tag{}}
-
-      iex> update_tag(tag, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_tag(%Tag{} = tag, attrs) do
-    tag
-    |> Tag.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a Tag.
 
   ## Examples
@@ -160,27 +236,18 @@ defmodule AlbumTags.Albums do
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking tag changes.
-
-  ## Examples
-
-      iex> change_tag(tag)
-      %Ecto.Changeset{source: %Tag{}}
-
+  Creates multiple songs associated with an album. NOTE: in order to function in
+  an album pipeline, this only returns the album with the input song data, not
+  the actual song structs from the database. This should not affect UI performance,
+  but is important to know as it may not be expected behavior.
   """
-  def change_tag(%Tag{} = tag) do
-    Tag.changeset(tag, %{})
-  end
-
-  @doc """
-  Creates multiple songs associated with an album.
-  """
-  def create_songs(songs, album) do
+  def create_songs(album, songs) do
     song_changesets = Enum.map(songs, fn x ->
       Song.changeset(%Song{}, Map.put_new(x, :album_id, album.id)).changes
     end)
-
     Repo.insert_all(Song, song_changesets)
+
+    %Album{album | songs: songs}
   end
 
   @doc """

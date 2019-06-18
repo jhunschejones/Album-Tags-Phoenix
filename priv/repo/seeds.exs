@@ -40,7 +40,7 @@ daisy = Repo.get_by!(Accounts.User, email: "daisy@dafox.com")
 
 # ====== create test albums ======
 if !Repo.get_by(Albums.Album, apple_album_id: 716394623) do
-  Albums.create_album(
+  Albums.create_album!(
     %{
       apple_album_id: 716394623,
       apple_url: "https://itunes.apple.com/us/album/the-question/716394623",
@@ -56,7 +56,7 @@ end
 emery = Repo.get_by!(Albums.Album, apple_album_id: 716394623)
 
 if !Repo.get_by(Albums.Album, apple_album_id: 1278421921) do
-  Albums.create_album(
+  Albums.create_album!(
     %{
       apple_album_id: 1278421921,
       apple_url: "https://itunes.apple.com/us/album/between-the-heart-and-the-synapse/1278421921",
@@ -72,7 +72,7 @@ end
 treos = Repo.get_by!(Albums.Album, apple_album_id: 1278421921)
 
 if !Repo.get_by(Albums.Album, apple_album_id: 1135092935) do
-  Albums.create_album(
+  Albums.create_album!(
     %{
       apple_album_id: 1135092935,
       apple_url: "https://itunes.apple.com/us/album/passengers/1135092935",
@@ -91,7 +91,7 @@ artifex_pereo = Repo.get_by!(Albums.Album, apple_album_id: 1135092935)
 %AlbumTags.Albums.Album{songs: emery_songs} = Repo.get_by(Albums.Album, apple_album_id: emery.apple_album_id) |> Repo.preload([:songs])
 
 if length(emery_songs) == 0 do
-  Albums.create_songs([
+  Albums.create_songs(emery, [
     %{
       duration: "3:31",
       name: "So Cold I Could See My Breath",
@@ -176,13 +176,13 @@ if length(emery_songs) == 0 do
       track_number: 12,
       # album_id: emery.id
     },
-  ], emery)
+  ])
 end
 
 %AlbumTags.Albums.Album{songs: treos_songs} = Repo.get_by(Albums.Album, apple_album_id: treos.apple_album_id) |> Repo.preload([:songs])
 
 if length(treos_songs) == 0 do
-  Albums.create_songs([
+  Albums.create_songs(treos, [
     %{
       duration: "0:42",
       name: "Prologue",
@@ -274,13 +274,13 @@ if length(treos_songs) == 0 do
       track_number: 13,
       # album_id: treos.id
     },
-  ], treos)
+  ])
 end
 
 %AlbumTags.Albums.Album{songs: artifex_pereo_songs} = Repo.get_by(Albums.Album, apple_album_id: artifex_pereo.apple_album_id) |> Repo.preload([:songs])
 
 if length(artifex_pereo_songs) == 0 do
-  Albums.create_songs([
+  Albums.create_songs(artifex_pereo, [
     %{
       duration: "1:22",
       name: "Re-Entry",
@@ -358,7 +358,7 @@ if length(artifex_pereo_songs) == 0 do
       track_number: 11,
       # album_id: artifex_pereo.id
     },
-  ], artifex_pereo)
+  ])
 end
 
 # ====== create test tags ======
