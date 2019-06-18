@@ -12,8 +12,10 @@ defmodule AlbumTagsWeb.AuthPlug do
   def call(conn, _params)  do
     user_id = get_session(conn, :user_id)
     cond do
-      user = user_id && Accounts.get_user!(user_id) ->
+      # if the user_id exists and the user is in the database
+      user = user_id && Accounts.get_user(user_id) ->
         assign(conn, :current_user, user)
+      # if the user doesn't exist on the session OR in the database
       true ->
         conn
         |> assign(:current_user, nil)
