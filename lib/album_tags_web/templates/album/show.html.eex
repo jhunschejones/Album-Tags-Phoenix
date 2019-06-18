@@ -8,6 +8,12 @@
     <h6 id="record-company" class="grey-text">
       <em><%= @album.record_company %>, &copy <%= release_year(@album) %></em>
     </h6>
+    <div id="apple-music-link-container-top" class="hide-on-small-only">
+      <a class="light-blue-text text-accent-4" href="<%= @album.apple_url %>" target="_blank">
+        <i class="tiny material-icons">headset</i>
+        <div>Listen On Apple Music</div>
+      </a>
+    </div>
   </div>
 </div>
 
@@ -43,6 +49,12 @@
           </tr>
         <% end %>
       </table>
+      <div id="apple-music-link-container-bottom" class="hide-on-med-and-up">
+        <a class="light-blue-text text-accent-4" href="<%= @album.apple_url %>" target="_blank">
+          <i class="tiny material-icons">headset</i>
+          <div>Listen On Apple Music</div>
+        </a>
+      </div>
     </div>
     <div id="tags" class="col s12">
       <%= for tag <- @album.tags do %>
@@ -83,7 +95,11 @@
         <ul>
           <li><a id="show-all-connections" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
           <li><a id="show-my-connections" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
-          <li><a id="add-connections" class="btn-floating light-blue accent-4"><i class="material-icons">add</i></a></li>
+          <li>
+            <%= link id: "add-connections", class: "btn-floating light-blue accent-4", to: Routes.connection_path(@conn, :edit, @album.apple_album_id) do %>
+              <i class="material-icons">add</i>
+            <% end %>
+          </li>
         </ul>
       </div>
     </div>

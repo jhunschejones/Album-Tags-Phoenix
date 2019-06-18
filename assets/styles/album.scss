@@ -42,6 +42,17 @@ $modern-blue: #0091ea;
   font-weight: 500;
 }
 
+#apple-music-link-container-top {
+  margin-top: 15px;
+  font-weight: 300;
+  i {
+    display: inline;
+    vertical-align: middle;
+  }
+  div {
+    display: inline;
+  }
+}
 
 .card {
   /* override default box shadow to only be on the top of the card */
@@ -111,4 +122,16 @@ $modern-blue: #0091ea;
 
 .close-toast {
   right: 0px;
+}
+
+#apple-music-link-container-bottom {
+  margin-top: 10px;
+  margin-left: 3px;
+  i {
+    display: inline;
+    vertical-align: middle;
+  }
+  div {
+    display: inline;
+  }
 }
