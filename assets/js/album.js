@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const _this = this;
       setTimeout(function() {
         return window.location = _this.href;
-      }, 50);
+      }, 75);
     });
   }
 
@@ -67,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById(`show-my-${contentType}s`).addEventListener("click", function() {
       localStorage.setItem(`${contentType}s`, "user");
       toggleContentDisplayed(contentType);
-    });  
-  
+    });
+
     document.getElementById(`show-all-${contentType}s`).addEventListener("click", function() {
       localStorage.setItem(`${contentType}s`, "all");
       toggleContentDisplayed(contentType);
@@ -118,7 +118,7 @@ function hideClass(className) {
   }
 }
 
-// refresh page if arriving on "back" action to make sure 
+// refresh page if arriving on "back" action to make sure
 // user login status is correctly reflected in the menu
 if(performance.navigation.type == 2){
   location.reload(true);
