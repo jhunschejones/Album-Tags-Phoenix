@@ -12,7 +12,7 @@ defmodule AlbumTags.Repo.Migrations.CreateTags do
 
     create index(:tags, [:user_id])
     create index(:tags, [:text])
-
+    create index(:tags, [:text, :user_id], unique: true)
   end
 
   def down do

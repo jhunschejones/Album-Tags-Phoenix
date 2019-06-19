@@ -13,7 +13,6 @@ defmodule AlbumTags.Repo.Migrations.CreateUsers do
     end
 
     create index(:users, [:email], unique: true)
-
   end
 
   def down do

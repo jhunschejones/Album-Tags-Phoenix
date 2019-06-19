@@ -13,7 +13,7 @@ defmodule AlbumTags.Repo.Migrations.CreateAlbumLists do
     create index(:album_lists, [:album_id])
     create index(:album_lists, [:list_id])
     create index(:album_lists, [:user_id])
-
+    create index(:album_lists, [:album_id, :list_id, :user_id], unique: true)
   end
 
   def down do

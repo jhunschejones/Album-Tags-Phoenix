@@ -15,7 +15,6 @@ defmodule AlbumTags.Repo.Migrations.CreateAlbums do
     end
 
     create index(:albums, [:apple_album_id], unique: true)
-
   end
 
   def down do

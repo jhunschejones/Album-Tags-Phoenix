@@ -13,7 +13,7 @@ defmodule AlbumTags.Repo.Migrations.CreateAlbumConnections do
     create index(:album_connections, [:parent_album])
     create index(:album_connections, [:child_album])
     create index(:album_connections, [:user_id])
-
+    create index(:album_connections, [:parent_album, :child_album, :user_id], unique: true)
   end
 
   def down do

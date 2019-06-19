@@ -13,6 +13,7 @@ defmodule AlbumTags.Repo.Migrations.CreateLists do
 
     create index(:lists, [:user_id])
     create index(:lists, [:permalink])
+    create index(:lists, [:title, :user_id], unique: true)
   end
 
   def down do

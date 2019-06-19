@@ -11,7 +11,7 @@ defmodule AlbumTags.Repo.Migrations.CreateSongs do
     end
 
     create index(:songs, [:album_id])
-
+    create index(:songs, [:name, :album_id, :track_number], unique: true)
   end
 
   def down do

@@ -15,5 +15,6 @@ defmodule AlbumTags.Albums.AlbumConnection do
     tag
     |> cast(attrs, [:parent_album, :child_album, :user_id])
     |> validate_required([:parent_album, :child_album, :user_id])
+    |> unique_constraint(:child_album, name: :album_connections_parent_album_child_album_user_id_index)
   end
 end
