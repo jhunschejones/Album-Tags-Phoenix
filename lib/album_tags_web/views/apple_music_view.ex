@@ -2,14 +2,21 @@ defmodule AlbumTagsWeb.AppleMusicView do
   use AlbumTagsWeb, :view
   alias Jason
 
-  def render("index.json", %{albums: albums}) do
-    %{albums: albums
-        |> Jason.decode!
-        |> Map.get("results")
-        |> Map.get("albums")
-        |> Map.get("data")
-        |> Enum.map(&album_json &1)
-    }
+  def render("index.json", %{albums: apple_data}) do
+    results = apple_data
+      |> Jason.decode!
+      |> Map.get("results")
+
+    case results do
+      %{"albums" => _} ->
+        %{albums: results
+          |> Map.get("albums")
+          |> Map.get("data")
+          |> Enum.map(&album_json &1)
+        }
+      %{} ->
+        %{albums: []}
+    end
   end
 
   def render("show.json", %{album: album}) do
