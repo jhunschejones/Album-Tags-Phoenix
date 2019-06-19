@@ -1,12 +1,28 @@
-<h5 id="page-header">Add a new connection:</h5>
+<%# <h5 id="page-header" class="center-align grey-text">Add a new connection:</h5> %>
 
 <div id="connection-search-container">
   <div class="input-field">
     <input id="connection-search-input" type="text" placeholder="Search by album or artist...">
   </div>
+  <a id="clear-search-input-btn" class="grey-text text-lighten-2"><i class="material-icons">close</i></a>
 </div>
 
-<div id="connection-search-results">
+<br/><br/>
+
+<div id="connection-search-results" class="row">
+  <div id="spinner-container" class="center-align hide">
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue-only">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="fixed-action-btn">
@@ -14,3 +30,7 @@
     <i class="large material-icons">arrow_back</i>
   <% end %>
 </div>
+
+<script type="text/javascript">
+  var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>
+</script>
