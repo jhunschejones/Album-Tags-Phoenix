@@ -156,6 +156,20 @@ defmodule AlbumTags.Albums do
     |> Repo.insert!()
   end
 
+  def find_or_create_album(apple_album_id) do
+    case Repo.get_by(Album, apple_album_id: apple_album_id) do
+      nil ->
+        apple_data = get_apple_album_details(apple_album_id)
+
+        apple_data
+        |> Map.from_struct()
+        |> create_album!()
+        |> create_songs(apple_data.songs)
+      album ->
+        album
+    end
+  end
+
   @doc """
   Returns the list of tags.
 
@@ -278,7 +292,7 @@ defmodule AlbumTags.Albums do
       where: c.parent_album == ^album.id,
       union: ^parent_query
 
-    results = Enum.map(Repo.all(child_query), fn x -> 
+    results = Enum.map(Repo.all(child_query), fn x ->
       {connected_album, user_id} = x
       Map.put_new(connected_album, :connection_owner, user_id)
     end)
