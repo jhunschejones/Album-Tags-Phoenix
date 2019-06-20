@@ -1,0 +1,67 @@
+#page-header {
+  margin-left: 15px;
+  margin-top: 20px;
+}
+
+// override default materialize formatting for input focus behavior
+#connection-search-input:focus {
+  background-color: #fafafa;
+  border-bottom: 1px solid#9e9e9e;
+  box-shadow: 0 1px 0 0 #9e9e9e;
+}
+
+#connection-search-container {
+  margin: 50px 15px;
+  #connection-search-input {
+    position: absolute;
+    margin-top: -9px;
+  }
+  #clear-search-input-btn {
+    position: absolute;
+    right: 15px;
+    z-index: 100;
+    &:hover {
+      cursor: pointer;
+      color: #bdbdbd !important;
+    }
+  }
+}
+
+#spinner-container {
+  width: 100%;
+  margin-top: 80px;
+}
+
+#connection-search-results {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  .album-cover {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+  }
+  .album {
+    width: 200px;
+    padding: 6px;
+    @media screen and (max-width: 375px) {
+      width: 176px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 414px) {
+      width: 195px;
+    }
+    line-height: normal;
+    .title {
+      font-weight: 500;
+      font-size: 1.12rem;
+      margin-top: 3px;
+      margin-left: 1px;
+      margin-bottom: 0px;
+    }
+    .artist {
+      font-weight: 300;
+      margin-top: 1px;
+      margin-left: 1px;
+      margin-bottom: 0px;
+    }
+  }
+}

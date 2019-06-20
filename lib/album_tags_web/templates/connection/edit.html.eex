@@ -1,28 +1,14 @@
-<%# <h5 id="page-header" class="center-align grey-text">Add a new connection:</h5> %>
-
-<div id="connection-search-container">
-  <div class="input-field">
-    <input id="connection-search-input" type="text" placeholder="Search by album or artist...">
-  </div>
-  <a id="clear-search-input-btn" class="grey-text text-lighten-2"><i class="material-icons">close</i></a>
-</div>
-
-<br/><br/>
-
-<div id="connection-search-results" class="row">
-  <div id="spinner-container" class="center-align hide">
-    <div class="preloader-wrapper big active">
-      <div class="spinner-layer spinner-blue-only">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
+<div id="connections-container" class="row">
+  <%= for connection <- user_only(@album.connections, @user.id) do %>
+    <div class="album">
+      <div class="delete-button" onclick="deleteConnection(<%= @album.id %>, <%= connection.id %>)">
+        &#10005;<%# <i class="material-icons">close</i> %>
       </div>
+      <img class="responsive-img album-cover" src="<%= album_cover(connection) %>">
+      <p class="title"><%= connection.title %></p>
+      <p class="artist grey-text text-darken-1"><%= connection.artist %></p>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="fixed-action-btn">

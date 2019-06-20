@@ -1,40 +1,4 @@
-#page-header {
-  margin-left: 15px;
-  margin-top: 20px;
-}
-
-// override default materialize formatting for input
-#connection-search-input:focus {
-  /* input color when selected should still be materialize "grey lighten-5" */
-  background-color: #fafafa;
-  /* add blue border bottom when typing input */
-  border-bottom: 1px solid #0091ea;
-  box-shadow: 0 1px 0 0 #0091ea;
-}
-
-#connection-search-container {
-  margin: 50px 15px;
-  #connection-search-input {
-    position: absolute;
-    margin-top: -9px;
-  }
-  #clear-search-input-btn {
-    position: absolute;
-    right: 15px;
-    z-index: 100;
-    &:hover {
-      cursor: pointer;
-      color: #bdbdbd !important;
-    }
-  }
-}
-
-#spinner-container {
-  width: 100%;
-  margin-top: 80px;
-}
-
-#connection-search-results {
+#connections-container {
   padding: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -45,12 +9,6 @@
   .album {
     width: 200px;
     padding: 6px;
-    @media screen and (max-width: 375px) {
-      width: 176px;
-    }
-    @media screen and (min-width: 376px) and (max-width: 414px) {
-      width: 195px;
-    }
     line-height: normal;
     .title {
       font-weight: 500;
@@ -64,6 +22,29 @@
       margin-top: 1px;
       margin-left: 1px;
       margin-bottom: 0px;
+    }
+    .delete-button {
+      padding: 2px 4px;
+      font-size: 1.2em;
+      position: absolute;
+      font-weight: 100;
+      vertical-align: center;
+      margin-top: -6px;
+      margin-left: 172px;
+      background-color: rgba(245,245,245,.7);
+      border-radius: 12px;
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(245,245,245,.9);
+      }
+    }
+    @media screen and (max-width: 375px) {
+      width: 176px;
+      .delete-button {margin-left: 148px;}
+    }
+    @media screen and (min-width: 376px) and (max-width: 414px) {
+      width: 195px;
+      .delete-button {margin-left: 167px;}
     }
   }
 }

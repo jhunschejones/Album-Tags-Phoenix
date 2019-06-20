@@ -21,7 +21,7 @@ defmodule AlbumTagsWeb.Router do
     get "/", PageController, :index
     resources "/albums", AlbumController, only: [:show]
     resources "/tags", TagController, only: [:index, :create, :edit, :delete]
-    resources "/connections", ConnectionController, only: [:create, :edit, :delete]
+    resources "/connections", ConnectionController, only: [:new, :create, :edit, :delete]
     # resources "/lists", ConnectionController, only: [:index, :show, :create, :edit, :update, :delete]
   end
 
