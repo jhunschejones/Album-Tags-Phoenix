@@ -16,5 +16,7 @@ defmodule AlbumTags.Albums.Tag do
     tag
     |> cast(attrs, [:text, :user_id, :custom_genre])
     |> validate_required([:text, :user_id, :custom_genre])
+    |> validate_length(:text, min: 2, max: 30)
+    |> unique_constraint(:text, name: :tags_text_user_id_index)
   end
 end

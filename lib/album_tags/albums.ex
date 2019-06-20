@@ -217,6 +217,15 @@ defmodule AlbumTags.Albums do
     |> Repo.insert()
   end
 
+  def find_or_create_tag(%{text: text, user_id: user_id, custom_genre: custom_genre}) do
+    case Repo.get_by(Tag, %{text: text, user_id: user_id, custom_genre: custom_genre}) do
+      nil ->
+        create_tag(%{text: text, user_id: user_id, custom_genre: custom_genre})
+      tag ->
+        tag
+    end
+  end
+
   @doc """
   Adds a tag to an album, keeping track of the user who made the association.
   """
@@ -229,8 +238,10 @@ defmodule AlbumTags.Albums do
   @doc """
   Removes an album-tag relationship but does not delete either the album or the tag.
   """
-  def remove_tag_from_album(%AlbumTag{} = album_tag) do
-    Repo.delete(album_tag)
+  def remove_tag_from_album(attrs) do
+    AlbumTag
+    |> Repo.get_by(attrs)
+    |> Repo.delete()
   end
 
   @doc """

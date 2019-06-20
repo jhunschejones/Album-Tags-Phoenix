@@ -9,11 +9,13 @@
 </div>
 
 <script type="text/javascript">
+  var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>
   var tagArray = JSON.parse(
-    "<%= javascript_escape raw tags_for_user(@album.tags, @user) %>"
-  )
+    <%= raw Jason.encode!(tags_for_user(@album.tags, @user)) %>
+  );
   var currentTags = []
   for (let i = 0; i < tagArray.length; i++) {
-    currentTags.push({tag: tagArray[i]});
+    currentTags.push({tag: tagArray[i].text});
   }
+  var albumID = <%= raw Jason.encode!(@album.id) %>
 </script>

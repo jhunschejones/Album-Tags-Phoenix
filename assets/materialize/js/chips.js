@@ -387,8 +387,10 @@
       if (chip.hasOwnProperty('tag') && chip.tag !== '') {
         let exists = false;
         for (let i = 0; i < this.chipsData.length; i++) {
-          if (this.chipsData[i].tag === chip.tag) {
+          if (this.chipsData[i].tag.toUpperCase() === chip.tag.toUpperCase()) {
             exists = true;
+            // Album Tags custom error toast
+            M.toast({html: `The '${this.chipsData[i].tag}' tag already exists`});
             break;
           }
         }
@@ -399,13 +401,51 @@
     }
 
     /**
+     * Custom method to verify tag requirements
+     * @param {String} tag
+     */
+    _followsTagRequirements(tag) {
+      if ((tag.includes("<") && tag.includes(">")) || tag.includes(".") || tag.includes("{") || tag.includes("}")) {
+        // Album Tags custom error toast
+        M.toast({html: "Some characters are not allowed in tags"});
+        return false;
+      }
+
+      if (tag.length > 30) {
+        // Album Tags custom error toast
+        M.toast({html: "Tags cannot be longer than 30 characters"});
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
+     * Custom method to title-case the tag text
+     * @param {String} str
+     */
+    _toTitleCase(str) {
+      return str.replace(/\b\w+/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    }
+
+    /**
+     * Custom method to remove extra spaces in the tag text
+     * @param {String} str
+     */
+    _removeExtraSpaces(str) { return str.replace(/\s\s+/g, ' ').trim(); }
+
+    /**
      * Add chip
      * @param {chip} chip
      */
     addChip(chip) {
-      if (!this._isValid(chip) || this.chipsData.length >= this.options.limit) {
+      if (!this._isValid(chip) || this.chipsData.length >= this.options.limit || !this._followsTagRequirements(chip.tag)) {
         return;
       }
+      // custom tag formatting for Album Tags
+      chip.tag = this._removeExtraSpaces(this._toTitleCase(chip.tag));
 
       let renderedChip = this._renderChip(chip);
       this.$chips.add(renderedChip);
@@ -417,6 +457,26 @@
       if (typeof this.options.onChipAdd === 'function') {
         this.options.onChipAdd.call(this, this.$el, renderedChip);
       }
+    }
+
+    formatTagText(tag) {
+      if ((newTag.includes("<") && newTag.includes(">")) || newTag.includes(".") || newTag.includes("{") || newTag.includes("}")) {
+        alert("Some characters are not allowed in tags, sorry!");
+        document.getElementById('add-tag-input').value = '';
+        document.getElementById('custom-genre-checkbox').checked = false;
+        // $("#custom-genre-checkbox").prop("checked", false);
+        return;
+      }
+
+      if (newTag.length > 30) {
+        alert("Tags cannot be longer than 30 characters. Check out the \"All tags\" page for some examples!");
+        document.getElementById('add-tag-input').value = '';
+        document.getElementById('custom-genre-checkbox').checked = false;
+        // $("#custom-genre-checkbox").prop("checked", false);
+        return;
+      }
+
+      newTag = removeExtraSpaces(toTitleCase(newTag));
     }
 
     /**
