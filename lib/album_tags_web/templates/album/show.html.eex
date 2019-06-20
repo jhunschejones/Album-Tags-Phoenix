@@ -37,7 +37,7 @@
   <div class="card-content grey lighten-5">
     <div id="songs-card">
       <table>
-        <%= for song <- @album.songs do %>
+        <%= for song <- sort_songs(@album.songs) do %>
           <tr>
             <td class="track-number grey-text">
               <%= song.track_number %>
@@ -57,7 +57,7 @@
       </div>
     </div>
     <div id="tags" class="col s12">
-      <%= for tag <- @album.tags do %>
+      <%= for tag <- remove_duplicate_tags(@album.tags, @user.id) do %>
         <div class="chip tag <%= if tag.user_id == @user.id, do: 'user-tag' %>" data-value="<%= url_tag(tag) %>">
           <%= tag.text %>
         </div>
@@ -80,7 +80,7 @@
     </div>
     <div id="connections" class="col s12">
       <div class="row">
-        <%= for connected_album <- @album.connections do %>
+        <%= for connected_album <- remove_duplicate_connections(@album.connections, @user.id) do %>
           <div class="connection <%= if connected_album.connection_owner == @user.id, do: 'user-connection' %>">
             <%= link to: Routes.album_path(@conn, :show, connected_album.apple_album_id) do %>
               <img class="responsive-img album-cover" src="<%= album_cover(connected_album) %>">
@@ -96,7 +96,12 @@
           <li><a id="show-all-connections" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
           <li><a id="show-my-connections" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
           <li>
-            <%= link id: "add-connections", class: "btn-floating light-blue accent-4", to: Routes.connection_path(@conn, :edit, @album.apple_album_id) do %>
+            <%= link id: "edit-connections", class: "btn-floating light-blue accent-4", to: Routes.connection_path(@conn, :edit, @album.apple_album_id) do %>
+              <i class="material-icons">edit</i>
+            <% end %>
+          </li>
+          <li>
+            <%= link id: "add-connections", class: "btn-floating light-blue accent-4", to: Routes.connection_path(@conn, :new, [parent_album: @album.apple_album_id]) do %>
               <i class="material-icons">add</i>
             <% end %>
           </li>

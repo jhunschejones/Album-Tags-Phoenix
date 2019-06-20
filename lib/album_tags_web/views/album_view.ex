@@ -25,4 +25,28 @@ defmodule AlbumTagsWeb.AlbumView do
     |> String.downcase()
     |> URI.encode()
   end
+
+  def sort_songs(songs_map) do
+    Enum.sort(songs_map, &(&1.track_number < &2.track_number))
+  end
+
+  def remove_duplicate_tags(tags, user_id) do
+    user_tags = Enum.filter(tags, &(&1.user_id == user_id))
+    other_tags = Enum.filter(tags, &(&1.user_id != user_id))
+    deduped_other_tags = Enum.filter(other_tags, fn tag ->
+      !Enum.any?(user_tags, &(&1.text == tag.text))
+    end)
+
+    Enum.concat(user_tags, deduped_other_tags)
+  end
+
+  def remove_duplicate_connections(connections, user_id) do
+    user_connections = Enum.filter(connections, &(&1.connection_owner == user_id))
+    other_connections = Enum.filter(connections, &(&1.connection_owner != user_id))
+    deduped_other_connections = Enum.filter(other_connections, fn connection ->
+      !Enum.any?(user_connections, &(&1.apple_album_id == connection.apple_album_id))
+    end)
+
+    Enum.concat(user_connections, deduped_other_connections)
+  end
 end
