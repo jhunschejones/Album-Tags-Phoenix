@@ -124,7 +124,16 @@
         <ul>
           <li><a id="show-all-lists" class="btn-floating light-blue accent-4"><i class="material-icons">people</i></a></li>
           <li><a id="show-my-lists" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
-          <li><a id="add-lists" class="btn-floating light-blue accent-4"><i class="material-icons">add</i></a></li>
+          <li>
+            <%= link id: "edit-lists", class: "btn-floating light-blue accent-4", to: Routes.list_path(@conn, :edit, @album.apple_album_id) do %>
+              <i class="material-icons">edit</i>
+            <% end %>
+          </li>
+          <li>
+            <%= link id: "add-lists", class: "btn-floating light-blue accent-4", to: Routes.list_path(@conn, :new, [parent_album: @album.apple_album_id]) do %>
+              <i class="material-icons">add</i>
+            <% end %>
+          </li>
         </ul>
       </div>
     </div>

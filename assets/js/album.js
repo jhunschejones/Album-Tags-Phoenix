@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // slow down link to tags edit page to allow button animation to finish
-  const editButtons = ["add-connections", "add-tags", "edit-connections"];
+  const editButtons = ["add-tags", "add-connections", "edit-connections", "add-lists", "edit-lists"];
 
   for (let i = 0; i < editButtons.length; i++) {
     const b = editButtons[i];
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "tags-fab-button", "show-all-tags", "show-my-tags", "add-tags",
       "connections-fab-button", "show-all-connections", "show-my-connections",
       "add-connections", "add-connections", "lists-fab-button", "show-all-lists",
-      "show-my-lists", "add-lists",
+      "show-my-lists", "add-lists", "edit-lists"
     ].includes(e.target.parentNode.id);
 
     if (!clickedFAB) {
