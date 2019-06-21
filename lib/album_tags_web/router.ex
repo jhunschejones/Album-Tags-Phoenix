@@ -22,7 +22,7 @@ defmodule AlbumTagsWeb.Router do
     resources "/albums", AlbumController, only: [:show]
     resources "/tags", TagController, only: [:index, :create, :edit, :delete]
     resources "/connections", ConnectionController, only: [:new, :create, :edit, :delete]
-    # resources "/lists", ConnectionController, only: [:index, :show, :create, :edit, :update, :delete]
+    resources "/lists", ListController, only: [:index, :show, :new, :create, :edit, :update, :delete]
   end
 
   # Other scopes may use custom stacks.
