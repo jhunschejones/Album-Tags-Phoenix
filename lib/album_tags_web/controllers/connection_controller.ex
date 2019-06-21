@@ -46,8 +46,12 @@ defmodule AlbumTagsWeb.ConnectionController do
     end
   end
 
-  # # receive connection delete input from form
-  # def delete(conn, %{"id" => apple_album_id} = params) do
-  #   render(conn, "edit.html", page: nil)
-  # end
+  def delete(conn, %{"parentAlbum" => parent_album, "childAlbum" => child_album}) do
+    Albums.delete_album_connection(%{
+      parent_album: parent_album,
+      child_album: child_album,
+      user_id: conn.assigns.current_user.id,
+    })
+    render(conn, "show.json", message: "Connection deleted")
+  end
 end

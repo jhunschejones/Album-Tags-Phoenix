@@ -1,6 +1,6 @@
 <div id="connections-container" class="row">
   <%= for connection <- user_only(@album.connections, @user.id) do %>
-    <div class="album">
+    <div id="connection-<%= connection.id %>" class="album">
       <div class="delete-button" onclick="deleteConnection(<%= @album.id %>, <%= connection.id %>)">
         &#10005;<%# <i class="material-icons">close</i> %>
       </div>

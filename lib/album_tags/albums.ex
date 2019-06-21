@@ -313,7 +313,9 @@ defmodule AlbumTags.Albums do
   @doc """
   Deletes a connection between two albums without deleting either of the albums themselves.
   """
-  def delete_album_connection(%AlbumConnection{} = connection) do
-    Repo.delete(connection)
+  def delete_album_connection(attrs) do
+    AlbumConnection
+    |> Repo.get_by(attrs)
+    |> Repo.delete()
   end
 end
