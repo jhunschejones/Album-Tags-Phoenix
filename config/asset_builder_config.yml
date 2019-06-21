@@ -19,3 +19,5 @@ js-files-to-compile:
   - tabs.js
   - chips.js # only needed for chips form
   - toasts.js
+  - select.js
+  - dropdown.js

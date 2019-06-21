@@ -1,0 +1,1 @@
+#list-container{margin:25px}#list-container .list label span{font-size:1.25em;color:rgba(0,0,0,0.87)}#list-container .list label:hover{cursor:pointer}[type="checkbox"]:checked+span:not(.lever):before{border-right:2px solid #0091ea;border-bottom:2px solid #0091ea}

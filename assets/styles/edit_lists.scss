@@ -1,0 +1,20 @@
+#list-container {
+  margin: 25px;
+  .list {
+    label {
+      span {
+        font-size: 1.25em;
+        color: rgba(0,0,0,0.87);
+      }
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// override default materialize check color
+[type="checkbox"]:checked+span:not(.lever):before {
+  border-right: 2px solid #0091ea;
+  border-bottom: 2px solid #0091ea;
+}

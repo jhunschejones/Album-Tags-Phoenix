@@ -1,0 +1,25 @@
+<div id="list-container">
+  <ul id="lists-ul">
+    <%= for list <- @album.lists do %>
+      <%= if list.user_id == 1 do %>
+        <li class="list">
+          <label>
+            <input class="browser-default" type="checkbox" />
+            <span><%= list.title %></span>
+            <span class="grey-text"> - <%= list.user.name %></span>
+          </label>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+
+<div class="fixed-action-btn">
+  <%= link to: Routes.album_path(@conn, :show, @album.apple_album_id, card: "lists"), class: "btn-floating light-blue accent-4" do %>
+    <i class="large material-icons">arrow_back</i>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>
+</script>
