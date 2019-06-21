@@ -33,7 +33,7 @@ function initializeChips() {
     onChipDelete: function(e, chip) {
       // `innerText` always ends with "close" when using materialize <i> element
       var tag = chip.innerText.substr(0, chip.innerText.lastIndexOf("close")).trim();
-      var confirmed = confirm(`Are you sure you want to delete the '${tag}' tag? You cannot reverse this action.`);
+      var confirmed = confirm(`Are you sure you want to delete the '${tag}' tag? You cannot undo this operation.`);
 
       if (confirmed) {
         deleteTag(tag);
@@ -86,8 +86,7 @@ function deleteTag(tag) {
       // remember to set window.instances[0].chipsData equal to new tag list
       currentTags = window.instances[0].chipsData.slice(0);
     } else {
-      // var message = JSON.parse(xhr.responseText).message;
-      // M.toast({html: message});
+      M.toast({html: "Unable to delete tag"});
     }
   };
   xhr.open("DELETE", `/tags/${tagID}`);
