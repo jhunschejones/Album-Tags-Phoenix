@@ -132,6 +132,10 @@
             .find('li')
             .removeClass('selected');
           $(option).toggleClass('selected', selected);
+          // unreleased bugfix from materialize repo
+          // https://github.com/Dogfalo/materialize/commit/4a68ebd12c85b81e188988760ec6f16899864da3
+          this._keysSelected = {};
+          this._keysSelected[option.id] = true;
         }
 
         // Set selected on original select option
