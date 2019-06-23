@@ -7,7 +7,7 @@ defmodule AlbumTagsWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug NavigationHistory.Tracker, history_size: 3 # limit to 3 entries needed to redirect prior to login sequence
+    plug NavigationHistory.Tracker, history_size: 6 # limit to 6 entries needed to redirect prior to login sequence
     plug AlbumTagsWeb.AuthPlug
   end
 
@@ -16,7 +16,7 @@ defmodule AlbumTagsWeb.Router do
     plug :fetch_session
     plug :fetch_flash
     plug :put_secure_browser_headers
-    plug NavigationHistory.Tracker, history_size: 3 # limit to 3 entries needed to redirect prior to login sequence
+    plug NavigationHistory.Tracker, history_size: 6 # limit to 6 entries needed to redirect prior to login sequence
     plug AlbumTagsWeb.AuthPlug
   end
 
