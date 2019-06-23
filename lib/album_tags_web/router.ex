@@ -11,6 +11,15 @@ defmodule AlbumTagsWeb.Router do
     plug AlbumTagsWeb.AuthPlug
   end
 
+  pipeline :browser_no_csrf do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :put_secure_browser_headers
+    plug NavigationHistory.Tracker, history_size: 3 # limit to 3 entries needed to redirect prior to login sequence
+    plug AlbumTagsWeb.AuthPlug
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -25,7 +34,6 @@ defmodule AlbumTagsWeb.Router do
     resources "/lists", ListController, only: [:index, :show, :new, :create, :edit, :update, :delete]
   end
 
-  # Other scopes may use custom stacks.
   scope "/api", AlbumTagsWeb do
     pipe_through :api
 
@@ -33,11 +41,19 @@ defmodule AlbumTagsWeb.Router do
     get "/apple/details/:id", AppleMusicController, :details
   end
 
-  scope "/auth", AlbumTagsWeb do #RanqWeb is app namespace
-     pipe_through :browser
+  scope "/auth", AlbumTagsWeb do
+    pipe_through :browser
 
-     get "/:provider", AuthController, :request
-     get "/:provider/callback", AuthController, :callback
-     delete "/logout", AuthController, :logout
- end
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+  end
+
+  # Ignore csrf tokens for logout rout only. This prevents users from seeing an
+  # error if they are authenticated in two windows, log out in one, then try to
+  # log out in the second.
+  scope "/auth", AlbumTagsWeb do
+    pipe_through :browser_no_csrf
+
+    delete "/logout", AuthController, :logout
+  end
 end
