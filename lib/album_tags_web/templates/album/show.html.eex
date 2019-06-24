@@ -113,7 +113,13 @@
         <%= for list <- @album.lists do %>
           <li class="list <%= if list.user_id == @user.id, do: 'user-list' %>">
             <%= list.title %>
-            <span class="grey-text"> - <%= list.user.name %></span>
+            <span class="grey-text">
+              <%= if list.user_id == @user.id do %>
+                 - You!
+              <% else %>
+                 - <%= list.user.name %>
+              <% end %>
+            </span>
           </li>
         <% end %>
       </ul>
@@ -130,7 +136,7 @@
             <% end %>
           </li>
           <li>
-            <%= link id: "add-lists", class: "btn-floating light-blue accent-4", to: Routes.list_path(@conn, :new, [parent_album: @album.apple_album_id]) do %>
+            <%= link id: "add-lists", class: "btn-floating light-blue accent-4", to: Routes.list_path(@conn, :new, [album: @album.apple_album_id]) do %>
               <i class="material-icons">add</i>
             <% end %>
           </li>
