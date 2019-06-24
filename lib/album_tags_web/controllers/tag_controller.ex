@@ -20,7 +20,7 @@ defmodule AlbumTagsWeb.TagController do
       text: text, user_id: conn.assigns.current_user.id, custom_genre: custom_genre
     }
 
-    {status, message} =
+    {status, message, tag_id} =
       case Albums.find_or_create_tag(tag_params) do
         {:ok, tag} ->
           case Albums.add_tag_to_album(%{
@@ -29,15 +29,15 @@ defmodule AlbumTagsWeb.TagController do
             user_id: conn.assigns.current_user.id
           }) do
             {:ok, %Albums.AlbumTag{tag_id: tag_id}} ->
-              {:ok, %{message: "Tag successfully created", tag_id: tag_id}}
+              {:ok, "Tag successfully created", tag_id}
             {:error, _} ->
-              {:internal_server_error, %{message: "Unable to create tag", tag_id: nil}}
+              {:internal_server_error, "Unable to create tag", nil}
           end
         {:error, response} ->
-          handle_error(response)
+          handle_changeset_error(response)
       end
 
-    render(Plug.Conn.put_status(conn, status), "show.json", message)
+    render(Plug.Conn.put_status(conn, status), "show.json", message: message, tag_id: tag_id)
   end
 
   def delete(conn, %{"albumID" => album_id, "id" => tag_id}) do
@@ -49,13 +49,18 @@ defmodule AlbumTagsWeb.TagController do
     render(conn, "show.json", message: "Tag deleted")
   end
 
-  defp handle_error(response) do
+  # return format {server_status, client_message, tag_id}
+  defp handle_changeset_error(response) do
     {element, {reason, _}} = List.first(response.errors)
     case {element, reason} do
       {:text, "should be at least %{count} character(s)"} ->
-        {:bad_request, %{message: "Tags must be at least two characters long"}}
+        {:bad_request, "Tags must be at least two characters long", nil}
+      {:text, "can't be blank"} ->
+        {:bad_request, "Tags must be at least two characters long", nil}
+      {:text, "should be at most %{count} character(s)"} ->
+        {:bad_request, "Tags cannot be more than thirty characters long", nil}
       _ ->
-        {:internal_server_error, %{message: "Unable to create connection"}}
+        {:internal_server_error, "Unable to create connection", nil}
     end
   end
 end

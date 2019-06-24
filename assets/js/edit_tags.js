@@ -54,7 +54,7 @@ function postNewTag(tag) {
     if (xhr.readyState !== 4) return;
 
     if (xhr.status >= 200 && xhr.status < 300) {
-      var tag_id = JSON.parse(xhr.responseText).message.tag_id;
+      var tag_id = JSON.parse(xhr.responseText).tag_id;
       tagArray.push({tag_id: tag_id, text: tag});
       // remember to set window.instances[0].chipsData equal to new tag list
       currentTags = window.instances[0].chipsData.slice(0);
@@ -63,9 +63,7 @@ function postNewTag(tag) {
       var message = JSON.parse(xhr.responseText).message;
       M.toast({html: message});
       // reset chips to previous state
-      // setTimeout(function(){
-        initializeChips();
-      // }, 800);
+      initializeChips();
     }
   };
   xhr.open("POST", "/tags");
