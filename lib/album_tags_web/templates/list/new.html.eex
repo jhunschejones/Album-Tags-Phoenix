@@ -4,14 +4,13 @@
     <button id="add-to-list-btn" class="btn-small light-blue accent-4">Add</button>
     <div class="input-field">
       <select id="existing-list-select">
-        <option value="" disabled selected>Select an existing list...</option>
+        <option id="placeholder" value="" disabled selected>Select an existing list...</option>
         <option value="favorites">&#9825; My Favorites</option>
-        <%= for list <- @album.lists do %>
+        <%= for list <- @user_lists do %>
           <%= if list.user_id == @user.id do %>
             <option value="<%= list.id %>"><%= list.title %></option>
           <% end %>
         <% end %>
-        <option value="test">This is a stupidly long list name but the list is so worth it</option>
       </select>
     </div>
   </div>

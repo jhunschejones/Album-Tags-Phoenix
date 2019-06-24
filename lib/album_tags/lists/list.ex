@@ -17,5 +17,7 @@ defmodule AlbumTags.Lists.List do
     list
     |> cast(attrs, [:title, :private, :permalink, :user_id])
     |> validate_required([:title, :private, :permalink, :user_id])
+    |> validate_length(:title, min: 2, max: 60)
+    |> unique_constraint(:title, name: :lists_title_user_id_index)
   end
 end

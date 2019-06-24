@@ -1,20 +1,23 @@
 #list-container {
   margin: 25px;
-  .list {
-    label {
-      span {
-        font-size: 1.25em;
-        color: rgba(0,0,0,0.87);
-      }
-      &:hover {
-        cursor: pointer;
-      }
+  #lists-ul {
+    word-break: break-word; // force long list names to line break
+  }
+  .delete-button {
+    display: inline-block;
+    position: absolute;
+    margin-left: -1px;
+    margin-top: -6px;
+    padding: 2px 4px;
+    font-size: 1.2em;
+    font-weight: 100;
+    vertical-align: center;
+    background-color: rgba(245,245,245,.7);
+    border-radius: 12px;
+    transform: scale(0.8);
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(245,245,245,.9);
     }
   }
-}
-
-// override default materialize check color
-[type="checkbox"]:checked+span:not(.lever):before {
-  border-right: 2px solid #0091ea;
-  border-bottom: 2px solid #0091ea;
 }

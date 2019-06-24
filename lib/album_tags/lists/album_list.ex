@@ -15,5 +15,6 @@ defmodule AlbumTags.Lists.AlbumList do
     tag
     |> cast(attrs, [:album_id, :list_id, :user_id])
     |> validate_required([:album_id, :list_id, :user_id])
+    |> unique_constraint(:album, name: :album_lists_album_id_list_id_user_id_index)
   end
 end

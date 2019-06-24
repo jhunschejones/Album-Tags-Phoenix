@@ -3,7 +3,7 @@ defmodule AlbumTags.Lists do
   The Lists context.
   """
 
-  import Ecto.Query, warn: false
+  import Ecto.{Query, UUID}, warn: false
   alias AlbumTags.Repo
 
   alias AlbumTags.Lists.{List, AlbumList}
@@ -42,9 +42,9 @@ defmodule AlbumTags.Lists do
   @doc """
   Gets all lists associated with a specific user_id
   """
-  def get_list_by(%{user_id: user_id}) do
+  def get_user_lists(user_id) do
     List
-    |> Repo.get_by!(user_id: user_id)
+    |> Repo.all(user_id: user_id)
     |> Albums.with_albums_and_tags()
   end
 
@@ -61,9 +61,25 @@ defmodule AlbumTags.Lists do
 
   """
   def create_list(attrs \\ %{}) do
+    attrs = Map.put_new(attrs, :permalink, Ecto.UUID.generate())
+
     %List{}
     |> List.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def find_or_create_favorites(user_id) do
+    case Repo.get_by(List, [user_id: user_id, title: "My Favorites"]) do
+      nil ->
+        {:ok, favorites_list} = create_list(%{
+          title: "My Favorites",
+          private: false,
+          user_id: user_id,
+        })
+        favorites_list
+      favorites_list ->
+        favorites_list
+    end
   end
 
   @doc """
@@ -96,8 +112,10 @@ defmodule AlbumTags.Lists do
   @doc """
   Removes an album from a list without deleting the album or the list.
   """
-  def remove_album_from_list(%AlbumList{} = album_list) do
-    Repo.delete(album_list)
+  def remove_album_from_list(attrs) do
+    AlbumList
+    |> Repo.get_by(attrs)
+    |> Repo.delete()
   end
 
   @doc """
