@@ -120,6 +120,7 @@ $modern-blue: #0091ea;
 
 #lists-ul {
   text-decoration: none;
+  word-break: break-word; // force long list names to line break
   margin-left: 12px;
   margin-top: 5px;
 }
