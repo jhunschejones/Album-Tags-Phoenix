@@ -14,6 +14,21 @@ function removeSelectedElement(selector) {
 }
 // ====== END UTILITY FUNCTIONS ======
 
+// ====== START MATERIALIZE ======
+// close toasts on click
+document.addEventListener("click", function(e) {
+  var parent = e.target.parentNode
+  var isToast = (parent.classList && parent.classList.contains("toast")) || parent.id == "toast-container";
+  if (isToast) { closeToast(); }
+});
+
+function closeToast() {
+  var toastElement = document.querySelector('.toast');
+  var toastInstance = M.Toast.getInstance(toastElement);
+  toastInstance.dismiss();
+}
+// ====== END MATERIALIZE ======
+
 function deleteConnection(parentAlbum, childAlbum) {
   var confirmed = confirm("Are you sure you want to delete this connection? You cannot undo this operation.");
   if (!confirmed) return;
