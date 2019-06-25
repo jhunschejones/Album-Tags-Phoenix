@@ -1,0 +1,53 @@
+<div id="lists-container">
+  <div id="lists-row" class="row">
+    <%= for list <- @lists do %>
+      <div id="list-<%= list.id %>">
+        <div class="delete-button hide " onclick="deleteList(<%= list.id %>)">
+          &#10005;
+        </div>
+        <div class="list">
+          <div class="row">
+            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 0) %>"></div>
+            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 1) %>"></div>
+          </div>
+          <div class="row">
+            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 2) %>"></div>
+            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 3) %>"></div>
+          </div>
+          <div class="list-title"><%= list.title %></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div id="new-list-modal" class="modal">
+  <div class="modal-content">
+    <div class="input-field">
+      <input id="list-name-input" type="text" placeholder="Create a new list...">
+      <a id="clear-list-name-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
+    </div>
+  </div>
+</div>
+
+<div class="fixed-action-btn click-to-toggle">
+  <a id="lists-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
+    <i class="large material-icons">more_vert</i>
+  </a>
+  <ul>
+    <li>
+      <a id="edit-lists" class="btn-floating light-blue accent-4">
+        <i class="material-icons">edit</i>
+      </a>
+    </li>
+    <li>
+      <a id="add-lists", class="btn-floating light-blue accent-4">
+        <i class="material-icons">add</i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+  var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>
+</script>

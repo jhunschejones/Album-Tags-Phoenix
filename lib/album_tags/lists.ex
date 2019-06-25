@@ -130,20 +130,9 @@ defmodule AlbumTags.Lists do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_list(%List{} = list) do
-    Repo.delete(list)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking list changes.
-
-  ## Examples
-
-      iex> change_list(list)
-      %Ecto.Changeset{source: %List{}}
-
-  """
-  def change_list(%List{} = list) do
-    List.changeset(list, %{})
+  def delete_user_list(%{list_id: id, user_id: user_id}) do
+    List
+    |> Repo.get_by(%{id: id, user_id: user_id})
+    |> Repo.delete()
   end
 end

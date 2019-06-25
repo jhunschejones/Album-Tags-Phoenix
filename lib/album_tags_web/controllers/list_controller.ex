@@ -2,7 +2,7 @@ defmodule AlbumTagsWeb.ListController do
   use AlbumTagsWeb, :controller
   alias AlbumTags.{Albums, Lists}
 
-  plug :authenticate_user when action in [:new, :edit]
+  plug :authenticate_user when action in [:new, :edit, :index]
 
   def new(conn, %{"album" => apple_album_id}) do
     data_for_page = %{
@@ -22,16 +22,18 @@ defmodule AlbumTagsWeb.ListController do
   end
 
   # loads the my-lists page
-  # def index(conn, params \\ %{}) do
-  #   render(conn, "index.html")
-  # end
+  def index(conn, params \\ %{}) do
+    lists = Lists.get_user_lists(conn.assigns.current_user)
+    data_for_page = %{lists: lists, page: "lists_index"}
+    render(conn, "index.html", data_for_page)
+  end
 
   # loads the list SPA
   # def show(conn, params \\ %{}) do
   #   render(conn, "show.html")
   # end
 
-  # creates new list on xhr POST
+  # creates new list and adds album on xhr POST
   def create(conn, %{"title" => title, "private" => private, "currentAlbum" => apple_album_id}) do
     if title |> String.trim() |> String.upcase() == "MY FAVORITES" do
       message = "The 'My Favorites' list already exists"
@@ -54,6 +56,29 @@ defmodule AlbumTagsWeb.ListController do
       end
 
       render(Plug.Conn.put_status(conn, status), "show.json", message: message)
+    end
+  end
+
+  # creates new list on xhr POST
+  def create(conn, %{"title" => title, "private" => private}) do
+    if title |> String.trim() |> String.upcase() == "MY FAVORITES" do
+      message = "The 'My Favorites' list already exists"
+      render(Plug.Conn.put_status(conn, :bad_request), "show.json", message: message)
+    else
+      {status, message, new_list} = case Lists.create_list(%{
+        title: force_title_case(title),
+        private: private,
+        user_id: conn.assigns.current_user.id,
+      }) do
+        {:ok, new_list} ->
+          {:ok, "List successfully created", new_list}
+        {:error, response} ->
+          Tuple.append(handle_changeset_error(response), nil) # add nil for no new list
+      end
+
+      new_list = new_list || nil
+
+      render(Plug.Conn.put_status(conn, status), "show.json", message: message, new_list: new_list)
     end
   end
 
@@ -104,9 +129,13 @@ defmodule AlbumTagsWeb.ListController do
   end
 
   # deletes a list on xhr DELETE
-  # def delete(conn, %{"albumID" => album_id, "id" => list_id}) do
-  #   render(conn, "show.json", message: "List successfully deleted")
-  # end
+  def delete(conn, %{"id" => list_id}) do
+    Lists.delete_user_list(%{
+      list_id: String.to_integer(list_id),
+      user_id: conn.assigns.current_user.id
+    })
+    render(conn, "show.json", message: "List successfully deleted")
+  end
 
   defp handle_changeset_error(response) do
     {element, {reason, _}} = List.first(response.errors)
