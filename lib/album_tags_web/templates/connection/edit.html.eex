@@ -2,7 +2,7 @@
   <%= for connection <- user_only(@album.connections, @user.id) do %>
     <div id="connection-<%= connection.id %>" class="album">
       <div class="delete-button" onclick="deleteConnection(<%= @album.id %>, <%= connection.id %>)">
-        &#10005;<%# <i class="material-icons">close</i> %>
+        &#10005;
       </div>
       <img class="responsive-img album-cover" src="<%= album_cover(connection) %>">
       <p class="title"><%= connection.title %></p>
