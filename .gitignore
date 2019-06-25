@@ -28,3 +28,6 @@ album_tags-*.tar
 
 closure-compiler-v20190528.jar
 .env
+
+# Temporarily ignore build files
+.elixir_ls/
