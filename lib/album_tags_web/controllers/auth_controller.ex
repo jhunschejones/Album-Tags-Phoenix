@@ -39,21 +39,21 @@ defmodule AlbumTagsWeb.AuthController do
   def logout(conn, _params) do
     conn
     |> configure_session(drop: true)
-    |> redirect(to: Routes.page_path(conn, :index))
+    |> redirect(to: Routes.static_page_path(conn, :home))
   end
 
   defp login(conn, changeset, redirect_steps \\ 2) do
     case Accounts.insert_or_update_user(changeset) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Welcome back")
+        # |> put_flash(:info, "Welcome back")
         |> put_session(:user_id, user.id)
         |> configure_session(renew: true) # sends cookie back to client with new identifier
         |> redirect_back(redirect_steps) # redirect to original page before login sequence
       {:error, _reason} ->
         conn
-        |> put_flash(:error, "Error signing in")
-        |> redirect(to: Routes.page_path(conn, :index))
+        # |> put_flash(:error, "Error signing in")
+        |> redirect(to: Routes.static_page_path(conn, :home))
     end
   end
 

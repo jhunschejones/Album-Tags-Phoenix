@@ -1,0 +1,58 @@
+<div class="parallax-container">
+  <div class="parallax"><img id="image-1" src="images/window-sm.jpg"></div>
+</div>
+
+<div class="container">
+  <h3 class="center-align">Welcome to Album Tags</h3>
+  <br/>
+</div>
+
+<div class="parallax-container">
+  <div class="parallax"><img id="image-3" src="images/city_md.jpg"></div>
+</div>
+
+<div class="container">
+  <h3 class="center-align">Just like you, we're here for the music</h3>
+  <br/>
+</div>
+
+<div class="parallax-container">
+  <div class="parallax"><img id="image-2" src="images/white_headphones_sm.jpg"></div>
+</div>
+
+<div class="container">
+  <h4 class="center-align">
+    <%= case @user do %>
+      <% nil -> %>
+        No user is signed in
+      <% _ -> %>
+        User '<%= @user.id %>' is signed in
+    <% end %>
+  </h4>
+  <br/>
+</div>
+
+<div class="parallax-container hide-on-med-and-up">
+  <div class="parallax">
+    <img class="image-4" src="images/red_earbuds_md.jpg">
+  </div>
+</div>
+
+<div class="parallax-container hide-on-small-only">
+  <div class="parallax">
+    <img class="image-4" src="images/red_earbuds_lg.jpg">
+  </div>
+</div>
+
+<div class="container">
+  <h3 class="center-align">Use the menu to get started</h3>
+  <br/>
+</div>
+
+<div class="parallax-container hide-on-med-and-up">
+  <div class="parallax"><img id="image-5" src="images/market_sm.jpg"></div>
+</div>
+
+<div class="parallax-container hide-on-small-only">
+  <div class="parallax"><img id="image-5b" src="images/market_md.jpg"></div>
+</div>

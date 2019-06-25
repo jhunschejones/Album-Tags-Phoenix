@@ -21,3 +21,4 @@ js-files-to-compile:
   - toasts.js
   - select.js
   - dropdown.js
+  - parallax.js
