@@ -1,10 +1,8 @@
-<%# <h5 id="page-header" class="center-align grey-text">Add a new connection:</h5> %>
-
 <div id="connection-search-container">
   <div class="input-field">
     <input id="connection-search-input" type="text" placeholder="Search by album or artist...">
   </div>
-  <a id="clear-search-input-btn" class="grey-text text-lighten-2"><i class="material-icons">close</i></a>
+  <a id="clear-search-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
 </div>
 
 <br/><br/>
