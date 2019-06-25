@@ -30,13 +30,13 @@ defmodule AlbumTagsWeb.ConnectionController do
           {:ok, _} ->
             {:ok, %{message: "Connection successfully created"}}
           {:error, response} ->
-            handle_error(response)
+            handle_changeset_error(response)
         end
     end
     render(Plug.Conn.put_status(conn, status), "show.json", message: message)
   end
 
-  defp handle_error(response) do
+  defp handle_changeset_error(response) do
     {element, {reason, _}} = List.first(response.errors)
     case {element, reason} do
       {:child_album, "has already been taken"} ->
