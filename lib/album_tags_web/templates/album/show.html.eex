@@ -97,7 +97,7 @@
           <li><a id="show-my-connections" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
           <li>
             <%= link id: "edit-connections", class: "btn-floating light-blue accent-4", to: Routes.connection_path(@conn, :edit, @album.apple_album_id) do %>
-              <i class="material-icons">edit</i>
+              <i class="material-icons">delete_forever</i>
             <% end %>
           </li>
           <li>
@@ -110,16 +110,18 @@
     </div>
     <div id="lists" class="col s12">
       <ul id="lists-ul">
-        <%= for list <- @album.lists do %>
+        <%= for list <- sortLists(@album.lists) do %>
           <li class="list <%= if list.user_id == @user.id, do: 'user-list' %>">
-            <%= list.title %>
-            <span class="grey-text">
-              <%= if list.user_id == @user.id do %>
-                 - You!
-              <% else %>
-                 - <%= list.user.name %>
-              <% end %>
-            </span>
+            <a href="/lists/<%= list.id %>">
+              <span class="list-title"><%= list.title %></span>
+              <span class="grey-text">
+                <%= if list.user_id == @user.id do %>
+                  - You!
+                <% else %>
+                  - <%= list.user.name %>
+                <% end %>
+              </span>
+            </a>
           </li>
         <% end %>
       </ul>
@@ -132,7 +134,7 @@
           <li><a id="show-my-lists" class="btn-floating light-blue accent-4"><i class="material-icons">person</i></a></li>
           <li>
             <%= link id: "edit-lists", class: "btn-floating light-blue accent-4", to: Routes.list_path(@conn, :edit, @album.apple_album_id) do %>
-              <i class="material-icons">edit</i>
+              <i class="material-icons">delete_forever</i>
             <% end %>
           </li>
           <li>
