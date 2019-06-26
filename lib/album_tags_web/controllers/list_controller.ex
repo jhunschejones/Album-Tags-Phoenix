@@ -16,22 +16,24 @@ defmodule AlbumTagsWeb.ListController do
   end
 
   def edit(conn, %{"id" => apple_album_id}) do
-    album = Albums.get_album_with(apple_album_id, [:lists])
+    album = Albums.get_album_with(apple_album_id, [lists: [:albums]])
     data_for_page = %{album: album, page: "edit_lists", user: conn.assigns.current_user}
     render(conn, "edit.html", data_for_page)
   end
 
   # loads the my-lists page
-  def index(conn, params \\ %{}) do
+  def index(conn, _params) do
     lists = Lists.get_user_lists(conn.assigns.current_user)
     data_for_page = %{lists: lists, page: "lists_index"}
     render(conn, "index.html", data_for_page)
   end
 
   # loads the list SPA
-  # def show(conn, params \\ %{}) do
-  #   render(conn, "show.html")
-  # end
+  def show(conn, %{"id" => list_id} = _params) do
+    list = Lists.get_list!(list_id)
+    data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
+    render(conn, "show.html", data_for_page)
+  end
 
   # creates new list and adds album on xhr POST
   def create(conn, %{"title" => title, "private" => private, "currentAlbum" => apple_album_id}) do
@@ -84,18 +86,22 @@ defmodule AlbumTagsWeb.ListController do
 
   # add album to list on xhr PATCH
   def update(conn, %{"action" => action} = params) when action == "add_album" do
-    {status, message} = case Lists.add_album_to_list(%{
-      album_id: Albums.find_or_create_album(params["currentAlbum"]).id,
+    album_to_add = Albums.find_or_create_album(params["currentAlbum"])
+
+    {status, message, added_album} = case Lists.add_album_to_list(%{
+      album_id: album_to_add.id,
       list_id: String.to_integer(params["id"]),
       user_id: conn.assigns.current_user.id,
     }) do
       {:ok, _response} ->
-        {:ok, "Album successfully added to list"}
+        {:ok, "Album successfully added to list", Albums.album_with_tags(album_to_add)}
       {:error, response} ->
-        handle_changeset_error(response)
+        Tuple.append(handle_changeset_error(response), nil) # add nil for no added_album
     end
 
-    render(Plug.Conn.put_status(conn, status), "show.json", message: message)
+    added_album = added_album || nil
+
+    render(Plug.Conn.put_status(conn, status), "show.json", message: message, added_album: added_album)
   end
 
   # add album to favorites list on xhr PATCH
@@ -128,6 +134,24 @@ defmodule AlbumTagsWeb.ListController do
     render(conn, "show.json", message: "Album successfully removed from list")
   end
 
+  # update list name xhr PATCH
+  def update(conn, %{"action" => action} = params) when action == "update_title" do
+    {status, message, list_title} = case Lists.update_title(%{
+      list_id: params["id"],
+      title: params["newTitle"],
+      user_id: conn.assigns.current_user.id,
+    }) do
+      {:ok, response} ->
+        {:ok, "List title successfully updated", response.title}
+      {:error, response} ->
+        Tuple.append(handle_changeset_error(response), nil) # add nil for no new list title
+    end
+
+    list_title = list_title || nil
+
+    render(Plug.Conn.put_status(conn, status), "show.json", message: message, list_title: list_title)
+  end
+
   # deletes a list on xhr DELETE
   def delete(conn, %{"id" => list_id}) do
     Lists.delete_user_list(%{
@@ -144,7 +168,7 @@ defmodule AlbumTagsWeb.ListController do
       {:title, "has already been taken"} ->
         {:bad_request, "You already created a list with that tile"}
       {:album, "has already been taken"} ->
-        {:bad_request, "You already added the album to that list"}
+        {:bad_request, "You already added the album to this list"}
       {:title, "should be at least %{count} character(s)"} ->
         {:bad_request, "List titles must be at least two characters long"}
       {:title, "can't be blank"} ->
@@ -152,7 +176,7 @@ defmodule AlbumTagsWeb.ListController do
       {:title, "should be at most %{count} character(s)"} ->
         {:bad_request, "List titles cannot be more than sixty characters long"}
       _ ->
-        {:internal_server_error, "Unable to add album to list"}
+        {:internal_server_error, "Unable to modify list as requested"}
     end
   end
 
