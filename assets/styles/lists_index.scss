@@ -37,6 +37,7 @@
       line-height: 1em;
       background-color: rgba(255,255,255,.94);
       word-break: break-word; // force long list names to line break
+      color: rgba(0,0,0,0.87);
     }
   }
   .delete-button {
@@ -69,28 +70,27 @@
   bottom: 40px;
 }
 
-#list-name-input:focus {
-  /* input color when selected should still be materialize "grey lighten-5" */
-  background-color: #fafafa;
-  /* leave standard border bottom when typing input */
-  border-bottom: 1px solid rgb(158, 158, 158);
-}
-
-#list-name-input {
-  margin-top: -11px; // this is as high up as this can go!
-  width: calc(100% - 22px);
-  &:focus{
-    // override default materialize formatting for input focus behavior
-    border-bottom: 1px solid#9e9e9e;
-    box-shadow: 0 1px 0 0 #9e9e9e;
+#new-list-modal {
+  width: 95%;
+  @media screen and (min-width: 700px) {
+    width: 80%;
   }
-}
-#clear-list-name-input-btn {
-  position: absolute;
-  right: -4px;
-  padding-top: 2px;
-  &:hover {
-    cursor: pointer;
-    color: #bdbdbd !important;
+  #list-name-input {
+    margin-top: -11px; // this is as high up as this can go!
+    width: calc(100% - 22px);
+    &:focus{
+      // override default materialize formatting for input focus behavior
+      border-bottom: 1px solid#9e9e9e;
+      box-shadow: 0 1px 0 0 #9e9e9e;
+    }
+  }
+  #clear-list-name-input-btn {
+    position: absolute;
+    right: -4px;
+    padding-top: 2px;
+    &:hover {
+      cursor: pointer;
+      color: #bdbdbd !important;
+    }
   }
 }

@@ -84,12 +84,20 @@ function removeSelectedElement(selector) {
     console.error("removeSelectedElement() was passed an invalid selector");
   }
 }
-// ====== END UTILITIES ======
 
-function deleteList(listID) {
-  console.log("Time to delete ", listID);
+/**
+ * addEventListenerToClass - description
+ * @param  {string} class class to select
+ * @param  {string} event event to trigger callback
+ * @param  {function} callback function to call on event
+ */
+function addEventListenerToClass(className, event, callback) {
+  var elems = document.getElementsByClassName(className);
+  for (var i = 0; i < elems.length; i++) {
+    elems[i].addEventListener(event, callback);
+  }
 }
-
+// ====== END UTILITIES ======
 document.getElementById("edit-lists").addEventListener("click", function() {
   if (!window.editLists) {
     window.editLists = true;
@@ -156,15 +164,17 @@ function addListToPage(listInfo) {
           &#10005;
         </div>
         <div class="list">
-          <div class="row">
-            <div class="col"><img class="responsive-img" src=""></div>
-            <div class="col"><img class="responsive-img" src=""></div>
-          </div>
-          <div class="row">
-            <div class="col"><img class="responsive-img" src=""></div>
-            <div class="col"><img class="responsive-img" src=""></div>
-          </div>
-          <div class="list-title">${listInfo.title}</div>
+          <a href="/lists/${listInfo.id}">
+            <div class="row">
+              <div class="col"><img class="responsive-img" src=""></div>
+              <div class="col"><img class="responsive-img" src=""></div>
+            </div>
+            <div class="row">
+              <div class="col"><img class="responsive-img" src=""></div>
+              <div class="col"><img class="responsive-img" src=""></div>
+            </div>
+            <div class="list-title">${listInfo.title}</div>
+          </a>
         </div>
       </div>`
     )

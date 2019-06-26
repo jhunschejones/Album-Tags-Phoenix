@@ -2,20 +2,22 @@
   <div id="lists-row" class="row">
     <%= for list <- @lists do %>
       <div id="list-<%= list.id %>">
-        <div class="delete-button hide " onclick="deleteList(<%= list.id %>)">
-          &#10005;
-        </div>
-        <div class="list">
-          <div class="row">
-            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 0) %>"></div>
-            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 1) %>"></div>
+          <div class="delete-button hide " onclick="deleteList(<%= list.id %>)">
+            &#10005;
           </div>
-          <div class="row">
-            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 2) %>"></div>
-            <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 3) %>"></div>
+          <div class="list">
+            <a href="/lists/<%= list.id %>">
+              <div class="row">
+                <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 0) %>"></div>
+                <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 1) %>"></div>
+              </div>
+              <div class="row">
+                <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 2) %>"></div>
+                <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 3) %>"></div>
+              </div>
+              <div class="list-title"><%= list.title %></div>
+            </a>
           </div>
-          <div class="list-title"><%= list.title %></div>
-        </div>
       </div>
     <% end %>
   </div>
@@ -37,7 +39,7 @@
   <ul>
     <li>
       <a id="edit-lists" class="btn-floating light-blue accent-4">
-        <i class="material-icons">edit</i>
+        <i class="material-icons">delete_forever</i>
       </a>
     </li>
     <li>
