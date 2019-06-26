@@ -1,5 +1,6 @@
 defmodule AlbumTagsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :album_tags
+  use NewRelic.Phoenix.Transaction
 
   socket "/socket", AlbumTagsWeb.UserSocket,
     websocket: true,

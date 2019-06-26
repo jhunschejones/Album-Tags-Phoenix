@@ -1,6 +1,5 @@
 defmodule AlbumTagsWeb.AppleMusicController do
   use AlbumTagsWeb, :controller
-  alias HTTPotion
 
   # /api/apple/search/?search_string=emery&offset=0
   def search(conn, %{"search_string" => search_string, "offset" => offset}) do

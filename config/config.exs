@@ -15,7 +15,8 @@ config :album_tags, AlbumTagsWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: AlbumTagsWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: AlbumTags.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: AlbumTags.PubSub, adapter: Phoenix.PubSub.PG2],
+  instrumenters: [NewRelic.Phoenix.Instrumenter]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -33,6 +34,11 @@ config :ueberauth, Ueberauth,
 config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   client_id: System.get_env("UEBERAUTH_CLIENT_ID"),
   client_secret: System.get_env("UEBERAUTH_CLIENT_SECRET")
+
+# Automatically read from the environment variables when set
+# config :new_relic_agent,
+#   app_name: System.get_env("NEW_RELIC_APP_NAME"),
+#   license_key: System.get_env("NEW_RELIC_LICENSE_KEY")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

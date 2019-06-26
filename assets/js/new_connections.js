@@ -106,7 +106,7 @@ function displayResults(results) {
   hideSpinner();
   for (let i = 0; i < results.albums.length; i++) {
     const album = results.albums[i];
-    const albumCover = album.cover.replace("{w}", "200").replace("{h}", "200")
+    const albumCover = album.cover.replace("{w}", "200").replace("{h}", "200");
     resultsContainer.appendChild(stringToNode(
       `<div class="album" onclick="addConnection(${album.appleAlbumID})">
         <img class="responsive-img album-cover" src="${albumCover}">

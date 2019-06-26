@@ -1,0 +1,94 @@
+[INFO] - 2019-06-26 08:30:27 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:30:28 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[DEBUG] - 2019-06-26 08:31:28 - Completed Error Trace harvest - size: 1
+[DEBUG] - 2019-06-26 08:31:28 - Completed Error Event harvest - size: 1
+[DEBUG] - 2019-06-26 08:31:28 - Completed Custom Event harvest - size: 61
+[DEBUG] - 2019-06-26 08:31:28 - Completed Transaction Trace harvest - size: 3
+[DEBUG] - 2019-06-26 08:31:28 - Completed Metric harvest - size: 28
+[DEBUG] - 2019-06-26 08:31:28 - Completed Transaction Event harvest - size: 10
+[DEBUG] - 2019-06-26 08:31:28 - Completed Span Event harvest - size: 13
+[INFO] - 2019-06-26 08:33:10 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:33:11 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[DEBUG] - 2019-06-26 08:34:10 - Completed Metric harvest - size: 2
+[DEBUG] - 2019-06-26 08:34:10 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:34:10 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:34:10 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:34:10 - Completed Span Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:34:10 - Completed Custom Event harvest - size: 51
+[DEBUG] - 2019-06-26 08:34:11 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:35:10 - Completed Metric harvest - size: 11
+[DEBUG] - 2019-06-26 08:35:10 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:35:10 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:35:10 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:35:10 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:35:10 - Completed Custom Event harvest - size: 56
+[DEBUG] - 2019-06-26 08:35:10 - Completed Span Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:36:10 - Completed Metric harvest - size: 11
+[DEBUG] - 2019-06-26 08:36:10 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:36:10 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:36:10 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:36:10 - Completed Custom Event harvest - size: 56
+[DEBUG] - 2019-06-26 08:36:10 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:36:10 - Completed Span Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:37:10 - Completed Metric harvest - size: 11
+[DEBUG] - 2019-06-26 08:37:10 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:37:10 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:37:10 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:37:10 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:37:10 - Completed Custom Event harvest - size: 58
+[DEBUG] - 2019-06-26 08:37:10 - Completed Span Event harvest - size: 0
+[INFO] - 2019-06-26 08:37:52 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:37:53 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[INFO] - 2019-06-26 08:38:40 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:38:41 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[DEBUG] - 2019-06-26 08:39:40 - Completed Metric harvest - size: 46
+[DEBUG] - 2019-06-26 08:39:40 - Completed Transaction Trace harvest - size: 2
+[DEBUG] - 2019-06-26 08:39:40 - Completed Error Trace harvest - size: 1
+[DEBUG] - 2019-06-26 08:39:41 - Completed Error Event harvest - size: 1
+[DEBUG] - 2019-06-26 08:39:41 - Completed Span Event harvest - size: 13
+[DEBUG] - 2019-06-26 08:39:41 - Completed Transaction Event harvest - size: 18
+[DEBUG] - 2019-06-26 08:39:41 - Completed Custom Event harvest - size: 69
+[DEBUG] - 2019-06-26 08:40:40 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:40:40 - Completed Metric harvest - size: 11
+[DEBUG] - 2019-06-26 08:40:40 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:40:40 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:40:41 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:40:41 - Completed Custom Event harvest - size: 56
+[DEBUG] - 2019-06-26 08:40:41 - Completed Span Event harvest - size: 0
+[INFO] - 2019-06-26 08:41:08 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:41:09 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[DEBUG] - 2019-06-26 08:42:09 - Completed Metric harvest - size: 2
+[DEBUG] - 2019-06-26 08:42:09 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:42:09 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:42:09 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:42:09 - Completed Custom Event harvest - size: 51
+[DEBUG] - 2019-06-26 08:42:09 - Completed Span Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:42:09 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:43:09 - Completed Metric harvest - size: 11
+[DEBUG] - 2019-06-26 08:43:09 - Completed Error Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:43:09 - Completed Transaction Trace harvest - size: 0
+[DEBUG] - 2019-06-26 08:43:09 - Completed Error Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:43:09 - Completed Transaction Event harvest - size: 0
+[DEBUG] - 2019-06-26 08:43:09 - Completed Custom Event harvest - size: 56
+[DEBUG] - 2019-06-26 08:43:09 - Completed Span Event harvest - size: 0
+[INFO] - 2019-06-26 08:44:07 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:44:07 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[DEBUG] - 2019-06-26 08:45:07 - Completed Metric harvest - size: 12
+[DEBUG] - 2019-06-26 08:45:07 - Completed Error Trace harvest - size: 1
+[DEBUG] - 2019-06-26 08:45:07 - Completed Transaction Trace harvest - size: 1
+[DEBUG] - 2019-06-26 08:45:07 - Completed Error Event harvest - size: 1
+[DEBUG] - 2019-06-26 08:45:07 - Completed Span Event harvest - size: 1
+[DEBUG] - 2019-06-26 08:45:07 - Completed Transaction Event harvest - size: 1
+[DEBUG] - 2019-06-26 08:45:07 - Completed Custom Event harvest - size: 52
+[INFO] - 2019-06-26 08:45:20 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:45:21 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[INFO] - 2019-06-26 08:45:46 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:45:46 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[INFO] - 2019-06-26 08:53:50 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:53:50 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[INFO] - 2019-06-26 08:54:31 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:54:31 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[INFO] - 2019-06-26 08:55:14 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:55:15 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
+[INFO] - 2019-06-26 08:55:49 - Log File: /Users/jjones/Documents/GitHub/Album-Tags-Phoenix/tmp/new_relic.log
+[INFO] - 2019-06-26 08:55:50 - Reporting to: https://rpm.newrelic.com/accounts/1968242/applications/352978302
