@@ -2,6 +2,7 @@ defmodule AlbumTags.Albums.Album do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :apple_album_id, :artist, :cover, :title, :tags]}
   schema "albums" do
     field :apple_album_id, :integer
     field :apple_url, :string

@@ -2,6 +2,7 @@ defmodule AlbumTags.Albums.Tag do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:text, :user_id]}
   schema "tags" do
     field :custom_genre, :boolean, default: false
     field :text, :string
