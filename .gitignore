@@ -31,3 +31,5 @@ closure-compiler-v20190528.jar
 
 # Temporarily ignore build files
 .elixir_ls/
+
+/tmp/
