@@ -16,6 +16,10 @@ defmodule AlbumTags.Lists do
     Repo.preload(module, [lists: [:user]])
   end
 
+  def with_lists_and_albums(module) do
+    Repo.preload(module, [lists: [:user, :albums]])
+  end
+
   @doc """
   Returns the list of lists.
 
@@ -94,9 +98,10 @@ defmodule AlbumTags.Lists do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_list(%List{} = list, attrs) do
-    list
-    |> List.changeset(attrs)
+  def update_title(%{list_id: list_id, title: title, user_id: user_id}) do
+    List
+    |> Repo.get_by(%{id: list_id, user_id: user_id})
+    |> List.changeset(%{title: title})
     |> Repo.update()
   end
 

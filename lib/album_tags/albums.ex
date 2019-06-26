@@ -33,6 +33,11 @@ defmodule AlbumTags.Albums do
     |> Lists.with_lists()
   end
 
+  def album_with_lists_and_albums(%Album{} = album) do
+    album
+    |> Lists.with_lists_and_albums()
+  end
+
   @doc """
   Includes all associations for an album
   """
@@ -77,6 +82,8 @@ defmodule AlbumTags.Albums do
             album_with_connections(album)
           [:lists] ->
             album_with_lists(album)
+          [lists: [:albums]] ->
+            album_with_lists_and_albums(album)
           _ ->
             album_with_all_associations(album)
         end
