@@ -1,23 +1,66 @@
-#list-container {
-  margin: 25px;
-  #lists-ul {
-    word-break: break-word; // force long list names to line break
+#lists-container {
+  margin-top: 3px;
+  #lists-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .list{
+    position: relative;
+    margin: 8px 4px 8px 8px;
+    box-shadow: 2px 2px 5px grey;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f5f5f5;
+    .row {
+      margin: 0px;
+    }
+    .col {
+      padding: 0px;
+      height: 120px;
+      width: 120px;
+      @media screen and (max-width: 375px) {
+        height: 86px;
+        width: 86px;
+      }
+      @media screen and (min-width: 376px) and (max-width: 414px) {
+        height: 96px;
+        width: 96px;
+      }
+    }
+    .list-title {
+      position: absolute;
+      top: 50%;
+      transform: translate(0,-50%);
+      right: 0;
+      left: 0;
+      padding: .7rem 1rem;
+      line-height: 1em;
+      background-color: rgba(255,255,255,.94);
+      word-break: break-word; // force long list names to line break
+      color: rgba(0,0,0,0.87);
+    }
   }
   .delete-button {
-    display: inline-block;
-    position: absolute;
-    margin-left: -1px;
-    margin-top: -6px;
-    padding: 2px 4px;
+    z-index: 100;
+    line-height: normal;
+    padding: 1px 5px;
     font-size: 1.2em;
+    position: absolute;
     font-weight: 100;
     vertical-align: center;
+    margin-top: 2px;
+    margin-left: 231px;
     background-color: rgba(245,245,245,.7);
     border-radius: 12px;
-    transform: scale(0.8);
     &:hover {
       cursor: pointer;
       background-color: rgba(245,245,245,.9);
+    }
+    @media screen and (max-width: 375px) {
+      margin-left: 162px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 414px) {
+      margin-left: 182px;
     }
   }
 }

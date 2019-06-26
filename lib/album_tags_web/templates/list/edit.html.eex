@@ -1,17 +1,28 @@
-<div id="list-container">
-  <ul id="lists-ul">
-    <%= for list <- @album.lists do %>
+<div id="lists-container">
+  <div id="lists-row" class="row">
+    <%= for list <- sortLists(@album.lists) do %>
       <%= if list.user_id == @user.id do %>
-        <li id="list-<%= list.id %>"class="list">
-          <span><%= list.title %></span>
-          <span class="grey-text"> - <%= list.user.name %></span>
-          <div class="delete-button" onclick="deleteList(<%= @album.id %>, <%= list.id %>)">
-            &#10005;
-          </div>
-        </li>
+        <div id="list-<%= list.id %>">
+            <div class="delete-button" onclick="deleteList(<%= @album.id %>, <%= list.id %>)">
+              &#10005;
+            </div>
+            <div class="list">
+              <a href="/lists/<%= list.id %>">
+                <div class="row">
+                  <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 0) %>"></div>
+                  <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 1) %>"></div>
+                </div>
+                <div class="row">
+                  <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 2) %>"></div>
+                  <div class="col"><img class="responsive-img" src="<%= get_cover_at(list.albums, 3) %>"></div>
+                </div>
+                <div class="list-title"><%= list.title %></div>
+              </a>
+            </div>
+        </div>
       <% end %>
     <% end %>
-  </ul>
+  </div>
 </div>
 
 <div class="fixed-action-btn">
