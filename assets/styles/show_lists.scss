@@ -1,0 +1,226 @@
+#list-container {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  .album-cover {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+  }
+  .album {
+    width: 200px;
+    padding: 6px;
+    line-height: normal;
+    .title {
+      font-weight: 500;
+      font-size: 1.12rem;
+      margin-top: 3px;
+      margin-left: 1px;
+      margin-bottom: 0px;
+    }
+    .artist {
+      font-weight: 300;
+      margin-top: 1px;
+      margin-left: 1px;
+      margin-bottom: 0px;
+    }
+    .delete-button {
+      padding: 2px 4px;
+      font-size: 1.2em;
+      position: absolute;
+      font-weight: 100;
+      vertical-align: center;
+      margin-top: -6px;
+      margin-left: 172px;
+      background-color: rgba(245,245,245,.7);
+      border-radius: 12px;
+      &:hover {
+        cursor: pointer;
+        background-color: rgba(245,245,245,.9);
+      }
+    }
+    @media screen and (max-width: 375px) {
+      width: 176px;
+      .delete-button {margin-left: 148px;}
+    }
+    @media screen and (min-width: 376px) and (max-width: 414px) {
+      width: 195px;
+      .delete-button {margin-left: 167px;}
+    }
+  }
+}
+
+// distance between main FAB and next button up in expanded menu
+.fixed-action-btn ul {
+  bottom: 40px;
+}
+
+#list-title {
+  margin: 20px 16px 0px 16px;
+  word-wrap: break-word;
+}
+
+#albums-count {
+  margin: 0px 16px 2px 16px;
+  font-weight: 300;
+}
+
+#edit-list-modal {
+  width: 95%;
+  @media screen and (min-width: 700px) {
+    width: 80%;
+  }
+  #list-name-input {
+    margin-top: -11px; // this is as high up as this can go!
+    width: calc(100% - 22px);
+    &:focus{
+      // override default materialize formatting for input focus behavior
+      border-bottom: 1px solid#9e9e9e;
+      box-shadow: 0 1px 0 0 #9e9e9e;
+    }
+  }
+
+  #clear-list-name-input-btn {
+    position: absolute;
+    right: -4px;
+    padding-top: 2px;
+    &:hover {
+      cursor: pointer;
+      color: #bdbdbd !important;
+    }
+  }
+}
+
+#add-album-modal {
+  width: 95%;
+  @media screen and (min-width: 700px) {
+    width: 80%;
+  }
+  .modal-content{
+    padding: 8px 17px;
+    @media screen and (min-width: 700px) {
+      padding: 8px 22px;
+    }
+    .input-field {
+      margin-top: 22px;
+    }
+  }
+  #add-album-input {
+    margin-top: -11px; // this is as high up as this can go!
+    width: calc(100% - 22px);
+    &:focus{
+      // override default materialize formatting for input focus behavior
+      border-bottom: 1px solid#9e9e9e;
+      box-shadow: 0 1px 0 0 #9e9e9e;
+    }
+  }
+  #clear-add-album-input-btn {
+    position: absolute;
+    right: -4px;
+    padding-top: 2px;
+    &:hover {
+      cursor: pointer;
+      color: #bdbdbd !important;
+    }
+  }
+  /* ====== MODAL SCROLLBAR ====== */
+  #add-album-search-results::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
+
+  #add-album-search-results::-webkit-scrollbar:horizontal {
+    height: 11px;
+  }
+
+  #add-album-search-results::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid #fafafa; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .35);
+  }
+
+  #add-album-search-results::-webkit-scrollbar-track {
+    background-color: #fafafa;
+    border-radius: 8px;
+  }
+
+  /* adds the arrow to the end of the scroll bar */
+  #add-album-search-results::-webkit-scrollbar-button:horizontal:end:increment {
+    display: block;
+    background:
+        linear-gradient(210deg, #fafafa 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(330deg, #fafafa 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(90deg, #fafafa 30%, rgba(0, 0, 0, 0) 31%);
+    background-color: #b6b6b6;
+  }
+
+  /* adds the arrow to the start of the scroll bar */
+  #add-album-search-results::-webkit-scrollbar-button:horizontal:start:decrement {
+    display: block;
+    background:
+        linear-gradient(30deg, #fafafa 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(150deg, #fafafa 40%, rgba(0, 0, 0, 0) 41%),
+        linear-gradient(270deg, #fafafa 30%, rgba(0, 0, 0, 0) 31%);
+    background-color: #b6b6b6;
+  }
+}
+
+#add-album-search-spinner-container {
+  width: 100%;
+  margin-top: 80px;
+  margin-bottom: 60px;
+}
+
+#add-album-search-results {
+  padding: 10px 0px 15px 0px;
+  margin-bottom: 4px;
+  display: inline-flex;
+  overflow-x: scroll;
+  max-width: 100%;
+  .search-album-cover {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+    width: 200px;
+    @media screen and (max-width: 375px) {
+      width: 176px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 414px) {
+      width: 195px;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .album-search-album {
+    width: 200px;
+    padding: 0px;
+    margin: 0px 14px 0px 0px;
+    @media screen and (max-width: 375px) {
+      width: 176px;
+    }
+    @media screen and (min-width: 376px) and (max-width: 414px) {
+      width: 195px;
+    }
+    line-height: normal;
+    .search-title {
+      font-weight: 500;
+      font-size: 1.12rem;
+      margin-top: 3px;
+      margin-left: 1px;
+      margin-bottom: 0px;
+    }
+    .search-artist {
+      font-weight: 300;
+      margin-top: 1px;
+      margin-left: 1px;
+      margin-bottom: 0px;
+    }
+  }
+  #add-album-search-result-warning {
+    margin-top: 18px;
+    margin-bottom: 22px;
+    width: 100%;
+    font-size: 1.1em;
+  }
+}
+
+// required for the v-cloak attribute to hide template {{}}'s
+[v-cloak] {display: none}
