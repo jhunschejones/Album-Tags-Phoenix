@@ -1,5 +1,8 @@
 // ====== START UTILITY FUNCTIONS ======
 function truncate(str, len){
+  // handle long string with no spaces
+  if (str.lastIndexOf(' ') == -1) {return str.substr(0, len-9) + '...';}
+
   // set up the substring
   const subString = str.substr(0, len-1);
   // add elipse after last complete word & trim trailing comma
@@ -70,7 +73,8 @@ document.getElementById("add-to-list-btn").addEventListener("click", function() 
       document.getElementById("placeholder").selected = true;
       initializeSelectElement();
 
-      M.toast({html: xhr.responseText.replace(/\"/g, "")});
+      var response = JSON.parse(xhr.responseText);
+      M.toast({html: response.message});
     } else {
       // reset selected option to default
       window.existingListSelect.destroy();
