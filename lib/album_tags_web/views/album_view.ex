@@ -30,6 +30,11 @@ defmodule AlbumTagsWeb.AlbumView do
     Enum.sort(songs_map, &(&1.track_number < &2.track_number))
   end
 
+  def sortLists(lists) do
+    lists
+    |> Enum.sort_by(fn list -> list.title end)
+  end
+
   def remove_duplicate_tags(tags, user_id) do
     user_tags = Enum.filter(tags, &(&1.user_id == user_id))
     other_tags = Enum.filter(tags, &(&1.user_id != user_id))
