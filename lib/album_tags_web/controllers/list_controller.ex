@@ -23,7 +23,7 @@ defmodule AlbumTagsWeb.ListController do
 
   # loads the my-lists page
   def index(conn, _params) do
-    lists = Lists.get_user_lists(conn.assigns.current_user)
+    lists = Lists.get_user_lists(conn.assigns.current_user.id)
     data_for_page = %{lists: lists, page: "lists_index"}
     render(conn, "index.html", data_for_page)
   end

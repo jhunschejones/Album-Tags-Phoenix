@@ -47,9 +47,12 @@ defmodule AlbumTags.Lists do
   Gets all lists associated with a specific user_id
   """
   def get_user_lists(user_id) do
-    List
-    |> Repo.all(user_id: user_id)
-    |> Albums.with_albums_and_tags()
+    query =
+      from l in List,
+      preload: [albums: [:tags]],
+      where: l.user_id == ^user_id
+
+    Repo.all(query)
   end
 
   @doc """
