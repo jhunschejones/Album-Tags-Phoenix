@@ -6,7 +6,8 @@ defmodule AlbumTagsWeb.Router do
     plug :fetch_session
     # plug :fetch_flash
     plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    # plug :put_secure_browser_headers, %{"content-security-policy" => "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/vue 'unsafe-inline'; connect-src 'self'; img-src 'self' is1-ssl.mzstatic.com/image/ is2-ssl.mzstatic.com/image/ is3-ssl.mzstatic.com/image/ is4-ssl.mzstatic.com/image/ is5-ssl.mzstatic.com/image/ is6-ssl.mzstatic.com/image/ is7-ssl.mzstatic.com/image/ is8-ssl.mzstatic.com/image/ is9-ssl.mzstatic.com/image/; style-src 'self' 'unsafe-inline' fonts.googleapis.com/icon; font-src 'self' fonts.gstatic.com/s/materialicons/;"}
+    plug :put_secure_browser_headers, %{"content-security-policy" => "default-src * 'unsafe-eval' 'unsafe-inline'"}
     plug NavigationHistory.Tracker, history_size: 6 # limit to 6 entries needed to redirect prior to login sequence
     plug AlbumTagsWeb.AuthPlug
   end
@@ -15,7 +16,8 @@ defmodule AlbumTagsWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
-    plug :put_secure_browser_headers
+    # plug :put_secure_browser_headers, %{"content-security-policy" => "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/vue 'unsafe-inline'; connect-src 'self'; img-src 'self' is1-ssl.mzstatic.com/image/ is2-ssl.mzstatic.com/image/ is3-ssl.mzstatic.com/image/ is4-ssl.mzstatic.com/image/ is5-ssl.mzstatic.com/image/ is6-ssl.mzstatic.com/image/ is7-ssl.mzstatic.com/image/ is8-ssl.mzstatic.com/image/ is9-ssl.mzstatic.com/image/; style-src 'self' 'unsafe-inline' fonts.googleapis.com/icon; font-src 'self' fonts.gstatic.com/s/materialicons/;"}
+    plug :put_secure_browser_headers, %{"content-security-policy" => "default-src * 'unsafe-eval' 'unsafe-inline'"}
     plug NavigationHistory.Tracker, history_size: 6 # limit to 6 entries needed to redirect prior to login sequence
     plug AlbumTagsWeb.AuthPlug
   end
