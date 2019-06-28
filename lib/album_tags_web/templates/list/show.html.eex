@@ -1,13 +1,18 @@
 <div id="listVueApp">
   <h5 id="list-title" v-cloak>{{ listTitle }}</h5>
-  <p id="albums-count" class="grey-text">{{ selectedAlbumsCount }} albums</p>
+  <div id="title-tags" v-if="typeof titleTags !== 'undefined'">
+    <div class="chip title-tag" v-for="tag in titleTags" v-cloak>{{ tag }}</div>
+  </div>
+  <p id="albums-count" class="grey-text" v-cloak>{{ selectedAlbumsCount }} albums</p>
 
   <div id="list-container" class="row">
     <div v-for="albumObject in selectedAlbums">
       <div v-bind:id="'album-' + albumObject.id" class="album">
-        <div class="delete-button hide" v-on:click="removeAlbum(albumObject.id)">
-          &#10005;
-        </div>
+        <%= if @list.user_id == @user.id do %>
+          <div class="delete-button hide" v-on:click="removeAlbum(albumObject.id)">
+            &#10005;
+          </div>
+        <% end %>
         <a v-bind:href="'/albums/' + albumObject.apple_album_id">
           <img class="responsive-img album-cover" v-bind:src="albumCover(albumObject, '200')">
         </a>
@@ -18,60 +23,62 @@
   </div> <!-- END LIST CONTAINER -->
 </div> <!-- END VUE APP -->
 
-<div id="edit-list-modal" class="modal">
-  <div class="modal-content">
-    <div class="input-field">
-      <input id="list-name-input" type="text" placeholder="List title..." value="<%= @list.title %>">
-      <a id="clear-list-name-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
+<%= if @list.user_id == @user.id do %>
+  <div id="edit-list-modal" class="modal">
+    <div class="modal-content">
+      <div class="input-field">
+        <input id="list-name-input" type="text" placeholder="List title..." value="<%= @list.title %>">
+        <a id="clear-list-name-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="add-album-modal" class="modal">
-  <div class="modal-content">
-    <div class="input-field">
-      <input id="add-album-input" type="text" placeholder="Search by album or artist...">
-      <a id="clear-add-album-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
-    </div>
-    <div id="add-album-search-spinner-container" class="center-align hide">
-      <div class="preloader-wrapper big active">
-        <div class="spinner-layer spinner-blue-only">
-          <div class="circle-clipper left">
-            <div class="circle"></div>
-          </div><div class="gap-patch">
-            <div class="circle"></div>
-          </div><div class="circle-clipper right">
-            <div class="circle"></div>
+  <div id="add-album-modal" class="modal">
+    <div class="modal-content">
+      <div class="input-field">
+        <input id="add-album-input" type="text" placeholder="Search by album or artist...">
+        <a id="clear-add-album-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
+      </div>
+      <div id="add-album-search-spinner-container" class="center-align hide">
+        <div class="preloader-wrapper big active">
+          <div class="spinner-layer spinner-blue-only">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
           </div>
         </div>
       </div>
+      <div id="add-album-search-results"></div>
     </div>
-    <div id="add-album-search-results"></div>
   </div>
-</div>
 
-<div class="fixed-action-btn click-to-toggle">
-  <a id="lists-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
-    <i class="large material-icons">more_vert</i>
-  </a>
-  <ul>
-    <li>
-      <a id="remove-album" class="btn-floating light-blue accent-4">
-        <i class="material-icons">delete_forever</i>
-      </a>
-    </li>
-    <li>
-      <a id="edit-list" class="btn-floating light-blue accent-4">
-        <i class="material-icons">edit</i>
-      </a>
-    </li>
-    <li>
-      <a id="add-album", class="btn-floating light-blue accent-4">
-        <i class="material-icons">add</i>
-      </a>
-    </li>
-  </ul>
-</div>
+  <div class="fixed-action-btn click-to-toggle">
+    <a id="lists-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
+      <i class="large material-icons">more_vert</i>
+    </a>
+    <ul>
+      <li>
+        <a id="remove-album" class="btn-floating light-blue accent-4">
+          <i class="material-icons">delete_forever</i>
+        </a>
+      </li>
+      <li>
+        <a id="edit-list" class="btn-floating light-blue accent-4">
+          <i class="material-icons">edit</i>
+        </a>
+      </li>
+      <li>
+        <a id="add-album", class="btn-floating light-blue accent-4">
+          <i class="material-icons">add</i>
+        </a>
+      </li>
+    </ul>
+  </div>
+<% end %>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script type="text/javascript">
@@ -81,7 +88,10 @@
     el: '#listVueApp',
     data: {
       albums: <%= raw Jason.encode!(sortAlbums(@list.albums)) %>,
-      listTitle: "<%= @list.title %>"
+      listTitle: "<%= raw @list.title %>",
+      <%= if Map.has_key?(@list, :title_tags) do %>
+        titleTags: <%= raw Jason.encode!(@list.title_tags) %>
+      <% end %>
     },
     methods: {
       albumCover: function(album, size) {

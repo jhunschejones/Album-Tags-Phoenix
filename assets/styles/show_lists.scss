@@ -1,3 +1,6 @@
+// required for the v-cloak attribute to hide template {{}}'s
+[v-cloak] {display: none}
+
 #list-container {
   padding: 10px;
   display: flex;
@@ -57,6 +60,16 @@
 #list-title {
   margin: 20px 16px 0px 16px;
   word-wrap: break-word;
+}
+
+#title-tags {
+  margin: 6px 15px 2px 14px;
+  .title-tag {
+    height: 29px;
+    line-height: 29px;
+    padding: 0 10px;
+    margin-bottom: 0px;
+  }
 }
 
 #albums-count {
@@ -221,6 +234,3 @@
     font-size: 1.1em;
   }
 }
-
-// required for the v-cloak attribute to hide template {{}}'s
-[v-cloak] {display: none}
