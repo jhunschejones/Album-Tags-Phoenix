@@ -28,8 +28,22 @@ defmodule AlbumTagsWeb.ListController do
     render(conn, "index.html", data_for_page)
   end
 
+  # loads tag search results as a list
+  def tag_search(conn, %{"search_string" => search_string}) do
+    tags = search_string |> URI.decode() |> String.split(",,")
+
+    list = Map.new()
+    |> Map.put_new(:title, "Tag Search:")
+    |> Map.put_new(:title_tags, tags)
+    |> Map.put_new(:albums, Albums.search_by_tags(search_string))
+    |> Map.put_new(:user_id, nil)
+
+    data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
+    render(conn, "show.html", data_for_page)
+  end
+
   # loads the list SPA
-  def show(conn, %{"id" => list_id} = _params) do
+  def show(conn, %{"id" => list_id}) do
     list = Lists.get_list!(list_id)
     data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
     render(conn, "show.html", data_for_page)

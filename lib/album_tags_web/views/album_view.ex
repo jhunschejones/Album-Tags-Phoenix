@@ -21,9 +21,7 @@ defmodule AlbumTagsWeb.AlbumView do
   end
 
   def url_tag(tag) do
-    tag.text
-    |> String.downcase()
-    |> URI.encode()
+    URI.encode(tag.text)
   end
 
   def sort_songs(songs_map) do

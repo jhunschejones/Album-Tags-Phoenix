@@ -405,7 +405,7 @@
      * @param {String} tag
      */
     _followsTagRequirements(tag) {
-      if ((tag.includes("<") && tag.includes(">")) || tag.includes(".") || tag.includes("{") || tag.includes("}")) {
+      if ((tag.includes("<") && tag.includes(">")) || tag.includes(".") || tag.includes("{") || tag.includes("}") || tag.includes(",,")) {
         // Album Tags custom error toast
         M.toast({html: "Some characters are not allowed in tags"});
         return false;

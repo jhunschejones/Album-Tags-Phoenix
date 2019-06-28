@@ -55,6 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
         instances[i].close();
       }
     }
+
+    // buttons are hidden by default to prevent flashing while page assets load
+    showClass("fixed-action-btn");
   });
 
   // intentionally singular to match DOM classes
@@ -144,7 +147,11 @@ document.getElementById("search-tags").addEventListener("click", function(e) {
   if (selectedTags.length === 0) {
     return M.toast({html: 'Select a tag to search by tags'});
   } else {
-    console.log(selectedTags);
+    // UI slowdown to match button collapse speed
+    e.preventDefault();
+    setTimeout(function() {
+      return window.location = `/tags/search/${encodeURIComponent(selectedTags.join(",,"))}`;
+    }, 75);
   }
 });
 

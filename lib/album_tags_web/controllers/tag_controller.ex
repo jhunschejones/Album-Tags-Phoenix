@@ -59,8 +59,10 @@ defmodule AlbumTagsWeb.TagController do
         {:bad_request, "Tags must be at least two characters long", nil}
       {:text, "should be at most %{count} character(s)"} ->
         {:bad_request, "Tags cannot be more than thirty characters long", nil}
+      {:text, "disallowed character used"} ->
+        {:bad_request, "Some characters are not allowed in tags", nil}
       _ ->
-        {:internal_server_error, "Unable to create connection", nil}
+        {:internal_server_error, "Unable to create tag", nil}
     end
   end
 end

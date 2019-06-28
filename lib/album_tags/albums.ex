@@ -229,8 +229,32 @@ defmodule AlbumTags.Albums do
       nil ->
         create_tag(%{text: text, user_id: user_id, custom_genre: custom_genre})
       tag ->
-        tag
+        {:ok, tag}
     end
+  end
+
+  def search_by_tags(search_string) do
+    searched_tags = search_string
+    |> URI.decode()
+    |> String.split(",,")
+
+    query =
+      from t in Tag,
+      join: at in AlbumTag,
+      on: at.tag_id == t.id,
+      join: a in Album,
+      on: at.album_id == a.id,
+      where: t.text in ^searched_tags,
+      select: a,
+      distinct: [a.apple_album_id]
+
+    Repo.all(query)
+    |> Repo.preload(tags: [:user])
+    |> Enum.filter(fn a ->
+      Enum.all?(searched_tags, fn t ->
+        Enum.member?(Enum.map(a.tags, &(&1.text)), t)
+      end)
+    end)
   end
 
   @doc """

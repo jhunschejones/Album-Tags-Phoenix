@@ -18,6 +18,16 @@ defmodule AlbumTags.Albums.Tag do
     |> cast(attrs, [:text, :user_id, :custom_genre])
     |> validate_required([:text, :user_id, :custom_genre])
     |> validate_length(:text, min: 2, max: 30)
+    |> validatate_allowed_characters(:text)
     |> unique_constraint(:text, name: :tags_text_user_id_index)
+  end
+
+  def validatate_allowed_characters(changeset, field) when is_atom(field) do
+    validate_change(changeset, field, fn field, value ->
+      case String.contains?(value, [",,", "{", "}"]) do
+        false -> []
+        true -> [{field, "disallowed character used"}]
+      end
+    end)
   end
 end
