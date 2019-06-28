@@ -1,14 +1,24 @@
+@media screen and (max-width: 320px) {
+  nav .brand-logo {
+    font-size: 1.8rem;
+  }
+}
+
 #site-title-icon {
   max-width: 25px;
   margin-right: 2px;
 }
 
-#login-button {
-  margin-top: 10px;
-}
-
-#login-button i {
-  margin-right: 12px;
+#slide-out {
+  @media screen and (max-width: 320px) {
+    width: 270px;
+  }
+  #login-button {
+    margin-top: 10px;
+  }
+  #login-button i {
+    margin-right: 12px;
+  }
 }
 
 #album-search-input:focus {

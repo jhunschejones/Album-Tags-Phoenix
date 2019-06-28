@@ -62,7 +62,7 @@
           <%= tag.text %>
         </div>
       <% end %>
-      <div class="fixed-action-btn click-to-toggle">
+      <div class="fixed-action-btn click-to-toggle hide">
         <a id="tags-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
           <i class="large material-icons">more_vert</i>
         </a>
@@ -72,7 +72,7 @@
           <li><a id="search-tags" class="btn-floating light-blue accent-4"><i class="material-icons">search</i></a></li>
           <li>
             <%= link id: "add-tags", class: "btn-floating light-blue accent-4", to: Routes.tag_path(@conn, :edit, @album.apple_album_id) do %>
-              <i class="material-icons">add</i>
+              <i class="material-icons">edit</i>
             <% end %>
           </li>
         </ul>
@@ -88,7 +88,7 @@
           </div>
         <% end %>
       </div>
-      <div class="fixed-action-btn click-to-toggle">
+      <div class="fixed-action-btn click-to-toggle hide">
         <a id="connections-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
           <i class="large material-icons">more_vert</i>
         </a>
@@ -125,7 +125,7 @@
           </li>
         <% end %>
       </ul>
-      <div class="fixed-action-btn click-to-toggle">
+      <div class="fixed-action-btn click-to-toggle hide">
         <a id="lists-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
           <i class="large material-icons">more_vert</i>
         </a>

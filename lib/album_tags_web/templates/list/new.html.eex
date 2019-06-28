@@ -1,5 +1,5 @@
 <div class="row">
-  <div id="existing-list-container" class="col s12 l6">
+  <div id="existing-list-container" class="col s12">
     <label>Add to an existing list:</label>
     <button id="add-to-list-btn" class="btn-small light-blue accent-4">Add</button>
     <div class="input-field">
@@ -7,7 +7,7 @@
         <option id="placeholder" value="" disabled selected>Select an existing list...</option>
         <option value="favorites">&#9825; My Favorites</option>
         <%= for list <- @user_lists do %>
-          <%= if list.user_id == @user.id do %>
+          <%= if list.user_id == @user.id && list.title != "My Favorites" do %>
             <option value="<%= list.id %>"><%= list.title %></option>
           <% end %>
         <% end %>
@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <div id="new-list-container" class="col s12 l6">
+  <div id="new-list-container" class="col s12">
     <button id="add-to-new-list-btn" class="btn-small light-blue accent-4">Add</button>
     <div class="input-field">
       <label for="new-list-name">Add to a new list:</label>

@@ -8,49 +8,57 @@ $modern-blue: #0091ea;
 }
 
 #album-cover-col {
-  padding: 10px 10px 10px 10px;
-}
-
-.album-cover {
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px grey;
+  padding: 10px 20px 10px 10px;
+  max-width: 350px;
+  @media screen and (max-width: 500px) {
+    padding: 10px 10px 10px 10px;
+  }
+  .album-cover {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+  }
 }
 
 #album-info-col {
   padding: 5px 2px;
-}
-
-#title {
-  font-size: 1.3em;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-#record-company {
-  font-size: 1.0em;
-  font-weight: 200;
-  margin: 0px;
-  padding: 0px;
-  line-height: normal;
-}
-
-#artist {
-  margin: 5px 0px;
-  font-size: 1.2em;
-  color: $modern-blue;
-  font-weight: 500;
-}
-
-#apple-music-link-container-top {
-  margin-top: 15px;
-  font-weight: 300;
-  i {
-    display: inline;
-    vertical-align: middle;
+  #title {
+    font-size: 2.4em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    @media screen and (max-width: 500px) {
+      font-size: 1.3em;
+    }
   }
-  div {
-    display: inline;
+  #artist {
+    margin: 5px 0px;
+    font-size: 1.7em;
+    color: $modern-blue;
+    font-weight: 500;
+    @media screen and (max-width: 500px) {
+      font-size: 1.2em;
+    }
+  }
+  #record-company {
+    font-size: 1.0em;
+    font-weight: 200;
+    margin: 0px;
+    padding: 0px;
+    line-height: normal;
+    @media screen and (max-width: 500px) {
+      font-size: 1.0em;
+    }
+  }
+  #apple-music-link-container-top {
+    margin-top: 15px;
+    font-weight: 300;
+    i {
+      display: inline;
+      vertical-align: middle;
+    }
+    div {
+      display: inline;
+    }
   }
 }
 
@@ -99,38 +107,55 @@ $modern-blue: #0091ea;
   }
 }
 
-.connection {
-  max-width: 140px;
-  margin: 5px;
-  display: inline-block;
-}
-
-// distance between main FAB and next button up in expanded menu
-.fixed-action-btn ul {
-  bottom: 40px;
-}
-
 #tags {
   margin-top: 5px;
+  .tag {
+    margin: 4px 1px;
+  }
+
 }
 
-.tag {
-  margin: 4px 1px;
+#connections {
+  .row {
+    margin-left: 0px;
+    margin-top: 2px;
+    @media screen and (max-width: 500px) {
+      // default materialize row margins
+      margin-left: -.75rem;
+      margin-right: -.75rem;
+      margin-top: 0px;
+    }
+  }
+  .connection {
+    max-width: 150px;
+    margin: 5px;
+    display: inline-block;
+    @media screen and (max-width: 500px) {
+      max-width: 140px;
+    }
+  }
+  .album-cover {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+  }
 }
 
-#lists-ul {
-  text-decoration: none;
-  word-break: break-word; // force long list names to line break
-  margin-left: 12px;
-  margin-top: 5px;
-}
-
-.list-title {
-  color: $modern-blue;
-}
-
-.close-toast {
-  right: 0px;
+#lists {
+  #lists-ul {
+    text-decoration: none;
+    word-break: break-word; // force long list names to line break
+    margin-left: 12px;
+    margin-top: 5px;
+  }
+  .list {
+    font-size: 1.15em;
+    @media screen and (max-width: 500px) {
+      font-size: 1.04em;
+    }
+  }
+  .list-title {
+    color: $modern-blue;
+  }
 }
 
 #apple-music-link-container-bottom {
@@ -143,4 +168,9 @@ $modern-blue: #0091ea;
   div {
     display: inline;
   }
+}
+
+// distance between main FAB and next button up in expanded menu
+.fixed-action-btn ul {
+  bottom: 40px;
 }
