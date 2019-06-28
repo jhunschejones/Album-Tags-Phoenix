@@ -30,8 +30,9 @@ defmodule AlbumTagsWeb.Router do
     pipe_through :browser
 
     get "/", StaticPageController, :home
+    get "/tags/search/:search_string", ListController, :tag_search
     resources "/albums", AlbumController, only: [:show]
-    resources "/tags", TagController, only: [:index, :create, :edit, :delete]
+    resources "/tags", TagController, only: [:create, :edit, :delete]
     resources "/connections", ConnectionController, only: [:new, :create, :edit, :delete]
     resources "/lists", ListController, only: [:index, :show, :new, :create, :edit, :update, :delete]
   end
