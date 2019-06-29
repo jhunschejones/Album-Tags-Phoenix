@@ -40,7 +40,7 @@
           <% end %>
         <% end %>
       </li>
-      <li><div class="divider" style="margin-bottom:8px;"></div></li>
+      <li><div class="divider" style="margin-bottom:11px;"></div></li>
       <li><a href="/">Home</a></li>
       <%# <li><a href="#">About</a></li> %>
       <li><a id="open-search-modal" class="modal-trigger" href="#search-modal">Search</a></li>
