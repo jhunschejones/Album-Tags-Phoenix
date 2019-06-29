@@ -55,9 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
         instances[i].close();
       }
     }
-
-    // buttons are hidden by default to prevent flashing while page assets load
-    showClass("fixed-action-btn");
   });
 
   // intentionally singular to match DOM classes
@@ -78,6 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
       toggleContentDisplayed(contentType);
     });
   }
+
+  // buttons are hidden by default to prevent flashing while page assets load
+  showClass("fixed-action-btn");
 });
 
 // close toasts on click

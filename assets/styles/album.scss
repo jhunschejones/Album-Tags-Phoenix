@@ -91,6 +91,9 @@ $modern-blue: #0091ea;
 }
 
 #songs-card {
+  tr {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
   td {
     padding: 8px 14px;
   }
