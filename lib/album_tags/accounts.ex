@@ -44,12 +44,14 @@ defmodule AlbumTags.Accounts do
   end
 
 
-  def insert_or_update_user(changeset) do
-    case Repo.get_by(User, email: changeset.changes.email) do
+  def insert_or_update_user(user_params) do
+    case Repo.get_by(User, email: user_params.email) do
       nil ->
-        Repo.insert(changeset)
+        create_user(user_params)
       user ->
-        {:ok, user}
+        # updating the user record every time because the token from google
+        # changes every time
+        update_user(user, user_params)
       end
   end
 
@@ -85,12 +87,5 @@ defmodule AlbumTags.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-  """
-  def change_user(user_params) do
-    User.changeset(%User{}, user_params)
   end
 end

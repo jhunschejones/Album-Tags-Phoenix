@@ -12,11 +12,12 @@ defmodule AlbumTagsWeb.AuthController do
     user_params = %{
       token: auth.credentials.token,
       email: auth.info.email,
+      name: auth.info.name,
+      profile_image: auth.info.image,
       provider: "google"
     }
-    changeset = Accounts.change_user(user_params)
 
-    login(conn, changeset)
+    login(conn, user_params)
   end
 
   # catch login path when a current user is already on the connection, aka, the
@@ -26,14 +27,15 @@ defmodule AlbumTagsWeb.AuthController do
     user_params = %{
       token: current_user.token,
       email: current_user.email,
+      name: current_user.name,
+      profile_image: current_user.profile_image,
       provider: "google"
     }
-    changeset = Accounts.change_user(user_params)
 
     # when a current user exists, it means the conn has already gone through the
     # authenticate plug, meaning we have to recirect back farther to get to the
     # origional page the user was requesting
-    login(conn, changeset, 5)
+    login(conn, user_params, 5)
   end
 
   def logout(conn, _params) do
@@ -42,17 +44,15 @@ defmodule AlbumTagsWeb.AuthController do
     |> redirect(to: Routes.static_page_path(conn, :home))
   end
 
-  defp login(conn, changeset, redirect_steps \\ 2) do
-    case Accounts.insert_or_update_user(changeset) do
+  defp login(conn, user_params, redirect_steps \\ 2) do
+    case Accounts.insert_or_update_user(user_params) do
       {:ok, user} ->
         conn
-        # |> put_flash(:info, "Welcome back")
         |> put_session(:user_id, user.id)
         |> configure_session(renew: true) # sends cookie back to client with new identifier
         |> redirect_back(redirect_steps) # redirect to original page before login sequence
       {:error, _reason} ->
         conn
-        # |> put_flash(:error, "Error signing in")
         |> redirect(to: Routes.static_page_path(conn, :home))
     end
   end

@@ -40,8 +40,12 @@ defmodule AlbumTagsWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    key: "_album_tags_key",
-    signing_salt: "k+vCu8cY"
+    key: "_album_tags_3",
+    signing_salt: "k+vCu8cY",
+    # without max_age the session will expire when browser is closed
+    # adding max_age impliments sessions that can span browser sessions
+    # remove max_age line to return to browser session length restriction
+    max_age: 1209600 # 60*60*24*14
 
   plug AlbumTagsWeb.Router
 end
