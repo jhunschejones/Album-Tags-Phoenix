@@ -60,10 +60,18 @@
 #list-title {
   margin: 20px 16px 0px 16px;
   word-wrap: break-word;
+  font-size: 1.7em;
+}
+
+#list-author {
+  color: #0091ea;
+  font-size: 1.2em;
+  margin: 5px 16px 0px 16px;
+  line-height: 1em;
 }
 
 #title-tags {
-  margin: 6px 15px 2px 14px;
+  margin: 6px 14px 2px 14px;
   .title-tag {
     height: 29px;
     line-height: 29px;
@@ -73,8 +81,10 @@
 }
 
 #albums-count {
-  margin: 0px 16px 2px 16px;
+  margin: 6px 16px 2px 16px;
   font-weight: 300;
+  font-size: 1em;
+  line-height: 1em;
 }
 
 #edit-list-modal {

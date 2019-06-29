@@ -43,6 +43,13 @@ defmodule AlbumTags.Lists do
     |> Albums.with_albums_and_tags()
   end
 
+  def get_list_with_user!(id) do
+    List
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
+    |> Albums.with_albums_and_tags()
+  end
+
   @doc """
   Gets all lists associated with a specific user_id
   """

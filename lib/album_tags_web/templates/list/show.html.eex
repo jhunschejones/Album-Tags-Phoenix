@@ -1,5 +1,13 @@
 <div id="listVueApp">
   <h5 id="list-title" v-cloak>{{ listTitle }}</h5>
+  <%= if @list.user_id do %>
+    <%= if @list.user_id == @user.id do %>
+      <p id="list-author" v-cloak>created by you</p>
+    <% else %>
+      <p id="list-author" v-cloak><%= @list.user.name %></p>
+    <% end %>
+  <% end %>
+
   <div id="title-tags" v-if="typeof titleTags !== 'undefined'">
     <div class="chip title-tag" v-for="tag in titleTags" v-cloak>{{ tag }}</div>
   </div>
@@ -62,17 +70,17 @@
     </a>
     <ul>
       <li>
-        <a id="remove-album" class="btn-floating light-blue accent-4">
-          <i class="material-icons">delete_forever</i>
-        </a>
-      </li>
-      <li>
         <a id="edit-list" class="btn-floating light-blue accent-4">
           <i class="material-icons">edit</i>
         </a>
       </li>
       <li>
-        <a id="add-album", class="btn-floating light-blue accent-4">
+        <a id="remove-album" class="btn-floating light-blue accent-4">
+          <i class="material-icons">delete_forever</i>
+        </a>
+      </li>
+      <li>
+        <a id="add-album" class="btn-floating light-blue accent-4">
           <i class="material-icons">add</i>
         </a>
       </li>
