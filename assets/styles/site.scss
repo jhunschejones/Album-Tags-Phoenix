@@ -4,6 +4,16 @@
   }
 }
 
+// position toasts for desktop
+@media screen and (min-width: 599px) {
+  #toast-container {
+    top: auto !important;
+    right: auto !important;
+    bottom: 10%;
+    left: 7%;
+  }
+}
+
 #site-title-icon {
   max-width: 25px;
   margin-right: 2px;
