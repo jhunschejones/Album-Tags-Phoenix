@@ -52,9 +52,61 @@
   }
 }
 
+#bottom-filters{
+  text-align: center;
+  width: 100%;
+  height: 54px;
+  bottom: 0px;
+  left: 0px;
+  position: fixed;
+  background-color: #424242;
+  z-index: 1000;
+  ul {
+    width: 100%;
+    li {
+      display: inline-block;
+      width: 19%;
+      a {
+        color: #fff;
+        &:hover{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+#tag-filters,
+#artist-filters,
+#year-filters {
+  margin-top: 15px;
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+// bottom buttons in filter modals
+.filter-btn,
+.clear-filters {
+  margin-top: 10px;
+}
+
+.clear-filters {
+  margin-left: 5px;
+}
+
+#year-filter-modal,
+#artist-filter-modal,
+#tag-filter-modal {
+  width: 95%;
+  @media screen and (min-width: 700px) {
+    width: 80%;
+  }
+}
+
 // distance between main FAB and next button up in expanded menu
 .fixed-action-btn ul {
-  bottom: 40px;
+  bottom: 39px;
 }
 
 #list-title {
@@ -77,6 +129,20 @@
     line-height: 29px;
     padding: 0 10px;
     margin-bottom: 0px;
+  }
+}
+
+#applied-filters{
+  margin: 6px 14px 2px 14px;
+  .applied-filter {
+    height: 20px;
+    line-height: 20px;
+    padding: 0 9px;
+    margin-bottom: 0px;
+    margin-right: 5px;
+    &:hover{
+      cursor: pointer;
+    }
   }
 }
 

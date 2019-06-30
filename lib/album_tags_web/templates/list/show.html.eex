@@ -11,6 +11,13 @@
   <div id="title-tags" v-if="typeof titleTags !== 'undefined'">
     <div class="chip title-tag" v-for="tag in titleTags" v-cloak>{{ tag }}</div>
   </div>
+
+  <div id="applied-filters" v-if="allFilters.length > 0">
+    <div class="chip light-blue accent-4 white-text applied-filter" onclick="removeFilter(event)" :data-filter="filter" :data-type="'year'" v-for="filter in yearFilters" v-cloak>{{ filter }}</div>
+    <div class="chip light-blue accent-4 white-text applied-filter" onclick="removeFilter(event)" :data-filter="filter" :data-type="'artist'" v-for="filter in artistFilters" v-cloak>{{ filter }}</div>
+    <div class="chip light-blue accent-4 white-text applied-filter" onclick="removeFilter(event)" :data-filter="filter" :data-type="'tag'" v-for="filter in tagFilters" v-cloak>{{ filter }}</div>
+  </div>
+
   <p id="albums-count" class="grey-text" v-cloak>{{ selectedAlbumsCount }} albums</p>
 
   <div id="list-container" class="row">
@@ -29,6 +36,41 @@
       </div>
     </div>
   </div> <!-- END LIST CONTAINER -->
+
+  <!-- START FILTER MODALS -->
+  <div id="year-filter-modal" class="modal">
+    <div class="modal-content">
+      <h6>Select a year to filter by:</h6>
+      <div id="year-filters">
+        <div class="chip year-filter" onclick="selectYearFilter(event)" v-for="year in years" :data-year="year" v-cloak>{{ year }}</div>
+      </div>
+      <a class="btn btn-small light-blue accent-4 filter-btn" data-type="year">Filter</a>
+      <a class="btn btn-small grey lighten-4 grey-text text-darken-2 clear-filters" data-type="year">Clear</a>
+    </div>
+  </div>
+
+  <div id="artist-filter-modal" class="modal">
+    <div class="modal-content">
+      <h6>Select an artist to filter by:</h6>
+      <div id="artist-filters">
+        <div class="chip artist-filter" onclick="selectArtistFilter(event)" v-for="artist in artists" :data-artist="artist" v-cloak>{{ artist }}</div>
+      </div>
+      <a class="btn btn-small light-blue accent-4 filter-btn" data-type="artist">Filter</a>
+      <a class="btn btn-small grey lighten-4 grey-text text-darken-2 clear-filters" data-type="artist">Clear</a>
+    </div>
+  </div>
+
+  <div id="tag-filter-modal" class="modal">
+    <div class="modal-content">
+      <h6>Select tags to filter by:</h6>
+      <div id="tag-filters">
+        <div class="chip tag-filter" onclick="selectTagFilter(event)" v-for="tag in tags" :data-tag="tag" v-cloak>{{ tag }}</div>
+      </div>
+      <a class="btn btn-small light-blue accent-4 filter-btn" data-type="tag">Filter</a>
+      <a class="btn btn-small grey lighten-4 grey-text text-darken-2 clear-filters" data-type="tag">Clear</a>
+    </div>
+  </div>
+  <!-- END FILTER MODALS -->
 </div> <!-- END VUE APP -->
 
 <%= if @list.user_id == @user.id do %>
@@ -63,30 +105,47 @@
       <div id="add-album-search-results"></div>
     </div>
   </div>
-
-  <div class="fixed-action-btn click-to-toggle">
-    <a id="lists-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
-      <i class="large material-icons">more_vert</i>
-    </a>
-    <ul>
-      <li>
-        <a id="edit-list" class="btn-floating light-blue accent-4">
-          <i class="material-icons">edit</i>
-        </a>
-      </li>
-      <li>
-        <a id="remove-album" class="btn-floating light-blue accent-4">
-          <i class="material-icons">delete_forever</i>
-        </a>
-      </li>
-      <li>
-        <a id="add-album" class="btn-floating light-blue accent-4">
-          <i class="material-icons">add</i>
-        </a>
-      </li>
-    </ul>
-  </div>
 <% end %>
+
+<div id="lists-fab-button" class="fixed-action-btn click-to-toggle">
+  <a id="show-buttons" class="btn-floating light-blue accent-4 click-to-toggle">
+    <i class="large material-icons">more_vert</i>
+  </a>
+  <ul>
+  <%= if @list.user_id == @user.id do %>
+    <li>
+      <a id="edit-list" class="btn-floating light-blue accent-4">
+        <i class="material-icons">edit</i>
+      </a>
+    </li>
+    <li>
+      <a id="remove-album" class="btn-floating light-blue accent-4">
+        <i class="material-icons">delete_forever</i>
+      </a>
+    </li>
+    <li>
+      <a id="add-album" class="btn-floating light-blue accent-4">
+        <i class="material-icons">add</i>
+      </a>
+    </li>
+    <% end %>
+    <li>
+      <a id="show-filters" class="btn-floating light-blue accent-4">
+        <i class="material-icons">filter_list</i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div id="bottom-filters" class="hide">
+  <ul>
+    <li><a id="year-filter-btn"><i class="material-icons">date_range</i></a></li>
+    <li><a id="artist-filter-btn"><i class="material-icons">mic</i></a></li>
+    <li><a id="tag-filter-btn"><i class="material-icons">loyalty</i></a></li>
+    <li><a id="clear-all-filters"><i class="material-icons">replay</i></a></li>
+    <li><a id="close-filter-menu"><i class="material-icons">close</i></a></li>
+  </ul>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script type="text/javascript">
@@ -96,6 +155,11 @@
     el: '#listVueApp',
     data: {
       albums: <%= raw Jason.encode!(sortAlbums(@list.albums)) %>,
+      selectedAlbums: [],
+      listUserID: <%= raw Jason.encode!(@list.user_id) %>,
+      yearFilters: [],
+      artistFilters: [],
+      tagFilters: [],
       listTitle: "<%= raw @list.title %>",
       <%= if Map.has_key?(@list, :title_tags) do %>
         titleTags: <%= raw Jason.encode!(@list.title_tags) %>
@@ -105,17 +169,38 @@
       albumCover: function(album, size) {
         return album.cover.replace("{w}", size).replace("{h}", size);
       },
-      removeAlbum: function(albumID) {
-        removeAlbumFromList(albumID);
-      }
+      removeAlbum: function(albumID) { removeAlbumFromList(albumID); },
+      resetSelectedAlbums: function() {
+        var albums = JSON.parse(JSON.stringify(this.albums));
+        for (var i = 0; i < albums.length; i++) {
+          var album = albums[i];
+          album.tags = album.tags.filter(t => t.user_id == this.listUserID);
+        }
+        this.selectedAlbums = albums;
+      },
     },
     computed: {
-      selectedAlbums: function() {
-        return this.albums.slice();
-      },
-      selectedAlbumsCount: function () {
-        return this.selectedAlbums.length;
+      selectedAlbumsCount: function () { return this.selectedAlbums.length; },
+      artists: function() { return Array.from(new Set(
+        this.selectedAlbums.slice().map(a => a.artist)
+      ));},
+      years: function() { return Array.from(new Set(
+        this.selectedAlbums.slice().map(a => a.release_date.substr(0,4))
+      ));},
+      tags: function() { return Array.from(new Set(
+        this.selectedAlbums.slice().map(a =>
+          a.tags.filter(t => t.user_id == this.listUserID).map(t => t.text)).flat()
+        )
+      );},
+      allFilters: function() {
+        return this.yearFilters.concat(this.artistFilters).concat(this.tagFilters);
       }
-    }
-  })
+    },
+    watch: {
+      albums: function () {
+        this.resetSelectedAlbums();
+      }
+    },
+    beforeMount() { this.resetSelectedAlbums(); }
+  });
 </script>
