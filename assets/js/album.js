@@ -2,7 +2,7 @@
 // initialize tabs on card
 document.addEventListener('DOMContentLoaded', function() {
   var elems = document.querySelectorAll('.tabs');
-  var instances = M.Tabs.init(elems, {
+  var tabInstances = M.Tabs.init(elems, {
     // to enable swipable tabs, also add materialize carousel js and scss
     // swipeable: true
   });
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // initialize floating action button
 document.addEventListener('DOMContentLoaded', function() {
   var elems = document.querySelectorAll('.fixed-action-btn');
-  var instances = M.FloatingActionButton.init(elems, {
+  window.FABinstances = M.FloatingActionButton.init(elems, {
     direction: "top",
     hoverEnabled: false
   });
@@ -34,12 +34,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById(b).addEventListener("click", function(e) {
       e.preventDefault();
-      const _this = this;
-      setTimeout(function() {
-        return window.location = _this.href;
-      }, 75);
+      // UI slowdown to match button collapse speed
+      // const _this = this;
+      // setTimeout(function() {
+      //   return window.location = _this.href;
+      // }, 75);
+
+      for (let i = 0; i < window.FABinstances.length; i++) {
+        const instance = window.FABinstances[i];
+        instance.destroy();
+      }
+      return window.location = this.href;
     });
   }
+
+  document.getElementById("search-tags").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (selectedTags.length === 0) return M.toast({html: 'Select a tag to search by tags'});
+
+    // UI slowdown to match button collapse speed
+    // setTimeout(function() {
+    //   return window.location = `/tags/search/${encodeURIComponent(selectedTags.join(",,"))}`;
+    // }, 75);
+
+    for (let i = 0; i < window.FABinstances.length; i++) {
+      const instance = window.FABinstances[i];
+      instance.destroy();
+    }
+    return window.location = `/tags/search/${encodeURIComponent(selectedTags.join(",,"))}`;
+  });
 
   // close expanded fabs when user clicks somewhere not on the buttons
   document.addEventListener("click", function(e) {
@@ -51,8 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
     ].includes(e.target.parentNode.id);
 
     if (!clickedFAB) {
-      for (let i = 0; i < instances.length; i++) {
-        instances[i].close();
+      for (let i = 0; i < window.FABinstances.length; i++) {
+        window.FABinstances[i].close();
       }
     }
   });
@@ -141,18 +164,6 @@ addEventListenerToClass("tag", "click", function(e) {
   const value = e.target.dataset.value;
   const i = selectedTags.indexOf(value);
   return i === -1 ? selectedTags.push(value) : selectedTags.splice(i, 1);
-});
-
-document.getElementById("search-tags").addEventListener("click", function(e) {
-  if (selectedTags.length === 0) {
-    return M.toast({html: 'Select a tag to search by tags'});
-  } else {
-    // UI slowdown to match button collapse speed
-    e.preventDefault();
-    setTimeout(function() {
-      return window.location = `/tags/search/${encodeURIComponent(selectedTags.join(",,"))}`;
-    }, 75);
-  }
 });
 
 function toggleContentDisplayed(contentType) {
