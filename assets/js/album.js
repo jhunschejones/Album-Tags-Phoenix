@@ -18,13 +18,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// initialize floating action button
-document.addEventListener('DOMContentLoaded', function() {
+// initialize all floating action buttons
+function initializeAllFAB() {
   var elems = document.querySelectorAll('.fixed-action-btn');
   window.FABinstances = M.FloatingActionButton.init(elems, {
     direction: "top",
     hoverEnabled: false
   });
+}
+
+// force FAB initialization if page is reached on back button
+if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
+  initializeAllFAB();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initializeAllFAB();
 
   // slow down link to tags edit page to allow button animation to finish
   const editButtons = ["add-tags", "add-connections", "edit-connections", "add-lists", "edit-lists"];
