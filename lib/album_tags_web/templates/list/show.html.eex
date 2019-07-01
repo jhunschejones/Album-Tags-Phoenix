@@ -8,7 +8,7 @@
     <% end %>
   <% end %>
 
-  <div id="title-tags" v-if="typeof titleTags !== 'undefined'">
+  <div id="title-tags" v-if="titleTags !== null">
     <div class="chip title-tag" v-for="tag in titleTags" v-cloak>{{ tag }}</div>
   </div>
 
@@ -128,7 +128,7 @@
         <i class="material-icons">add</i>
       </a>
     </li>
-    <% end %>
+  <% end %>
     <li>
       <a id="show-filters" class="btn-floating light-blue accent-4">
         <i class="material-icons">filter_list</i>
@@ -150,57 +150,12 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script type="text/javascript">
   var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>
-
-  var listVueApp = new Vue({
-    el: '#listVueApp',
-    data: {
-      albums: <%= raw Jason.encode!(sortAlbums(@list.albums)) %>,
-      selectedAlbums: [],
-      listUserID: <%= raw Jason.encode!(@list.user_id) %>,
-      yearFilters: [],
-      artistFilters: [],
-      tagFilters: [],
-      listTitle: "<%= raw @list.title %>",
-      <%= if Map.has_key?(@list, :title_tags) do %>
-        titleTags: <%= raw Jason.encode!(@list.title_tags) %>
-      <% end %>
-    },
-    methods: {
-      albumCover: function(album, size) {
-        return album.cover.replace("{w}", size).replace("{h}", size);
-      },
-      removeAlbum: function(albumID) { removeAlbumFromList(albumID); },
-      resetSelectedAlbums: function() {
-        var albums = JSON.parse(JSON.stringify(this.albums));
-        for (var i = 0; i < albums.length; i++) {
-          var album = albums[i];
-          album.tags = album.tags.filter(t => t.user_id == this.listUserID);
-        }
-        this.selectedAlbums = albums;
-      },
-    },
-    computed: {
-      selectedAlbumsCount: function () { return this.selectedAlbums.length; },
-      artists: function() { return Array.from(new Set(
-        this.selectedAlbums.slice().map(a => a.artist)
-      ));},
-      years: function() { return Array.from(new Set(
-        this.selectedAlbums.slice().map(a => a.release_date.substr(0,4))
-      ));},
-      tags: function() { return Array.from(new Set(
-        this.selectedAlbums.slice().map(a =>
-          a.tags.filter(t => t.user_id == this.listUserID).map(t => t.text)).flat()
-        )
-      );},
-      allFilters: function() {
-        return this.yearFilters.concat(this.artistFilters).concat(this.tagFilters);
-      }
-    },
-    watch: {
-      albums: function () {
-        this.resetSelectedAlbums();
-      }
-    },
-    beforeMount() { this.resetSelectedAlbums(); }
-  });
+  var allAlbums = <%= raw Jason.encode!(sortAlbums(@list.albums)) %>
+  // if there is no list owner, show tags for logged in user
+  var listUserID = <%= raw Jason.encode!(@list.user_id) %> || <%= raw Jason.encode!(@user.id) %>
+  var listTitle = <%= raw Jason.encode!(@list.title) %>
+  <%= if Map.has_key?(@list, :title_tags) do %>
+    var tagSearchTags = <%= raw Jason.encode!(@list.title_tags) %>
+  <% end %>
+  var tagSearchTags = tagSearchTags || null;
 </script>
