@@ -43,9 +43,37 @@ defmodule AlbumTags.Lists do
     |> Albums.with_albums_and_tags()
   end
 
-  def get_list_with_user!(id) do
+  # def get_associated_tags_for_user(album_ids, user_id) do
+  #   query =
+  #     from t in Albums.Tag,
+  #     join: a in assoc(t, :albums),
+  #     preload: [:user],
+  #     where: a.id in ^album_ids and t.user_id == ^user_id,
+  #     select: {a.id, t}
+
+  #   Repo.all(query)
+  # end
+
+  def get_list_with_user!(list_id, user_id) do
+    # tags_preloader = fn album_ids ->
+    #   get_associated_tags_for_user(album_ids, user_id)
+    # end
+
+    # problem is this only loads albums with tags by this user, it doesn't
+    # limit the tags loaded to just this user's tags
+    # query =
+    #   from l in List,
+    #   join: a in assoc(l, :albums),
+    #   join: t in assoc(a, :tags),
+    #   join: u in assoc(t, :user),
+    #   preload: [:albums, albums: :tags],
+    #   where: l.id == ^list_id,
+    #   select: l
+
+    # Repo.all(query)
+
     List
-    |> Repo.get!(id)
+    |> Repo.get!(list_id)
     |> Repo.preload(:user)
     |> Albums.with_albums_and_tags()
   end

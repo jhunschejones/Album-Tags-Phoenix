@@ -35,7 +35,7 @@ defmodule AlbumTagsWeb.ListController do
     list = Map.new()
     |> Map.put_new(:title, "Tag Search:")
     |> Map.put_new(:title_tags, tags)
-    |> Map.put_new(:albums, Albums.search_by_tags(search_string))
+    |> Map.put_new(:albums, Albums.search_by_tags(search_string, conn.assigns.current_user.id))
     |> Map.put_new(:user_id, nil)
 
     data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
@@ -44,7 +44,7 @@ defmodule AlbumTagsWeb.ListController do
 
   # loads the list SPA
   def show(conn, %{"id" => list_id}) do
-    list = Lists.get_list_with_user!(list_id)
+    list = Lists.get_list_with_user!(list_id, conn.assigns.current_user.id)
     data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
     render(conn, "show.html", data_for_page)
   end
