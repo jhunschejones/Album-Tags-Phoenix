@@ -25,12 +25,13 @@ function initializeAllFAB() {
     direction: "top",
     hoverEnabled: false
   });
+  window.fabsInitialized = true;
 }
 
-// force FAB initialization if page is reached on back button
-if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
-  initializeAllFAB();
-}
+// re-initialize destroyed FAB's when page is reached using browser "back" button
+window.addEventListener('pageshow', function() {
+  if (!window.fabsInitialized) { initializeAllFAB(); }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   initializeAllFAB();
@@ -52,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
       for (let i = 0; i < window.FABinstances.length; i++) {
         const instance = window.FABinstances[i];
         instance.destroy();
+        window.fabsInitialized = false;
       }
       return window.location = this.href;
     });
@@ -69,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let i = 0; i < window.FABinstances.length; i++) {
       const instance = window.FABinstances[i];
       instance.destroy();
+      window.fabsInitialized = false;
     }
     return window.location = `/tags/search/${encodeURIComponent(selectedTags.join(",,"))}`;
   });
