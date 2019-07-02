@@ -18,12 +18,15 @@ var listVueApp = new Vue({
     removeAlbum: function(albumID) { removeAlbumFromList(albumID); },
     resetSelectedAlbums: function() {
       var albums = JSON.parse(JSON.stringify(this.albums));
-      for (var i = 0; i < albums.length; i++) {
-        var album = albums[i];
-        album.tags = album.tags.filter(t => t.user_id == this.listUserID);
+      // filter tags down to just those made by the list creator if this is a user list
+      if (listUserID) {
+        for (var i = 0; i < albums.length; i++) {
+          var album = albums[i];
+          album.tags = album.tags.filter(t => t.user_id == this.listUserID);
+        }
       }
       this.selectedAlbums = albums;
-    },
+    }
   },
   computed: {
     selectedAlbumsCount: function () { return this.selectedAlbums.length; },
@@ -38,9 +41,8 @@ var listVueApp = new Vue({
       ));
     },
     tags: function() {
-      return Array.from(new Set(
-      this.selectedAlbums.slice().map(a =>
-        a.tags.filter(t => t.user_id == this.listUserID).map(t => t.text)).flat()
+      return Array.from(new Set(this.selectedAlbums.slice().map(a =>
+        a.tags.map(t => t.text)).flat()
       ));
     },
     allFilters: function() {
@@ -65,6 +67,11 @@ var listVueApp = new Vue({
     this.resetSelectedAlbums();
   },
   mounted() {
+    // remove static list title for progressive enhancement
+    const e = document.getElementById("htm-title");
+    e.parentNode.removeChild(e);
+
+    // set filters
     this.artistFilters = getURIparam("artists");
     this.yearFilters = getURIparam("years");
     this.tagFilters = getURIparam("tags");

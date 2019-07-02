@@ -41,13 +41,31 @@
         background-color: rgba(245,245,245,.9);
       }
     }
+    img {
+      height: 188px;
+      width: 188px;
+      opacity: 1;
+      animation: fadeIn 1s ease;
+      @keyframes fadeIn{
+        0%{opacity: 0;}
+        100%{opacity: 1;}
+      }
+    }
     @media screen and (max-width: 375px) {
       width: 176px;
       .delete-button {margin-left: 148px;}
+      img {
+        height: 164px;
+        width: 164px;
+      }
     }
     @media screen and (min-width: 376px) and (max-width: 414px) {
       width: 195px;
       .delete-button {margin-left: 167px;}
+      img {
+        height: 183px;
+        width: 183px;
+      }
     }
   }
 }
@@ -268,11 +286,23 @@
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
     width: 200px;
+    img {
+      height: 188px;
+      width: 188px;
+    }
     @media screen and (max-width: 375px) {
       width: 176px;
+      img {
+        height: 164px;
+        width: 164px;
+      }
     }
     @media screen and (min-width: 376px) and (max-width: 414px) {
       width: 195px;
+      img {
+        height: 183px;
+        width: 183px;
+      }
     }
     &:hover {
       cursor: pointer;
