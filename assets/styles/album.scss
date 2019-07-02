@@ -16,6 +16,12 @@ $modern-blue: #0091ea;
   .album-cover {
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
+    opacity: 1;
+    animation: fadeIn 1s ease;
+    @keyframes fadeIn{
+      0%{opacity: 0;}
+      100%{opacity: 1;}
+    }
   }
 }
 
@@ -62,6 +68,16 @@ $modern-blue: #0091ea;
   }
 }
 
+#album-cover-spinner-container {
+  margin: 120px 0px;
+  @media screen and (max-width: 375px) {
+    margin: 42px 0px;
+  }
+  @media screen and (min-width: 376px) and (max-width: 414px) {
+    margin: 45px 0px;
+  }
+}
+
 .card {
   /* override default box shadow to only be on the top of the card */
   box-shadow: 0 -2px 1px 0px rgba(0,0,0,0.05);
@@ -87,6 +103,11 @@ $modern-blue: #0091ea;
       color: black;
       background-color: $background-grey;
     }
+  }
+  .tab-scope-indicator {
+    opacity: 0.3;
+    vertical-align: middle;
+    margin-right: -7px;
   }
 }
 
@@ -153,7 +174,7 @@ $modern-blue: #0091ea;
   .list {
     font-size: 1.15em;
     @media screen and (max-width: 500px) {
-      font-size: 1.04em;
+      font-size: 1.1em;
     }
   }
   .list-title {

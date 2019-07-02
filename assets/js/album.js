@@ -164,6 +164,26 @@ if(performance.navigation.type == 2){
 }
 // ====== END UTILITY FUNCTIONS ======
 
+// ====== START SPINNER FUNCTIONALITY ======
+const spinner = document.getElementById("album-cover-spinner-container");
+function hideSpinner() {
+  if (spinner.classList.contains("hide")) return;
+  spinner.classList.add("hide");
+}
+
+function showSpinner() {
+  spinner.classList.remove("hide");
+}
+
+if (!document.getElementById("page-album-cover").complete) {
+  showSpinner();
+}
+
+document.getElementById("page-album-cover").addEventListener("load", function() {
+  hideSpinner();
+});
+// ====== END SPINNER FUNCTIONALITY ======
+
 let selectedTags = [];
 addEventListenerToClass("tag", "click", function(e) {
   var toastOut = document.getElementById("toast-container");
@@ -187,9 +207,13 @@ function toggleContentDisplayed(contentType) {
     showClass(`user-${contentType}`);
     document.getElementById(`show-my-${contentType}s`).classList.add("hide");
     document.getElementById(`show-all-${contentType}s`).classList.remove("hide");
+    document.getElementById(`user-${contentType}s-icon`).classList.remove("hide");
+    document.getElementById(`all-${contentType}s-icon`).classList.add("hide");
   } else {
     showClass(contentType);
     document.getElementById(`show-my-${contentType}s`).classList.remove("hide");
     document.getElementById(`show-all-${contentType}s`).classList.add("hide");
+    document.getElementById(`user-${contentType}s-icon`).classList.add("hide");
+    document.getElementById(`all-${contentType}s-icon`).classList.remove("hide");
   }
 }
