@@ -43,49 +43,34 @@ defmodule AlbumTags.Lists do
     |> Albums.with_albums_and_tags()
   end
 
-  # def get_associated_tags_for_user(album_ids, user_id) do
-  #   query =
-  #     from t in Albums.Tag,
-  #     join: a in assoc(t, :albums),
-  #     preload: [:user],
-  #     where: a.id in ^album_ids and t.user_id == ^user_id,
-  #     select: {a.id, t}
-
-  #   Repo.all(query)
-  # end
-
-  def get_list_with_user!(list_id, user_id) do
-    # tags_preloader = fn album_ids ->
-    #   get_associated_tags_for_user(album_ids, user_id)
-    # end
-
-    # problem is this only loads albums with tags by this user, it doesn't
-    # limit the tags loaded to just this user's tags
-    # query =
-    #   from l in List,
-    #   join: a in assoc(l, :albums),
-    #   join: t in assoc(a, :tags),
-    #   join: u in assoc(t, :user),
-    #   preload: [:albums, albums: :tags],
-    #   where: l.id == ^list_id,
-    #   select: l
-
-    # Repo.all(query)
-
+  def get_list_by(attrs) do
     List
-    |> Repo.get!(list_id)
-    |> Repo.preload(:user)
-    |> Albums.with_albums_and_tags()
+    |> Repo.get_by(attrs)
+  end
+
+  def get_list_with_all_assoc(list_id) do
+    # optimized to run as one SQL query
+    query =
+      from list in List,
+      where: list.id == ^list_id,
+      left_join: albums in assoc(list, :albums),
+      left_join: tags in assoc(albums, :tags),
+      left_join: user in assoc(tags, :user),
+      preload: [albums: {albums, tags: {tags, user: user}}]
+
+    Repo.one(query)
   end
 
   @doc """
   Gets all lists associated with a specific user_id
   """
   def get_user_lists(user_id) do
+    # optimized to run as one SQL query
     query =
-      from l in List,
-      preload: [albums: [:tags]],
-      where: l.user_id == ^user_id
+      from list in List,
+      where: list.user_id == ^user_id,
+      left_join: albums in assoc(list, :albums),
+      preload: [albums: albums]
 
     Repo.all(query)
   end
