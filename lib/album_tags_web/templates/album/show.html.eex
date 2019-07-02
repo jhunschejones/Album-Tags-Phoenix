@@ -1,6 +1,19 @@
 <div id="top-row" class="row">
   <div id="album-cover-col" class="col s6">
-    <img class="responsive-img album-cover" src="<%= album_cover(@album) %>" alt="album cover">
+    <div id="album-cover-spinner-container" class="center-align hide">
+      <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <img id="page-album-cover" class="responsive-img album-cover" src="<%= album_cover(@album) %>" alt="album cover">
   </div>
   <div id="album-info-col" class="col s6">
     <h6 id="title"><%= @album.title %></h6>
@@ -24,13 +37,37 @@
         <a id="go-to-songs-card" class="active" href="#songs-card">Songs</a>
       </li>
       <li class="tab">
-        <a id="go-to-tags-card" href="#tags">Tags</a>
+        <a id="go-to-tags-card" href="#tags">
+          <span>Tags</span>
+          <span id="all-tags-icon" class="tab-scope-indicator hide">
+            <i class="tiny material-icons">people_outline</i>
+          </span>
+          <span id="user-tags-icon" class="tab-scope-indicator hide">
+            <i class="tiny material-icons">perm_identity</i>
+          </span>
+        </a>
       </li>
       <li class="tab">
-        <a id="go-to-connections-card" href="#connections">Connections</a>
+        <a id="go-to-connections-card" href="#connections">
+          <span>Connections</span>
+          <span id="all-connections-icon" class="tab-scope-indicator hide">
+            <i class="tiny material-icons">people_outline</i>
+          </span>
+          <span id="user-connections-icon"  class="tab-scope-indicator hide">
+            <i class="tiny material-icons">perm_identity</i>
+          </span>
+        </a>
       </li>
       <li class="tab">
-        <a id="go-to-lists-card" href="#lists">Lists</a>
+        <a id="go-to-lists-card" href="#lists">
+          <span>Lists</span>
+          <span id="all-lists-icon" class="tab-scope-indicator hide">
+            <i class="tiny material-icons">people_outline</i>
+          </span>
+          <span id="user-lists-icon" class="tab-scope-indicator hide">
+            <i class="tiny material-icons">perm_identity</i>
+          </span>
+        </a>
       </li>
     </ul>
   </div>
