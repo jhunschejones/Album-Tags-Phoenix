@@ -38,13 +38,25 @@
         background-color: rgba(245,245,245,.9);
       }
     }
+    img {
+      height: 188px;
+      width: 188px;
+    }
     @media screen and (max-width: 375px) {
       width: 176px;
       .delete-button {margin-left: 148px;}
+      img {
+        height: 164px;
+        width: 164px;
+      }
     }
     @media screen and (min-width: 376px) and (max-width: 414px) {
       width: 195px;
       .delete-button {margin-left: 167px;}
+      img {
+        height: 183px;
+        width: 183px;
+      }
     }
   }
 }

@@ -29,6 +29,11 @@
   #login-button i {
     margin-right: 12px;
   }
+  li {
+    a {
+      font-size: 1.1em;
+    }
+  }
 }
 
 #album-search-input:focus {
@@ -145,11 +150,23 @@
     width: 200px;
     padding: 0px;
     margin: 0px 14px 0px 0px;
+    img {
+      height: 188px;
+      width: 188px;
+    }
     @media screen and (max-width: 375px) {
       width: 176px;
+      img {
+        height: 164px;
+        width: 164px;
+      }
     }
     @media screen and (min-width: 376px) and (max-width: 414px) {
       width: 195px;
+      img {
+        height: 183px;
+        width: 183px;
+      }
     }
     line-height: normal;
     .search-title {
