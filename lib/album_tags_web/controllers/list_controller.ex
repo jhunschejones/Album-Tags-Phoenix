@@ -44,7 +44,7 @@ defmodule AlbumTagsWeb.ListController do
 
   # loads the list SPA
   def show(conn, %{"id" => list_id}) do
-    list = Lists.get_list_with_user!(list_id, conn.assigns.current_user.id)
+    list = Lists.get_list_with_all_assoc(list_id)
     data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
     render(conn, "show.html", data_for_page)
   end
