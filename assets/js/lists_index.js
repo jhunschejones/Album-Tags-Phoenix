@@ -110,28 +110,33 @@ document.getElementById("edit-lists").addEventListener("click", function() {
 
 document.getElementById("list-name-input").addEventListener("keydown", function(e) {
   if(e.keyCode == 13) {
-    var newListName = document.getElementById("list-name-input").value.trim();
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState !== 4) return;
-
-      if (xhr.status >= 200 && xhr.status < 300) {
-        document.getElementById("list-name-input").value = "";
-        M.toast({html: JSON.parse(xhr.responseText).message});
-        addListToPage(JSON.parse(xhr.responseText).new_list)
-      } else {
-        M.toast({html: xhr.responseText.replace(/\"/g, "")});
-      }
-    };
-    xhr.open("POST", "/lists");
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("X-CSRF-Token", CSRF_TOKEN);
-    xhr.send(JSON.stringify({
-      private: false,
-      title: newListName
-    }));
+    createNewList();
   }
 });
+
+function createNewList() {
+  var newListName = document.getElementById("list-name-input").value.trim();
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4) return;
+
+    if (xhr.status >= 200 && xhr.status < 300) {
+      document.getElementById("list-name-input").value = "";
+      M.toast({html: JSON.parse(xhr.responseText).message});
+      addListtCardToUI(JSON.parse(xhr.responseText).new_list);
+      window.newListModal.close();
+    } else {
+      M.toast({html: xhr.responseText.replace(/\"/g, "")});
+    }
+  };
+  xhr.open("POST", "/lists");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.setRequestHeader("X-CSRF-Token", CSRF_TOKEN);
+  xhr.send(JSON.stringify({
+    private: false,
+    title: newListName
+  }));
+}
 
 function deleteList(listID) {
   var confirmed = confirm("Are you sure you want to delete this list? You cannot undo this operation.");
@@ -154,9 +159,7 @@ function deleteList(listID) {
   xhr.send();
 }
 
-
-
-function addListToPage(listInfo) {
+function addListtCardToUI(listInfo) {
   document.getElementById("lists-row").appendChild(
     stringToNode(
       `<div id="list-${listInfo.id}">
