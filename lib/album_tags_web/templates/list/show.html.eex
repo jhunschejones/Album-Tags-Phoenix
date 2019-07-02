@@ -1,10 +1,13 @@
 <div id="listVueApp">
-  <h5 id="list-title" v-cloak>{{ listTitle }}</h5>
+  <h5 id="list-title">
+    <span id="vue-title" v-cloak>{{ listTitle }}</span>
+    <span id="htm-title"><%= @list.title %></span>
+  </h5>
   <%= if @list.user_id do %>
     <%= if @list.user_id == @user.id do %>
-      <p id="list-author" v-cloak>created by you</p>
+      <p id="list-author">created by you</p>
     <% else %>
-      <p id="list-author" v-cloak><%= @list.user.name %></p>
+      <p id="list-author"><%= @list.user.name %></p>
     <% end %>
   <% end %>
 
@@ -149,13 +152,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script type="text/javascript">
-  var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>
-  var allAlbums = <%= raw Jason.encode!(sortAlbums(@list.albums)) %>
-  // if there is no list owner, show tags for logged in user
-  var listUserID = <%= raw Jason.encode!(@list.user_id) %> || <%= raw Jason.encode!(@user.id) %>
-  var listTitle = <%= raw Jason.encode!(@list.title) %>
+  var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
+  var allAlbums = <%= raw Jason.encode!(sortAlbums(@list.albums)) %>;
+  // if there is no list owner, show tags all users
+  var listUserID = <%= raw Jason.encode!(@list.user_id) %> || null;
+  var listTitle = <%= raw Jason.encode!(@list.title) %>;
   <%= if Map.has_key?(@list, :title_tags) do %>
-    var tagSearchTags = <%= raw Jason.encode!(@list.title_tags) %>
+    var tagSearchTags = <%= raw Jason.encode!(@list.title_tags) %>;
   <% end %>
   var tagSearchTags = tagSearchTags || null;
 </script>
