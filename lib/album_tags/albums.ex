@@ -233,7 +233,7 @@ defmodule AlbumTags.Albums do
     end
   end
 
-  def search_by_tags(search_string, user_id) do
+  def search_by_tags(search_string, _user_id) do
     searched_tags = search_string
     |> URI.decode()
     |> String.split(",,")
