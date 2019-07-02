@@ -34,7 +34,7 @@ defmodule AlbumTagsWeb.ListView do
 
   def sortAlbums(albums) do
     albums
-    |> Enum.sort(&(&1.apple_album_id >= &2.apple_album_id))
+    |> Enum.sort(&(&1.release_date >= &2.release_date))
   end
 
   def sortLists(lists) do
