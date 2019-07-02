@@ -1,6 +1,6 @@
 <div id="lists-container">
   <div id="lists-row" class="row">
-    <%= for list <- @lists do %>
+    <%= for list <- sortLists(@lists) do %>
       <div id="list-<%= list.id %>">
           <div class="delete-button hide " onclick="deleteList(<%= list.id %>)">
             &#10005;
