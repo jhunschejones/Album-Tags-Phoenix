@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // close toasts on click
 document.addEventListener("click", function(e) {
-  var parent = e.target.parentNode
+  var parent = e.target.parentNode;
   var isToast = (parent.classList && parent.classList.contains("toast")) || parent.id == "toast-container";
   if (isToast) { closeToast(); }
 });
@@ -148,6 +148,7 @@ function deleteList(listID) {
 
     if (xhr.status >= 200 && xhr.status < 300) {
       removeSelectedElement(`#list-${listID}`);
+      removeSelectedElement("#my-favorites-list");
       M.toast({html: xhr.responseText.replace(/\"/g, "")});
     } else {
       M.toast({html: "Unable to delete list"});

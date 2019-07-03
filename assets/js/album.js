@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // then remove query param from url and history
     window.history.replaceState(
       {}, window.location, window.location.origin + window.location.pathname
-    )
+    );
   }
 });
 
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // close toasts on click
 document.addEventListener("click", function(e) {
-  var parent = e.target.parentNode
+  var parent = e.target.parentNode;
   var isToast = (parent.classList && parent.classList.contains("toast")) || parent.id == "toast-container";
   if (isToast) { closeToast(); }
 });
@@ -190,7 +190,7 @@ addEventListenerToClass("tag", "click", function(e) {
   if (toastOut) { closeToast(); }
 
   e.target.classList.toggle("light-blue");
-  e.target.classList.toggle("accent-4")
+  e.target.classList.toggle("accent-4");
   e.target.classList.toggle("white-text");
 
   const value = e.target.dataset.value;

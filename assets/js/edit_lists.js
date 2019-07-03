@@ -17,7 +17,7 @@ function removeSelectedElement(selector) {
 // ====== START MATERIALIZE ======
 // close toasts on click
 document.addEventListener("click", function(e) {
-  var parent = e.target.parentNode
+  var parent = e.target.parentNode;
   var isToast = (parent.classList && parent.classList.contains("toast")) || parent.id == "toast-container";
   if (isToast) { closeToast(); }
 });

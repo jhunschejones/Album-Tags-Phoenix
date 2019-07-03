@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // focus on input when modal is launched
       document.getElementById("album-search-input").focus();
   }});
-  window.searchModal = M.Modal.getInstance(sidenav);
+  window.searchModal = M.Modal.getInstance(searchModal);
 
   // open sidenav on menu button click
   document.getElementById("open-sidenav").addEventListener("click", function(e) {

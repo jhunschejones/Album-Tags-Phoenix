@@ -5,5 +5,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.getElementsByClassName("open-search-menu")[0].addEventListener("click", function(e) {
   e.preventDefault();
-  window.sidenav.open();
+  window.searchModal.open();
 });

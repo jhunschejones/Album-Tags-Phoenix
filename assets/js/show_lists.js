@@ -42,7 +42,7 @@ var listVueApp = new Vue({
     },
     tags: function() {
       return Array.from(new Set(this.selectedAlbums.slice().map(a =>
-        a.tags.map(t => t.text)).flat()
+        a.tags.map(t => t.text)).flat().sort()
       ));
     },
     allFilters: function() {
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   // close toasts on click
   document.addEventListener("click", function(e) {
-    var parent = e.target.parentNode
+    var parent = e.target.parentNode;
     var isToast = (parent && parent.classList && parent.classList.contains("toast")) || (parent && parent.id == "toast-container");
     if (isToast) return closeToast();
   });
@@ -295,7 +295,11 @@ if (editableList) {
     if (!window.showRemoveAlbum) {
       window.showRemoveAlbum = true;
       showClass("delete-button");
-      M.toast({html: "Click the 'X' to remove an album from the list", displayLength: 2500});
+      M.toast({html: `
+        <span>
+          Click the <i class='small material-icons' style='vertical-align:middle;'>highlight_off</i> to remove an album from the list
+        </span>
+      `, displayLength: 2500});
     } else {
       window.showRemoveAlbum = false;
       hideClass("delete-button");
@@ -464,7 +468,7 @@ function deselectChip(element) {
 
 function toggleChipSelect(element) {
   element.classList.toggle("light-blue");
-  element.classList.toggle("accent-4")
+  element.classList.toggle("accent-4");
   element.classList.toggle("white-text");
 }
 
@@ -506,16 +510,16 @@ function removeFilter(e) {
 
   switch (e.target.dataset.type) {
     case "year":
-      var index = listVueApp.yearFilters.indexOf(filterToRemove);
-      listVueApp.yearFilters.splice(index, 1);
+      var yearIndex = listVueApp.yearFilters.indexOf(filterToRemove);
+      listVueApp.yearFilters.splice(yearIndex, 1);
       break;
     case "artist":
-      var index = listVueApp.artistFilters.indexOf(filterToRemove);
-      listVueApp.artistFilters.splice(index, 1);
+      var artistIndex = listVueApp.artistFilters.indexOf(filterToRemove);
+      listVueApp.artistFilters.splice(artistIndex, 1);
       break;
     case "tag":
-      var index = listVueApp.tagFilters.indexOf(filterToRemove);
-      listVueApp.tagFilters.splice(index, 1);
+      var tagIndex = listVueApp.tagFilters.indexOf(filterToRemove);
+      listVueApp.tagFilters.splice(tagIndex, 1);
   }
   listVueApp.resetSelectedAlbums();
   filterAll();
@@ -525,8 +529,12 @@ function hilightSelectedTagFilters() {
   var filterChips = document.getElementsByClassName("tag-filter");
   var selectedFilters = listVueApp.tagFilters;
   for (var i = 0; i < filterChips.length; i++) {
-    var ele = filterChips[i];
-    selectedFilters.includes(ele.dataset.tag) ? selectChip(ele) : deselectChip(ele);
+    var element = filterChips[i];
+    if (selectedFilters.includes(element.dataset.tag)) {
+      selectChip(element);
+    } else {
+      deselectChip(element);
+    }
   }
 }
 
@@ -534,8 +542,12 @@ function hilightSelectedArtistFilters() {
   var filterChips = document.getElementsByClassName("artist-filter");
   var selectedFilters = listVueApp.artistFilters;
   for (var i = 0; i < filterChips.length; i++) {
-    var ele = filterChips[i];
-    selectedFilters.includes(ele.dataset.artist) ? selectChip(ele) : deselectChip(ele);
+    var element = filterChips[i];
+    if (selectedFilters.includes(element.dataset.artist)) {
+      selectChip(element);
+    } else {
+      deselectChip(element);
+    }
   }
 }
 

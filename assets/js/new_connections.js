@@ -1,7 +1,7 @@
 // ====== START MATERIALIZE ======
 // close toasts on click
 document.addEventListener("click", function(e) {
-  var parent = e.target.parentNode
+  var parent = e.target.parentNode;
   var isToast = (parent.classList && parent.classList.contains("toast")) || parent.id == "toast-container";
   if (isToast) { closeToast(); }
 });
@@ -63,7 +63,7 @@ document.getElementById("connection-search-input").focus();
 document.getElementById("connection-search-input").addEventListener("keydown", function(e) {
   if(e.keyCode == 13) {
     removeSelectedElement(".album");
-    removeSelectedElement("#warning")
+    removeSelectedElement("#warning");
     showSpinner();
 
     var search = document.getElementById("connection-search-input").value.trim();
@@ -126,11 +126,11 @@ function addConnection(appleAlbumID) {
     if (xhr.readyState !== 4) return;
 
     if (xhr.status >= 200 && xhr.status < 300) {
-      var message = JSON.parse(xhr.responseText).message;
-      M.toast({html: message});
+      var successMessage = JSON.parse(xhr.responseText).message;
+      M.toast({html: successMessage});
     } else {
-      var message = JSON.parse(xhr.responseText).message;
-      M.toast({html: message});
+      var failureMessage = JSON.parse(xhr.responseText).message;
+      M.toast({html: failureMessage});
     }
   };
   xhr.open("POST", "/connections");
