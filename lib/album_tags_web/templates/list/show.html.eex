@@ -32,7 +32,7 @@
           </div>
         <% end %>
         <a v-bind:href="'/albums/' + albumObject.apple_album_id">
-          <img class="responsive-img album-cover" v-bind:src="albumCover(albumObject, '200')">
+          <img class="responsive-img album-cover" v-bind:src="albumCover(albumObject, '250')">
         </a>
         <p class="title" v-cloak>{{ albumObject.title }}</p>
         <p class="artist grey-text text-darken-1" v-cloak>{{ albumObject.artist }}</p>
@@ -155,7 +155,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script type="text/javascript">
   var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
-  var allAlbums = <%= raw Jason.encode!(sortAlbums(@list.albums)) %>;
+  var allAlbums = <%= raw Jason.encode!(sort_albums(@list.albums)) %>;
   // if there is no list owner, show tags all users
   var listUserID = <%= raw Jason.encode!(@list.user_id) %> || null;
   var listTitle = <%= raw Jason.encode!(@list.title) %>;

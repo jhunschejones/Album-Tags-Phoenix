@@ -15,24 +15,38 @@ var listVueApp = new Vue({
     albumCover: function(album, size) {
       return album.cover.replace("{w}", size).replace("{h}", size);
     },
-    removeAlbum: function(albumID) { removeAlbumFromList(albumID); },
+    removeAlbum: function(albumID) { window.removeAlbumFromList(albumID); },
     resetSelectedAlbums: function() {
       var albums = JSON.parse(JSON.stringify(this.albums));
-      // filter tags down to just those made by the list creator if this is a user list
+
       if (listUserID) {
+        // filter tags down to just those made by the list creator if this is a user list
         for (var i = 0; i < albums.length; i++) {
           var album = albums[i];
           album.tags = album.tags.filter(t => t.user_id == this.listUserID);
         }
       }
-      this.selectedAlbums = albums;
+
+      this.selectedAlbums = albums.sort(function(a, b) {
+        if (a.release_date < b.release_date) return 1;
+        if (a.release_date > b.release_date) return -1;
+        return 0;
+      });
     }
   },
   computed: {
     selectedAlbumsCount: function () { return this.selectedAlbums.length; },
     artists: function() {
       return Array.from(new Set(
-        this.selectedAlbums.slice().map(a => a.artist)
+        this.selectedAlbums.slice().map(a => a.artist).sort(function(a, b) {
+          var nameA = a.toUpperCase();
+          var nameB = b.toUpperCase();
+
+          if (nameA < nameB) { return -1; }
+          if (nameA > nameB) { return 1; }
+
+          return 0; // names are equal
+        })
       ));
     },
     years: function() {
@@ -316,9 +330,11 @@ if (editableList) {
       if (xhr.status >= 200 && xhr.status < 300) {
         var response = JSON.parse(xhr.responseText);
         listVueApp.albums.push(response.added_album);
+
         // hide delete buttons if they are shown
         window.showRemoveAlbum = true;
         toggleRemoveAlbumButtons();
+
         window.addAlbumModal.close();
       } else {
         M.toast({html: xhr.responseText.replace(/\"/g, "")});
@@ -330,7 +346,7 @@ if (editableList) {
     xhr.send(JSON.stringify({action: "add_album", currentAlbum: appleAlbumID}));
   }
 
-  function removeAlbumFromList(albumID) {
+  window.removeAlbumFromList = function(albumID) {
     var confirmed = confirm("Are you sure you want to remove the album from this list? You cannot undo this operation.");
     if (!confirmed) return;
 
@@ -555,8 +571,12 @@ function hilightSelectedYearFilters() {
   var filterChips = document.getElementsByClassName("year-filter");
   var selectedFilters = listVueApp.yearFilters;
   for (var i = 0; i < filterChips.length; i++) {
-    var ele = filterChips[i];
-    selectedFilters.includes(ele.dataset.year) ? selectChip(ele) : deselectChip(ele);
+    var element = filterChips[i];
+    if (selectedFilters.includes(element.dataset.year)) {
+      selectChip(element);
+    } else {
+      deselectChip(element);
+    }
   }
 }
 
