@@ -4,7 +4,7 @@
     <span id="htm-title"><%= @list.title %></span>
   </h5>
   <%= if @list.user_id do %>
-    <%= if @list.user_id == @user.id do %>
+    <%= if @user && @list.user_id == @user.id do %>
       <p id="list-author">created by you</p>
     <% else %>
       <p id="list-author"><%= @list.user.name %></p>
@@ -26,7 +26,7 @@
   <div id="list-container" class="row">
     <div v-for="albumObject in selectedAlbums">
       <div v-bind:id="'album-' + albumObject.id" class="album">
-        <%= if @list.user_id == @user.id do %>
+        <%= if @user && @list.user_id == @user.id do %>
           <div class="delete-button hide" v-on:click="removeAlbum(albumObject.id)">
             &#10005;
           </div>
@@ -43,7 +43,7 @@
   <!-- START FILTER MODALS -->
   <div id="year-filter-modal" class="modal">
     <div class="modal-content">
-      <h6>Select a year to filter by:</h6>
+      <h6>Select years to filter by:</h6>
       <div id="year-filters">
         <div class="chip year-filter" onclick="selectYearFilter(event)" v-for="year in years" :data-year="year" v-cloak>{{ year }}</div>
       </div>
@@ -54,7 +54,7 @@
 
   <div id="artist-filter-modal" class="modal">
     <div class="modal-content">
-      <h6>Select an artist to filter by:</h6>
+      <h6>Select artists to filter by:</h6>
       <div id="artist-filters">
         <div class="chip artist-filter" onclick="selectArtistFilter(event)" v-for="artist in artists" :data-artist="artist" v-cloak>{{ artist }}</div>
       </div>
@@ -76,9 +76,10 @@
   <!-- END FILTER MODALS -->
 </div> <!-- END VUE APP -->
 
-<%= if @list.user_id == @user.id do %>
+<%= if @user && @list.user_id == @user.id do %>
   <div id="edit-list-modal" class="modal">
     <div class="modal-content">
+      <h6 class="grey-text"><em>Give your list a memorable name:</em></h6>
       <div class="input-field">
         <input id="list-name-input" type="text" placeholder="List title..." value="<%= @list.title %>">
         <a id="clear-list-name-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
@@ -88,6 +89,7 @@
 
   <div id="add-album-modal" class="modal">
     <div class="modal-content">
+      <h6 class="grey-text"><em>Add an album to your list:</em></h6>
       <div class="input-field">
         <input id="add-album-input" type="text" placeholder="Search by album or artist...">
         <a id="clear-add-album-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
@@ -115,7 +117,7 @@
     <i class="large material-icons">more_vert</i>
   </a>
   <ul>
-  <%= if @list.user_id == @user.id do %>
+  <%= if @user && @list.user_id == @user.id do %>
     <li>
       <a id="edit-list" class="btn-floating light-blue accent-4">
         <i class="material-icons">edit</i>

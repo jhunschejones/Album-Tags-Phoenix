@@ -33,23 +33,31 @@ defmodule AlbumTagsWeb.AlbumView do
     |> Enum.sort_by(fn list -> list.title end)
   end
 
-  def remove_duplicate_tags(tags, user_id) do
-    user_tags = Enum.filter(tags, &(&1.user_id == user_id))
-    other_tags = Enum.filter(tags, &(&1.user_id != user_id))
-    deduped_other_tags = Enum.filter(other_tags, fn tag ->
-      !Enum.any?(user_tags, &(&1.text == tag.text))
-    end)
+  def remove_duplicate_tags(tags, user) do
+    if !user do
+      tags
+    else
+      user_tags = Enum.filter(tags, &(&1.user_id == user.id))
+      other_tags = Enum.filter(tags, &(&1.user_id != user.id))
+      deduped_other_tags = Enum.filter(other_tags, fn tag ->
+        !Enum.any?(user_tags, &(&1.text == tag.text))
+      end)
 
-    Enum.concat(user_tags, deduped_other_tags)
+      Enum.concat(user_tags, deduped_other_tags)
+    end
   end
 
-  def remove_duplicate_connections(connections, user_id) do
-    user_connections = Enum.filter(connections, &(&1.connection_owner == user_id))
-    other_connections = Enum.filter(connections, &(&1.connection_owner != user_id))
-    deduped_other_connections = Enum.filter(other_connections, fn connection ->
-      !Enum.any?(user_connections, &(&1.apple_album_id == connection.apple_album_id))
-    end)
+  def remove_duplicate_connections(connections, user) do
+    if !user do
+      connections
+    else
+      user_connections = Enum.filter(connections, &(&1.connection_owner == user.id))
+      other_connections = Enum.filter(connections, &(&1.connection_owner != user.id))
+      deduped_other_connections = Enum.filter(other_connections, fn connection ->
+        !Enum.any?(user_connections, &(&1.apple_album_id == connection.apple_album_id))
+      end)
 
-    Enum.concat(user_connections, deduped_other_connections)
+      Enum.concat(user_connections, deduped_other_connections)
+    end
   end
 end

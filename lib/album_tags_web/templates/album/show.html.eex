@@ -94,8 +94,8 @@
       </div>
     </div>
     <div id="tags" class="col s12">
-      <%= for tag <- remove_duplicate_tags(@album.tags, @user.id) do %>
-        <div class="chip tag <%= if tag.user_id == @user.id, do: 'user-tag' %>" data-value="<%= url_tag(tag) %>">
+      <%= for tag <- remove_duplicate_tags(@album.tags, @user) do %>
+        <div class="chip tag <%= if @user && tag.user_id == @user.id, do: 'user-tag' %>" data-value="<%= url_tag(tag) %>">
           <%= tag.text %>
         </div>
       <% end %>
@@ -117,8 +117,8 @@
     </div>
     <div id="connections" class="col s12">
       <div class="row">
-        <%= for connected_album <- remove_duplicate_connections(@album.connections, @user.id) do %>
-          <div class="connection <%= if connected_album.connection_owner == @user.id, do: 'user-connection' %>">
+        <%= for connected_album <- remove_duplicate_connections(@album.connections, @user) do %>
+          <div class="connection <%= if @user && connected_album.connection_owner == @user.id, do: 'user-connection' %>">
             <%= link to: Routes.album_path(@conn, :show, connected_album.apple_album_id) do %>
               <img class="responsive-img album-cover" src="<%= album_cover(connected_album) %>">
             <% end %>
@@ -148,11 +148,11 @@
     <div id="lists" class="col s12">
       <ul id="lists-ul">
         <%= for list <- sortLists(@album.lists) do %>
-          <li class="list <%= if list.user_id == @user.id, do: 'user-list' %>">
+          <li class="list <%= if @user && list.user_id == @user.id, do: 'user-list' %>">
             <a href="/lists/<%= list.id %>">
               <span class="list-title"><%= list.title %></span>
               <span class="grey-text">
-                <%= if list.user_id == @user.id do %>
+                <%= if @user && list.user_id == @user.id do %>
                   - You!
                 <% else %>
                   - <%= list.user.name %>
