@@ -233,7 +233,7 @@ defmodule AlbumTags.Albums do
     end
   end
 
-  def search_by_tags(search_string, _user_id) do
+  def search_by_tags(search_string) do
     searched_tags = search_string
     |> URI.decode()
     |> String.split(",,")
@@ -244,7 +244,8 @@ defmodule AlbumTags.Albums do
       on: at.tag_id == t.id,
       join: a in Album,
       on: at.album_id == a.id,
-      # where: t.text in ^searched_tags and t.user_id == ^user_id, # last half of clause makes this a user-specific search
+      # Replace existing `where` statement with this one to make this a user-specific search. NOTE: requires user_id as a param
+      # where: t.text in ^searched_tags and t.user_id == ^user_id,
       where: t.text in ^searched_tags,
       select: a,
       distinct: [a.apple_album_id]
