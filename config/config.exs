@@ -35,8 +35,8 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   client_id: System.get_env("UEBERAUTH_CLIENT_ID"),
   client_secret: System.get_env("UEBERAUTH_CLIENT_SECRET")
 
-# Automatically read from the environment variables when set
-# config :new_relic_agent,
+config :new_relic_agent, apdex_t: 0.015
+# The agent will automatically read this from environment variables
 #   app_name: System.get_env("NEW_RELIC_APP_NAME"),
 #   license_key: System.get_env("NEW_RELIC_LICENSE_KEY")
 
