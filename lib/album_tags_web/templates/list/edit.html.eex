@@ -1,6 +1,6 @@
 <div id="lists-container">
   <div id="lists-row" class="row">
-    <%= for list <- sortLists(@album.lists) do %>
+    <%= for list <- sort_lists(@album.lists) do %>
       <%= if list.user_id == @user.id do %>
         <div id="list-<%= list.id %>">
             <div class="delete-button" onclick="deleteList(<%= @album.id %>, <%= list.id %>)">

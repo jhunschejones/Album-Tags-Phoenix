@@ -28,7 +28,7 @@ defmodule AlbumTagsWeb.AlbumView do
     Enum.sort(songs_map, &(&1.track_number < &2.track_number))
   end
 
-  def sortLists(lists) do
+  def sort_lists(lists) do
     lists
     |> Enum.sort_by(fn list -> list.title end)
   end

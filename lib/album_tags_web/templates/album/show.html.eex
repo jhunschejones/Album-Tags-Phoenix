@@ -147,7 +147,7 @@
     </div>
     <div id="lists" class="col s12">
       <ul id="lists-ul">
-        <%= for list <- sortLists(@album.lists) do %>
+        <%= for list <- sort_lists(@album.lists) do %>
           <li class="list <%= if @user && list.user_id == @user.id, do: 'user-list' %>">
             <a href="/lists/<%= list.id %>">
               <span class="list-title"><%= list.title %></span>

@@ -6,7 +6,7 @@
       <select id="existing-list-select">
         <option id="placeholder" value="" disabled selected>Select an existing list...</option>
         <option value="favorites">&#9825; My Favorites</option>
-        <%= for list <- @user_lists do %>
+        <%= for list <- sort_lists(@user_lists) do %>
           <%= if list.user_id == @user.id && list.title != "My Favorites" do %>
             <option value="<%= list.id %>"><%= list.title %></option>
           <% end %>

@@ -32,12 +32,12 @@ defmodule AlbumTagsWeb.ListView do
     end
   end
 
-  def sortAlbums(albums) do
+  def sort_albums(albums) do
     albums
     |> Enum.sort(&(&1.release_date >= &2.release_date))
   end
 
-  def sortLists(lists) do
+  def sort_lists(lists) do
     lists
     |> Enum.sort_by(fn list -> list.title end)
   end
