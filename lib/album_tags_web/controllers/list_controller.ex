@@ -1,6 +1,7 @@
 defmodule AlbumTagsWeb.ListController do
   use AlbumTagsWeb, :controller
   alias AlbumTags.{Albums, Lists}
+  alias Plug.Conn
 
   plug :authenticate_user when action in [:new, :edit, :index]
 
@@ -35,7 +36,7 @@ defmodule AlbumTagsWeb.ListController do
     list = Map.new()
     |> Map.put_new(:title, "Tag Search:")
     |> Map.put_new(:title_tags, tags)
-    |> Map.put_new(:albums, Albums.search_by_tags(search_string, conn.assigns.current_user.id))
+    |> Map.put_new(:albums, Albums.search_by_tags(search_string))
     |> Map.put_new(:user_id, nil)
 
     data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
@@ -53,7 +54,7 @@ defmodule AlbumTagsWeb.ListController do
   def create(conn, %{"title" => title, "private" => private, "currentAlbum" => apple_album_id}) do
     if title |> String.trim() |> String.upcase() == "MY FAVORITES" do
       message = "The 'My Favorites' list already exists"
-      render(Plug.Conn.put_status(conn, :bad_request), "show.json", message: message)
+      render(Conn.put_status(conn, :bad_request), "show.json", message: message)
     else
       {status, message} = case Lists.create_list(%{
         title: force_title_case(title),
@@ -71,30 +72,30 @@ defmodule AlbumTagsWeb.ListController do
           handle_changeset_error(response)
       end
 
-      render(Plug.Conn.put_status(conn, status), "show.json", message: message)
+      render(Conn.put_status(conn, status), "show.json", message: message)
     end
   end
 
   # creates new list on xhr POST
   def create(conn, %{"title" => title, "private" => private}) do
-    if title |> String.trim() |> String.upcase() == "MY FAVORITES" do
-      message = "The 'My Favorites' list already exists"
-      render(Plug.Conn.put_status(conn, :bad_request), "show.json", message: message)
+    {status, message, new_list} = case Lists.create_list(%{
+      title: force_title_case(title),
+      private: private,
+      user_id: conn.assigns.current_user.id,
+    }) do
+      {:ok, new_list} ->
+        {:ok, "List successfully created", new_list}
+      {:error, response} ->
+        Tuple.append(handle_changeset_error(response), nil) # add nil for no new list
+    end
+
+    new_list = new_list || nil
+
+    # add favorites_list_id to session to save extra queries
+    if new_list && new_list.title == "My Favorites" do
+      render(Conn.put_status(Conn.put_session(conn, :favorites_list_id, new_list.id), status), "show.json", message: message, new_list: new_list)
     else
-      {status, message, new_list} = case Lists.create_list(%{
-        title: force_title_case(title),
-        private: private,
-        user_id: conn.assigns.current_user.id,
-      }) do
-        {:ok, new_list} ->
-          {:ok, "List successfully created", new_list}
-        {:error, response} ->
-          Tuple.append(handle_changeset_error(response), nil) # add nil for no new list
-      end
-
-      new_list = new_list || nil
-
-      render(Plug.Conn.put_status(conn, status), "show.json", message: message, new_list: new_list)
+      render(Conn.put_status(conn, status), "show.json", message: message, new_list: new_list)
     end
   end
 
@@ -115,7 +116,7 @@ defmodule AlbumTagsWeb.ListController do
 
     added_album = added_album || nil
 
-    render(Plug.Conn.put_status(conn, status), "show.json", message: message, added_album: added_album)
+    render(Conn.put_status(conn, status), "show.json", message: message, added_album: added_album)
   end
 
   # add album to favorites list on xhr PATCH
@@ -133,7 +134,8 @@ defmodule AlbumTagsWeb.ListController do
         handle_changeset_error(response)
     end
 
-    render(Plug.Conn.put_status(conn, status), "show.json", message: message)
+    # update favorites list on session to save extra queries
+    render(Conn.put_status(Conn.put_session(conn, :favorites_list_id, favorites_list.id), status), "show.json", message: message)
   end
 
   # remove album from list on xhr PATCH
@@ -163,16 +165,23 @@ defmodule AlbumTagsWeb.ListController do
 
     list_title = list_title || nil
 
-    render(Plug.Conn.put_status(conn, status), "show.json", message: message, list_title: list_title)
+    render(Conn.put_status(conn, status), "show.json", message: message, list_title: list_title)
   end
 
   # deletes a list on xhr DELETE
   def delete(conn, %{"id" => list_id}) do
-    Lists.delete_user_list(%{
+    {:ok, deleted_list} = Lists.delete_user_list(%{
       list_id: String.to_integer(list_id),
       user_id: conn.assigns.current_user.id
     })
-    render(conn, "show.json", message: "List successfully deleted")
+
+    # remove favorites_list_id from session if favorites list is deleted
+    case deleted_list.title do
+      "My Favorites" ->
+        render(Conn.put_session(conn, :favorites_list_id, nil), "show.json", message: "List successfully deleted")
+      _ ->
+        render(conn, "show.json", message: "List successfully deleted")
+    end
   end
 
   defp handle_changeset_error(response) do

@@ -45,8 +45,12 @@
       <%# <li><a href="#">About</a></li> %>
       <li><a id="open-search-modal" class="modal-trigger" href="#search-modal">Search</a></li>
       <%# <li><a href="#">All Tags</a></li> %>
-      <%# <li><a href="#">My Favorites</a></li> %>
       <li><a href="/lists">My Lists</a></li>
+      <%= if favorites_id(@conn) != nil do %>
+        <li id="my-favorites-list">
+          <%= link "My Favorites", to: Routes.list_path(@conn, :show, favorites_id(@conn)) %>
+        </li>
+      <% end %>
     </ul>
 
     <!-- SEARCH MODAL -->

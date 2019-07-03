@@ -47,8 +47,14 @@ defmodule AlbumTagsWeb.AuthController do
   defp login(conn, user_params, redirect_steps \\ 2) do
     case Accounts.insert_or_update_user(user_params) do
       {:ok, user} ->
+        favorites_id = case AlbumTags.Lists.get_list_by(%{user_id: user.id, title: "My Favorites"}) do
+          nil -> nil
+          favorites_list -> favorites_list.id
+        end
+
         conn
         |> put_session(:user_id, user.id)
+        |> put_session(:favorites_list_id, favorites_id) # stores favorites_list_id on the session so it doesn't have to be queried on every page
         |> configure_session(renew: true) # sends cookie back to client with new identifier
         |> redirect_back(redirect_steps) # redirect to original page before login sequence
       {:error, _reason} ->
