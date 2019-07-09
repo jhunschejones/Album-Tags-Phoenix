@@ -7,8 +7,14 @@
   <br/>
 </div>
 
-<div class="parallax-container">
-  <div class="parallax"><img id="image-3" src="images/city_md.jpg"></div>
+<div class="parallax-container hide-on-med-and-up">
+  <div class="parallax"><img id="image-3-med" src="images/city_md.jpg"></div>
+</div>
+
+<div class="parallax-container hide-on-small-only">
+  <div class="parallax">
+    <img id="image-3-lg" src="images/city_lg.jpg">
+  </div>
 </div>
 
 <div class="container message-container">
