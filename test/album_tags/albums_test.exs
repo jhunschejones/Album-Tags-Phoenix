@@ -1,76 +1,58 @@
 defmodule AlbumTags.AlbumsTest do
-  use AlbumTags.DataCase
+  use AlbumTags.DataCase, async: true
 
   alias AlbumTags.Albums
+  alias AlbumTags.Accounts
+  alias AlbumTags.Albums.Album
+
+  @album_one_attrs %{apple_album_id: 716394623, apple_url: "https://itunes.apple.com/us/album/the-question/716394623", title: "The Question", artist: "Emery", release_date: "2005-08-02", record_company: "Tooth & Nail (TNN)", cover: "https://is3-ssl.mzstatic.com/image/thumb/Music4/v4/db/cd/a9/dbcda9bf-6551-a37d-0d57-3c4455b9d8dd/00724386060457.jpg/{w}x{h}bb.jpeg"}
+  @album_two_attrs %{apple_album_id: 1135092935, apple_url: "https://itunes.apple.com/us/album/passengers/1135092935", title: "Passengers", artist: "Artifex Pereo", release_date: "2016-09-09", record_company: "Tooth & Nail Records", cover: "https://is2-ssl.mzstatic.com/image/thumb/Music20/v4/c5/64/ce/c564ce15-0e87-458c-cbb0-9941d65b5648/886446002583.jpg/{w}x{h}bb.jpeg"}
+  @user_attrs %{name: "Carl Fox", email: "carl@dafox.com", provider: "google", token: "test token 1"}
 
   describe "albums" do
-    alias AlbumTags.Albums.Album
-
-    @valid_attrs %{apple_album_id: 42, apple_url: "some apple_url", artist: "some artist", cover: "some cover", record_company: "some record_company", release_date: "some release_date", title: "some title"}
-    @update_attrs %{apple_album_id: 43, apple_url: "some updated apple_url", artist: "some updated artist", cover: "some updated cover", record_company: "some updated record_company", release_date: "some updated release_date", title: "some updated title"}
-    @invalid_attrs %{apple_album_id: nil, apple_url: nil, artist: nil, cover: nil, record_company: nil, release_date: nil, title: nil}
-
-    def album_fixture(attrs \\ %{}) do
-      {:ok, album} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Albums.create_album()
-
-      album
+    setup do
+      {:ok, album_one: album_fixture(@album_one_attrs)}
+      {:ok, album_two: album_fixture(@album_two_attrs)}
+      {:ok, user: user_fixture(@user_attrs)}
+      {:ok, connection: connection_fixture(
+        Repo.get_by(Album, apple_album_id: @album_one_attrs.apple_album_id),
+        Repo.get_by(Album, apple_album_id: @album_two_attrs.apple_album_id),
+        Repo.get_by(Accounts.User, email: @user_attrs.email)
+      )}
     end
 
-    test "list_albums/0 returns all albums" do
-      album = album_fixture()
-      assert Albums.list_albums() == [album]
+    test "get_album_with/2 returns apple api data for album not in the database" do
+      album = Albums.get_album_with(1113863913)
+      assert album.title == "Periphery III: Select Difficulty"
+      assert album.artist == "Periphery"
     end
 
-    test "get_album!/1 returns the album with given id" do
-      album = album_fixture()
-      assert Albums.get_album!(album.id) == album
+    test "get_album_with/2 returns album with all resources when resource is not specified" do
+      album = Albums.get_album_with(716394623)
+      assert Ecto.assoc_loaded?(album.tags) == true
+      assert List.first(album.connections).apple_album_id == @album_two_attrs.apple_album_id
+      assert Ecto.assoc_loaded?(album.lists) == true
     end
 
-    test "create_album/1 with valid data creates a album" do
-      assert {:ok, %Album{} = album} = Albums.create_album(@valid_attrs)
-      assert album.apple_album_id == 42
-      assert album.apple_url == "some apple_url"
-      assert album.artist == "some artist"
-      assert album.cover == "some cover"
-      assert album.record_company == "some record_company"
-      assert album.release_date == "some release_date"
-      assert album.title == "some title"
+    test "get_album_with/2 returns album with tags when resource is specified" do
+      album = Albums.get_album_with(716394623, [:tags])
+      assert Ecto.assoc_loaded?(album.tags) == true
+      assert album.connections == nil
+      assert Ecto.assoc_loaded?(album.lists) == false
     end
 
-    test "create_album/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Albums.create_album(@invalid_attrs)
+    test "get_album_with/2 returns album with connections when resource is specified" do
+      album = Albums.get_album_with(716394623, [:connections])
+      assert Ecto.assoc_loaded?(album.tags) == false
+      assert List.first(album.connections).apple_album_id == @album_two_attrs.apple_album_id
+      assert Ecto.assoc_loaded?(album.lists) == false
     end
 
-    test "update_album/2 with valid data updates the album" do
-      album = album_fixture()
-      assert {:ok, %Album{} = album} = Albums.update_album(album, @update_attrs)
-      assert album.apple_album_id == 43
-      assert album.apple_url == "some updated apple_url"
-      assert album.artist == "some updated artist"
-      assert album.cover == "some updated cover"
-      assert album.record_company == "some updated record_company"
-      assert album.release_date == "some updated release_date"
-      assert album.title == "some updated title"
-    end
-
-    test "update_album/2 with invalid data returns error changeset" do
-      album = album_fixture()
-      assert {:error, %Ecto.Changeset{}} = Albums.update_album(album, @invalid_attrs)
-      assert album == Albums.get_album!(album.id)
-    end
-
-    test "delete_album/1 deletes the album" do
-      album = album_fixture()
-      assert {:ok, %Album{}} = Albums.delete_album(album)
-      assert_raise Ecto.NoResultsError, fn -> Albums.get_album!(album.id) end
-    end
-
-    test "change_album/1 returns a album changeset" do
-      album = album_fixture()
-      assert %Ecto.Changeset{} = Albums.change_album(album)
+    test "get_album_with/2 returns album with lists when resource is specified" do
+      album = Albums.get_album_with(716394623, [:lists])
+      assert Ecto.assoc_loaded?(album.tags) == false
+      assert album.connections == nil
+      assert Ecto.assoc_loaded?(album.lists) == true
     end
   end
 
@@ -90,51 +72,10 @@ defmodule AlbumTags.AlbumsTest do
       tag
     end
 
-    test "list_tags/0 returns all tags" do
-      tag = tag_fixture()
-      assert Albums.list_tags() == [tag]
-    end
-
-    test "get_tag!/1 returns the tag with given id" do
-      tag = tag_fixture()
-      assert Albums.get_tag!(tag.id) == tag
-    end
-
-    test "create_tag/1 with valid data creates a tag" do
-      assert {:ok, %Tag{} = tag} = Albums.create_tag(@valid_attrs)
-      assert tag.custom_genre == true
-      assert tag.text == "some text"
-      assert tag.user_id == 42
-    end
-
-    test "create_tag/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Albums.create_tag(@invalid_attrs)
-    end
-
-    test "update_tag/2 with valid data updates the tag" do
-      tag = tag_fixture()
-      assert {:ok, %Tag{} = tag} = Albums.update_tag(tag, @update_attrs)
-      assert tag.custom_genre == false
-      assert tag.text == "some updated text"
-      assert tag.user_id == 43
-    end
-
-    test "update_tag/2 with invalid data returns error changeset" do
-      tag = tag_fixture()
-      assert {:error, %Ecto.Changeset{}} = Albums.update_tag(tag, @invalid_attrs)
-      assert tag == Albums.get_tag!(tag.id)
-    end
-
-    test "delete_tag/1 deletes the tag" do
-      tag = tag_fixture()
-      assert {:ok, %Tag{}} = Albums.delete_tag(tag)
-      assert_raise Ecto.NoResultsError, fn -> Albums.get_tag!(tag.id) end
-    end
-
-    test "change_tag/1 returns a tag changeset" do
-      tag = tag_fixture()
-      assert %Ecto.Changeset{} = Albums.change_tag(tag)
-    end
+    # test "list_tags/0 returns all tags" do
+    #   tag = tag_fixture()
+    #   assert Albums.list_tags() == [tag]
+    # end
   end
 
   describe "songs" do
@@ -153,52 +94,9 @@ defmodule AlbumTags.AlbumsTest do
       song
     end
 
-    test "list_songs/0 returns all songs" do
-      song = song_fixture()
-      assert Albums.list_songs() == [song]
-    end
-
-    test "get_song!/1 returns the song with given id" do
-      song = song_fixture()
-      assert Albums.get_song!(song.id) == song
-    end
-
-    test "create_song/1 with valid data creates a song" do
-      assert {:ok, %Song{} = song} = Albums.create_song(@valid_attrs)
-      assert song.album_id == 42
-      assert song.length == "some length"
-      assert song.order == 42
-      assert song.title == "some title"
-    end
-
-    test "create_song/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Albums.create_song(@invalid_attrs)
-    end
-
-    test "update_song/2 with valid data updates the song" do
-      song = song_fixture()
-      assert {:ok, %Song{} = song} = Albums.update_song(song, @update_attrs)
-      assert song.album_id == 43
-      assert song.length == "some updated length"
-      assert song.order == 43
-      assert song.title == "some updated title"
-    end
-
-    test "update_song/2 with invalid data returns error changeset" do
-      song = song_fixture()
-      assert {:error, %Ecto.Changeset{}} = Albums.update_song(song, @invalid_attrs)
-      assert song == Albums.get_song!(song.id)
-    end
-
-    test "delete_song/1 deletes the song" do
-      song = song_fixture()
-      assert {:ok, %Song{}} = Albums.delete_song(song)
-      assert_raise Ecto.NoResultsError, fn -> Albums.get_song!(song.id) end
-    end
-
-    test "change_song/1 returns a song changeset" do
-      song = song_fixture()
-      assert %Ecto.Changeset{} = Albums.change_song(song)
-    end
+    # test "list_songs/0 returns all songs" do
+    #   song = song_fixture()
+    #   assert Albums.list_songs() == [song]
+    # end
   end
 end
