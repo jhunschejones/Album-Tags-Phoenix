@@ -20,5 +20,6 @@ defmodule AlbumTags.Accounts.User do
     user
     |> cast(attrs, [:name, :email, :provider, :token, :profile_image])
     |> validate_required([:email, :provider, :token])
+    |> unique_constraint(:email, name: :users_email_index)
   end
 end
