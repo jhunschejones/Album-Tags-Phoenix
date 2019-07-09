@@ -203,6 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 50);
   }, {passive: true});
 
+  document.getElementById("open-sidenav").addEventListener("click", function() {
+    document.getElementById("bottom-filters").classList.add("hide");
+  }, {passive: true});
+
   // initialize year filter modal
   var yearFilterModal = document.getElementById("year-filter-modal");
   window.yearFilterModal = M.Modal.init(yearFilterModal, {
@@ -247,6 +251,15 @@ document.addEventListener('DOMContentLoaded', function() {
     hilightSelectedTagFilters();
     window.tagFilterModal.open();
   });
+
+  // make sure modals close when user clicks outside the modal itself
+  document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("modal-overlay")) {
+      window.tagFilterModal.close();
+      window.artistFilterModal.close();
+      window.yearFilterModal.close();
+    }
+  }, {passive: true});
 });
 // ====== END MATERIALIZE ======
 
@@ -370,7 +383,7 @@ if (editableList) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("X-CSRF-Token", CSRF_TOKEN);
     xhr.send(JSON.stringify({action: "remove_album", albumID: albumID}));
-  }
+  };
 
   function updateListTitle() {
     var listID = parseInt(window.location.pathname.replace("/lists/", ""));
@@ -519,6 +532,11 @@ function selectTagFilter(e) {
   } else {
     listVueApp.tagFilters.splice(index, 1);
   }
+  listVueApp.resetSelectedAlbums();
+  filterAll();
+  // filter as the user clicks tags to avoid combinations of tags that return
+  // no results
+  setTimeout(() => { hilightSelectedTagFilters(); }, 10);
 }
 
 function removeFilter(e) {
