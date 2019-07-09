@@ -1,5 +1,9 @@
-<div class="parallax-container">
-  <div class="parallax"><img id="image-1" src="images/window-sm.jpg"></div>
+<div class="parallax-container hide-on-large-only">
+  <div class="parallax"><img id="image-1-sm" src="images/window-sm.jpg"></div>
+</div>
+
+<div class="parallax-container hide-on-med-and-down">
+  <div class="parallax"><img id="image-1-md" src="images/window-md.jpg"></div>
 </div>
 
 <div class="container message-container">
