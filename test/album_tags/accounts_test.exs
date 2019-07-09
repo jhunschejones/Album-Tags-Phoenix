@@ -1,64 +1,66 @@
 defmodule AlbumTags.AccountsTest do
-  use AlbumTags.DataCase
+  use AlbumTags.DataCase, async: true
 
   alias AlbumTags.Accounts
 
   describe "users" do
     alias AlbumTags.Accounts.User
 
-    @valid_attrs %{name: "some name"}
-    @update_attrs %{name: "some updated name"}
-    @invalid_attrs %{name: nil}
+    @valid_attrs %{name: "Carl Fox", email: "carl@dafox.com", provider: "google", token: "test token 1"}
+    @new_attrs %{name: "Daisy Bear", email: "daisy@dafox.com", provider: "google", token: "test token 2"}
+    @attrs_missing_email %{name: "McClain Fox", provider: "google", token: "test token 3"}
+    @attrs_missing_provider %{name: "McClain Fox", email: "mcclain@dafox.com", token: "test token 3"}
+    @attrs_missing_token %{name: "McClain Fox", provider: "google", email: "mcclain@dafox.com"}
 
-    def user_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_user()
-
-      user
+    test "insert_or_update_user/1 finds user if one exists" do
+      existing_user = user_fixture(@valid_attrs)
+      {:ok, found_user} = Accounts.insert_or_update_user(@valid_attrs)
+      assert found_user.name == existing_user.name
+      assert found_user.email == existing_user.email
     end
 
-    test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Accounts.list_users() == [user]
+    test "insert_or_update_user/1 creates new user if none exists" do
+      {:ok, new_user} = Accounts.insert_or_update_user(@new_attrs)
+      assert new_user.name == @new_attrs.name
+      assert new_user.email == @new_attrs.email
     end
 
-    test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
-      assert Accounts.get_user!(user.id) == user
+    test "get_user/1 finds a user when one exists" do
+      existing_user = user_fixture(@valid_attrs)
+      found_user = Accounts.get_user(existing_user.id)
+      assert existing_user.name == found_user.name
+      assert existing_user.email == found_user.email
+    end
+
+    test "get_user/1 returns nil when no user exists" do
+      assert Accounts.get_user(12) == nil
     end
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.name == "some name"
+      assert user.name == @valid_attrs.name
+      assert user.email == @valid_attrs.email
     end
 
-    test "create_user/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
+    test "create_user/1 returns error when missing email" do
+      {:error, %{errors: reason}} = Accounts.create_user(@attrs_missing_email)
+      assert reason == [email: {"can't be blank", [validation: :required]}]
     end
 
-    test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
-      assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.name == "some updated name"
+    test "create_user/1 returns error when missing provider" do
+      {:error, %{errors: reason}} = Accounts.create_user(@attrs_missing_provider)
+      assert reason == [provider: {"can't be blank", [validation: :required]}]
     end
 
-    test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
-      assert user == Accounts.get_user!(user.id)
+    test "create_user/1 returns error when missing token" do
+      {:error, %{errors: reason}} = Accounts.create_user(@attrs_missing_token)
+      assert reason == [token: {"can't be blank", [validation: :required]}]
     end
 
-    test "delete_user/1 deletes the user" do
-      user = user_fixture()
-      assert {:ok, %User{}} = Accounts.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
-    end
-
-    test "change_user/1 returns a user changeset" do
-      user = user_fixture()
-      assert %Ecto.Changeset{} = Accounts.change_user(user)
+    test "create_user/1 returns error when email is already used" do
+      user_fixture(@valid_attrs)
+      {:error, %{errors: reason}} = Accounts.create_user(@valid_attrs)
+      assert reason == [email: {"has already been taken", [constraint: :unique, constraint_name: "users_email_index"]}]
     end
   end
 end
