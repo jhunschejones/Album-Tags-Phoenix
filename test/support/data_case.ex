@@ -22,6 +22,7 @@ defmodule AlbumTags.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import AlbumTags.DataCase
+      import AlbumTags.TestHelpers
     end
   end
 
