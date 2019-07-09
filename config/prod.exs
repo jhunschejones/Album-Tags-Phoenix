@@ -13,7 +13,7 @@ config :album_tags, AlbumTagsWeb.Endpoint,
   url: [scheme: "https", host: "album-tags-phoenix", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  https: [compress: true]
+  http: [compress: true]
 
 # Do not print debug messages in production
 config :logger, level: :info
