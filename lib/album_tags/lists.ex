@@ -20,32 +20,8 @@ defmodule AlbumTags.Lists do
     Repo.preload(module, [lists: [:user, :albums]])
   end
 
-  @doc """
-  Returns the list of lists.
-
-  ## Examples
-
-      iex> list_lists()
-      [%List{}, ...]
-
-  """
-  def list_lists do
-    List
-    |> Repo.all()
-  end
-
-  @doc """
-  Gets a single list.
-  """
-  def get_list!(id) do
-    List
-    |> Repo.get!(id)
-    |> Albums.with_albums_and_tags()
-  end
-
   def get_list_by(attrs) do
-    List
-    |> Repo.get_by(attrs)
+    Repo.get_by(List, attrs)
   end
 
   def get_list_with_all_assoc(list_id) do
