@@ -32,7 +32,7 @@
           </div>
         <% end %>
         <a v-bind:href="'/albums/' + albumObject.apple_album_id">
-          <img class="responsive-img album-cover" v-bind:src="albumCover(albumObject, '250')">
+          <img class="responsive-img album-cover" v-bind:src="albumCover(albumObject, '200')">
         </a>
         <p class="title" v-cloak>{{ albumObject.title }}</p>
         <p class="artist grey-text text-darken-1" v-cloak>{{ albumObject.artist }}</p>
