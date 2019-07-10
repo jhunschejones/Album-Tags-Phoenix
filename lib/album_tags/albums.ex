@@ -191,22 +191,6 @@ defmodule AlbumTags.Albums do
   end
 
   @doc """
-  Gets a single tag.
-
-  Raises `Ecto.NoResultsError` if the Tag does not exist.
-
-  ## Examples
-
-      iex> get_tag!(123)
-      %Tag{}
-
-      iex> get_tag!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_tag!(id), do: Repo.get!(Tag, id)
-
-  @doc """
   Creates a tag.
 
   ## Examples
@@ -275,22 +259,6 @@ defmodule AlbumTags.Albums do
     AlbumTag
     |> Repo.get_by(attrs)
     |> Repo.delete()
-  end
-
-  @doc """
-  Deletes a Tag.
-
-  ## Examples
-
-      iex> delete_tag(tag)
-      {:ok, %Tag{}}
-
-      iex> delete_tag(tag)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_tag(%Tag{} = tag) do
-    Repo.delete(tag)
   end
 
   @doc """
