@@ -152,7 +152,7 @@
   </ul>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.runtime.min.js"></script>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, ~s(/js/vue.min.js)) %>"></script>
 <script type="text/javascript">
   var CSRF_TOKEN = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
   var allAlbums = <%= raw Jason.encode!(sort_albums(@list.albums)) %>;
