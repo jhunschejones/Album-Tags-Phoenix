@@ -16,9 +16,9 @@
 
     <!-- MATERIALIZE AND CUSTOM STYLING FOR COMPONENTS IN TEMPLATE -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/compiled_materialize.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, ~s(/css/compiled_materialize.css)) %>"/>
     <%= if @page do %>
-      <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/#{@page}.min.css") %>"/>
+      <link rel="stylesheet" href="<%= Routes.static_path(@conn, ~s(/css/#{@page}.min.css)) %>"/>
     <% end %>
   </head>
   <body class="grey lighten-5">
@@ -26,7 +26,7 @@
     <nav id="main-nav">
       <div class="nav-wrapper grey darken-3">
         <a href="/" class="brand-logo center">
-          <img id="site-title-icon" src="<%= Routes.static_path(@conn, "/images/headphones_100.png") %>">
+          <img id="site-title-icon" src="<%= Routes.static_path(@conn, ~s(/images/headphones_100.png)) %>">
           <span>Album Tags</span>
         </a>
         <ul id="nav-mobile" class="left">
@@ -89,9 +89,9 @@
     <%= render @view_module, @view_template, assigns %>
 
     <!-- MATERIALIZE AND CUSTOM JS FOR COMPONENTS IN TEMPLATE -->
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/compiled_materialize.js") %>"></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, ~s(/js/compiled_materialize.js)) %>"></script>
     <%= if @page do %>
-      <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/#{@page}.min.js") %>"></script>
+      <script type="text/javascript" src="<%= Routes.static_path(@conn, ~s(/js/#{@page}.min.js)) %>"></script>
     <% end %>
   </body>
 </html>
