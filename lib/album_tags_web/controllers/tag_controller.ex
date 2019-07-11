@@ -4,11 +4,6 @@ defmodule AlbumTagsWeb.TagController do
 
   plug :authenticate_user when action in [:edit]
 
-  def index(conn, _params) do
-    all_tags = Albums.list_tags()
-    render(conn, "index.html", tags: all_tags, page: nil)
-  end
-
   def edit(conn, %{"id" => apple_album_id}) do
     album = Albums.get_album_with(apple_album_id, [:tags])
     data_for_page = %{album: album, page: "edit_tags", user: conn.assigns.current_user}

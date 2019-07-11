@@ -178,19 +178,6 @@ defmodule AlbumTags.Albums do
   end
 
   @doc """
-  Returns the list of tags.
-
-  ## Examples
-
-      iex> list_tags()
-      [%Tag{}, ...]
-
-  """
-  def list_tags do
-    Repo.all(Tag)
-  end
-
-  @doc """
   Creates a tag.
 
   ## Examples
