@@ -42,6 +42,7 @@ defmodule AlbumTagsWeb.AuthController do
     conn
     |> configure_session(drop: true)
     |> redirect(to: Routes.static_page_path(conn, :home))
+    |> halt() # this is important otherwise the conn will continue into the controller method before the redirect completes
   end
 
   defp login(conn, user_params, redirect_steps \\ 2) do

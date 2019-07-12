@@ -30,6 +30,7 @@ defmodule AlbumTagsWeb.AuthPlug do
     else
       conn
       |> redirect(to: Routes.auth_path(conn, :request, "google"))
+      |> halt() # this is important otherwise the conn will continue into the controller method before the redirect completes
     end
   end
 end
