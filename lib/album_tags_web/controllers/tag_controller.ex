@@ -2,7 +2,7 @@ defmodule AlbumTagsWeb.TagController do
   use AlbumTagsWeb, :controller
   alias AlbumTags.Albums
 
-  plug :authenticate_user when action in [:edit]
+  plug :authenticate_user when action in [:edit, :create, :delete]
 
   def edit(conn, %{"id" => apple_album_id}) do
     album = Albums.get_album_with(apple_album_id, [:tags])
@@ -36,12 +36,16 @@ defmodule AlbumTagsWeb.TagController do
   end
 
   def delete(conn, %{"albumID" => album_id, "id" => tag_id}) do
-    Albums.remove_tag_from_album(%{
+    case Albums.remove_tag_from_album(%{
       album_id: album_id,
       tag_id: String.to_integer(tag_id),
       user_id: conn.assigns.current_user.id
-    })
-    render(conn, "show.json", message: "Tag deleted")
+    }) do
+      {:ok, "Tag removed from album"} ->
+        render(conn, "show.json", message: "Tag deleted")
+      {:error, "Unable to remove tag from album"} ->
+        render(Plug.Conn.put_status(conn, :internal_server_error), "show.json", message: "Unable to delete tag")
+    end
   end
 
   # return format {server_status, client_message, tag_id}
