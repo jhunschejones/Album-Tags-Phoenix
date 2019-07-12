@@ -243,9 +243,13 @@ defmodule AlbumTags.Albums do
   Removes an album-tag relationship but does not delete either the album or the tag.
   """
   def remove_tag_from_album(attrs) do
-    AlbumTag
-    |> Repo.get_by(attrs)
-    |> Repo.delete()
+    case AlbumTag |> Repo.get_by(attrs) do
+      nil ->
+        {:error, "Unable to remove tag from album"}
+      album_tag ->
+        Repo.delete(album_tag)
+        {:ok, "Tag removed from album"}
+    end
   end
 
   @doc """
