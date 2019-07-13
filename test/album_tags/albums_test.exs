@@ -1,5 +1,5 @@
 defmodule AlbumTags.AlbumsTest do
-  use AlbumTags.DataCase, async: true
+  use AlbumTags.DataCase
 
   alias AlbumTags.Albums
   alias AlbumTags.Albums.Tag

@@ -1,5 +1,5 @@
 defmodule AlbumTagsWeb.StaticPageControllerTest do
-  use AlbumTagsWeb.ConnCase, async: true
+  use AlbumTagsWeb.ConnCase
 
   @user_attrs %{name: "Carl Fox", email: "carl@dafox.com", provider: "google", token: "test token 1"}
 

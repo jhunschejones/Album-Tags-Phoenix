@@ -1,5 +1,5 @@
 defmodule AlbumTagsWeb.TagControllerTest do
-  use AlbumTagsWeb.ConnCase, async: true
+  use AlbumTagsWeb.ConnCase
 
   alias AlbumTags.Albums.{Album, Tag}
   alias AlbumTags.Repo
