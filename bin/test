@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+FileUtils.chdir APP_ROOT do
+  system '. ./tmp/.env && MIX_ENV=test mix test'
+end
