@@ -347,7 +347,10 @@ if (editableList) {
         // hide delete buttons if they are shown
         window.showRemoveAlbum = true;
         toggleRemoveAlbumButtons();
-
+        setTimeout(() => {
+          listVueApp.resetSelectedAlbums();
+          filterAll();
+        }, 5);
         window.addAlbumModal.close();
       } else {
         M.toast({html: xhr.responseText.replace(/\"/g, "")});
@@ -373,7 +376,18 @@ if (editableList) {
         // remove album from vue app
         var albumsIndex = listVueApp.albums.findIndex(a => a.id == albumID);
         listVueApp.albums.splice(albumsIndex, 1);
-
+        setTimeout(() => {
+          listVueApp.resetSelectedAlbums();
+          filterAll();
+          // clear filters if there are now no matching results
+          if (listVueApp.selectedAlbums.length == 0) {
+            listVueApp.yearFilters = [];
+            listVueApp.artistFilters = [];
+            listVueApp.tagFilters = [];
+            listVueApp.resetSelectedAlbums();
+            filterAll();
+          }
+        }, 5);
         M.toast({html: xhr.responseText.replace(/\"/g, "")});
       } else {
         M.toast({html: "Unable to remove album from list"});
