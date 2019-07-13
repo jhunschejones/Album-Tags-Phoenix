@@ -100,12 +100,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     toggleContentDisplayed(contentType);
 
+    // all users fab button
     document.getElementById(`show-my-${contentType}s`).addEventListener("click", function() {
       localStorage.setItem(`${contentType}s`, "user");
       toggleContentDisplayed(contentType);
     });
 
+    // all users tab icon
+    document.getElementById(`all-${contentType}s-icon`).addEventListener("click", function() {
+      localStorage.setItem(`${contentType}s`, "user");
+      toggleContentDisplayed(contentType);
+    });
+
+    // user fab button
     document.getElementById(`show-all-${contentType}s`).addEventListener("click", function() {
+      localStorage.setItem(`${contentType}s`, "all");
+      toggleContentDisplayed(contentType);
+    });
+
+    // user tag icon
+    document.getElementById(`user-${contentType}s-icon`).addEventListener("click", function() {
       localStorage.setItem(`${contentType}s`, "all");
       toggleContentDisplayed(contentType);
     });
