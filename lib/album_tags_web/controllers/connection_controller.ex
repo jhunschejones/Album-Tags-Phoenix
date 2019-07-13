@@ -2,7 +2,7 @@ defmodule AlbumTagsWeb.ConnectionController do
   use AlbumTagsWeb, :controller
   alias AlbumTags.Albums
 
-  plug :authenticate_user when action in [:new, :edit]
+  plug :authenticate_user when action in [:new, :edit, :create, :delete]
 
   def new(conn, %{"parent_album" => apple_album_id}) do
     album = Albums.get_album_with(apple_album_id, [:connections])
@@ -47,11 +47,15 @@ defmodule AlbumTagsWeb.ConnectionController do
   end
 
   def delete(conn, %{"parentAlbum" => parent_album, "childAlbum" => child_album}) do
-    Albums.delete_album_connection(%{
+    case Albums.delete_album_connection(%{
       parent_album: parent_album,
       child_album: child_album,
       user_id: conn.assigns.current_user.id,
-    })
-    render(conn, "show.json", message: "Connection deleted")
+    }) do
+      {:error, "Unable to delete connection"} ->
+        render(Plug.Conn.put_status(conn, :internal_server_error), "show.json", message: "Unable to delete connection")
+      {:ok, "Connection deleted"} ->
+        render(conn, "show.json", message: "Connection deleted")
+    end
   end
 end
