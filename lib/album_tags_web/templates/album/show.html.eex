@@ -99,6 +99,9 @@
           <%= tag.text %>
         </div>
       <% end %>
+      <%= if length(remove_duplicate_tags(@album.tags, @user)) == 0 do %>
+        <div class="center-align"><em class="grey-text">Click the floating action button in the bottom right corner of the screen to add a tag to this album.</em></div>
+      <% end %>
       <div class="fixed-action-btn click-to-toggle hide">
         <a id="tags-fab-button" class="btn-floating light-blue accent-4 click-to-toggle">
           <i class="large material-icons">more_vert</i>
@@ -123,6 +126,9 @@
               <img class="responsive-img album-cover" src="<%= album_cover(connected_album) %>">
             <% end %>
           </div>
+        <% end %>
+        <%= if length(remove_duplicate_connections(@album.connections, @user)) == 0 do %>
+          <div class="center-align"><em class="grey-text">Click the floating action button in the bottom right corner of the screen to add a connection to this album.</em></div>
         <% end %>
       </div>
       <div class="fixed-action-btn click-to-toggle hide">
@@ -160,6 +166,9 @@
               </span>
             </a>
           </li>
+        <% end %>
+        <%= if length(@album.lists) == 0 do %>
+          <div class="center-align"><em class="grey-text">Click the floating action button in the bottom right corner of the screen to add this album to a list.</em></div>
         <% end %>
       </ul>
       <div class="fixed-action-btn click-to-toggle hide">
