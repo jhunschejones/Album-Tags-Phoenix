@@ -15,7 +15,7 @@ database_url =
 config :album_tags, AlbumTags.Repo,
   ssl: true,
   url: database_url,
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "18")
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
