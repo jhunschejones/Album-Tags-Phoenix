@@ -3,7 +3,7 @@
     <%= for list <- sort_lists(@album.lists) do %>
       <%= if list.user_id == @user.id do %>
         <div id="list-<%= list.id %>">
-            <div class="delete-button" onclick="deleteList(<%= @album.id %>, <%= list.id %>)">
+            <div class="delete-button" onclick="listPage.deleteList(<%= @album.id %>, <%= list.id %>)">
               &#10005;
             </div>
             <div class="list">

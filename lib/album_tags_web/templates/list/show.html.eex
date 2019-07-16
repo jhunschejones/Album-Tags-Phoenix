@@ -16,9 +16,9 @@
   </div>
 
   <div id="applied-filters" v-if="allFilters.length > 0">
-    <div class="chip light-blue accent-4 white-text applied-filter" onclick="removeFilter(event)" :data-filter="filter" :data-type="'year'" v-for="filter in yearFilters" v-cloak>{{ filter }}</div>
-    <div class="chip light-blue accent-4 white-text applied-filter" onclick="removeFilter(event)" :data-filter="filter" :data-type="'artist'" v-for="filter in artistFilters" v-cloak>{{ filter }}</div>
-    <div class="chip light-blue accent-4 white-text applied-filter" onclick="removeFilter(event)" :data-filter="filter" :data-type="'tag'" v-for="filter in tagFilters" v-cloak>{{ filter }}</div>
+    <div class="chip light-blue accent-4 white-text applied-filter" onclick="listPage.removeFilter(event)" :data-filter="filter" :data-type="'year'" v-for="filter in yearFilters" v-cloak>{{ filter }}</div>
+    <div class="chip light-blue accent-4 white-text applied-filter" onclick="listPage.removeFilter(event)" :data-filter="filter" :data-type="'artist'" v-for="filter in artistFilters" v-cloak>{{ filter }}</div>
+    <div class="chip light-blue accent-4 white-text applied-filter" onclick="listPage.removeFilter(event)" :data-filter="filter" :data-type="'tag'" v-for="filter in tagFilters" v-cloak>{{ filter }}</div>
   </div>
 
   <p id="albums-count" class="grey-text" v-cloak>{{ selectedAlbumsCount }} albums</p>
@@ -45,7 +45,7 @@
     <div class="modal-content">
       <h6>Select years to filter by:</h6>
       <div id="year-filters">
-        <div class="chip year-filter" onclick="selectYearFilter(event)" v-for="year in years" :data-year="year" v-cloak>{{ year }}</div>
+        <div class="chip year-filter" onclick="listPage.selectYearFilter(event)" v-for="year in years" :data-year="year" v-cloak>{{ year }}</div>
       </div>
       <a class="btn btn-small light-blue accent-4 filter-btn" data-type="year">Filter</a>
       <a class="btn btn-small grey lighten-4 grey-text text-darken-2 clear-filters" data-type="year">Clear</a>
@@ -56,7 +56,7 @@
     <div class="modal-content">
       <h6>Select artists to filter by:</h6>
       <div id="artist-filters">
-        <div class="chip artist-filter" onclick="selectArtistFilter(event)" v-for="artist in artists" :data-artist="artist" v-cloak>{{ artist }}</div>
+        <div class="chip artist-filter" onclick="listPage.selectArtistFilter(event)" v-for="artist in artists" :data-artist="artist" v-cloak>{{ artist }}</div>
       </div>
       <a class="btn btn-small light-blue accent-4 filter-btn" data-type="artist">Filter</a>
       <a class="btn btn-small grey lighten-4 grey-text text-darken-2 clear-filters" data-type="artist">Clear</a>
@@ -67,7 +67,7 @@
     <div class="modal-content">
       <h6>Select tags to filter by:</h6>
       <div id="tag-filters">
-        <div class="chip tag-filter" onclick="selectTagFilter(event)" v-for="tag in tags" :data-tag="tag" v-cloak>{{ tag }}</div>
+        <div class="chip tag-filter" onclick="listPage.selectTagFilter(event)" v-for="tag in tags" :data-tag="tag" v-cloak>{{ tag }}</div>
       </div>
       <a class="btn btn-small light-blue accent-4 filter-btn" data-type="tag">Filter</a>
       <a class="btn btn-small grey lighten-4 grey-text text-darken-2 clear-filters" data-type="tag">Clear</a>
