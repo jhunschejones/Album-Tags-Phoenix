@@ -173,6 +173,9 @@
   };
 
   document.addEventListener('DOMContentLoaded', function() {
+    var tagSearchButton = document.getElementById("search-tags");
+    albumPage.spinner = document.getElementById("album-cover-spinner-container");
+
     albumPage.initializeAllFAB();
     albumPage.initlializeEditButtons();
     albumPage.initializeCardTabs();
@@ -182,15 +185,10 @@
       albumPage.closeFabsWhenClickOutside(e);
       albumPage.closeToastsOnClick(e);
     });
-
-    var tagSearchButton = document.getElementById("search-tags");
-    albumPage.spinner = document.getElementById("album-cover-spinner-container");
-
     tagSearchButton.addEventListener("click", function(e) {
       e.preventDefault();
       albumPage.executeTagSearch();
     });
-
     addEventListenerToClass("tag", "click", function(e) {
       albumPage.selectTag(e);
     });
@@ -211,7 +209,7 @@
 
   // ====== START UTILITY FUNCTIONS ======
   /**
-   * addEventListenerToClass - description
+   * Add an event listener to each element on the page matching a given class
    * @param  {string} class class to select
    * @param  {string} event event to trigger callback
    * @param  {function} callback function to call on event

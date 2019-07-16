@@ -88,7 +88,7 @@
       xhr.setRequestHeader("X-CSRF-Token", CSRF_TOKEN);
       xhr.send(JSON.stringify({albumID: albumID}));
     }
-  }
+  };
 
   document.addEventListener('DOMContentLoaded', function() {
     tagsPage.initializeChips();

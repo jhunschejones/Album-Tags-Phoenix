@@ -65,28 +65,8 @@ function hideClass(className) {
   }
 }
 
-function stringToNode(html) {
-  const template = document.createElement('template');
-  template.innerHTML = html;
-  return template.content.firstChild;
-}
-
-function removeSelectedElement(selector) {
-  if (selector[0] === ".") {
-    const c = document.querySelectorAll(selector);
-    for (let i = 0; i < c.length; i++) {
-      c[i].parentNode.removeChild(c[i]);
-    }
-  } else if (selector[0] === "#") {
-    const e = document.getElementById(selector.substring(1));
-    if (e) { e.parentNode.removeChild(e); }
-  } else {
-    console.error("removeSelectedElement() was passed an invalid selector");
-  }
-}
-
 /**
- * addEventListenerToClass - description
+ * Add an event listener to each element on the page matching a given class
  * @param  {string} class class to select
  * @param  {string} event event to trigger callback
  * @param  {function} callback function to call on event
