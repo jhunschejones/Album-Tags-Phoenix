@@ -5,9 +5,7 @@ defmodule AlbumTags.Lists do
 
   import Ecto.{Query, UUID}, warn: false
   alias AlbumTags.Repo
-
   alias AlbumTags.Lists.{List, AlbumList}
-  alias AlbumTags.Albums
 
   @doc """
   Preloads lists for a given, associated module (like an Album)
