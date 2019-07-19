@@ -210,7 +210,7 @@ defmodule AlbumTagsWeb.ListController do
     |> String.trim()
     |> String.downcase()
     |> String.split()
-    |> Enum.with_index()
+    |> Stream.with_index()
     |> Enum.map_join(" ", fn {word, index} ->
         word_not_capitalizable = Enum.any?(not_capitalized, &(&1 == word))
         case index != 0 && word_not_capitalizable do
