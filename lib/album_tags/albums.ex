@@ -95,13 +95,10 @@ defmodule AlbumTags.Albums do
   """
   def get_apple_album_details(apple_album_id) do
     HTTPotion.get("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", headers: [Accept: "application/json", Authorization: "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"])
-    |> map_to_album_struct()
+    |> map_raw_album_data_to_album_struct()
   end
 
-  @doc """
-  Converts Apple Music response JSON into an Album struct
-  """
-  defp map_to_album_struct(apple_data) do
+  defp map_raw_album_data_to_album_struct(apple_data) do
     album = apple_data.body
     |> Jason.decode!
     |> Map.get("data")
