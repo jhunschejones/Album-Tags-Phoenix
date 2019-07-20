@@ -57,7 +57,7 @@ defmodule AlbumTagsWeb.ListController do
       render(Conn.put_status(conn, :bad_request), "show.json", message: message)
     else
       {status, message} = case Lists.create_list(%{
-        title: force_title_case(title),
+        title: title,
         private: private,
         user_id: conn.assigns.current_user.id,
       }) do
@@ -79,7 +79,7 @@ defmodule AlbumTagsWeb.ListController do
   # creates new list on xhr POST
   def create(conn, %{"title" => title, "private" => private}) do
     {status, message, new_list} = case Lists.create_list(%{
-      title: force_title_case(title),
+      title: title,
       private: private,
       user_id: conn.assigns.current_user.id,
     }) do
@@ -201,22 +201,5 @@ defmodule AlbumTagsWeb.ListController do
       _ ->
         {:internal_server_error, "Unable to modify list as requested"}
     end
-  end
-
-  def force_title_case(input_string) do
-    not_capitalized = ["a", "an", "and", "the", "for", "but", "yet", "so", "nor", "at", "by", "of", "to", "on"]
-
-    input_string
-    |> String.trim()
-    |> String.downcase()
-    |> String.split()
-    |> Stream.with_index()
-    |> Enum.map_join(" ", fn {word, index} ->
-        word_not_capitalizable = Enum.any?(not_capitalized, &(&1 == word))
-        case index != 0 && word_not_capitalizable do
-          true -> word
-          false -> String.capitalize(word)
-        end
-      end)
   end
 end

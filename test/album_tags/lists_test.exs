@@ -86,7 +86,7 @@ defmodule AlbumTags.ListsTest do
 
       assert list.id == updated_list.id
       assert updated_list.title != list.title
-      assert updated_list.title == "Super updated title"
+      assert updated_list.title == "Super Updated Title"
     end
   end
 
