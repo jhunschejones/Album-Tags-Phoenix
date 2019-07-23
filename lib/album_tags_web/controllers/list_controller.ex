@@ -3,7 +3,7 @@ defmodule AlbumTagsWeb.ListController do
   alias AlbumTags.{Albums, Lists}
   alias Plug.Conn
 
-  plug :authenticate_user when action in [:new, :edit, :index]
+  plug :authenticate_user when action in [:new, :create, :edit, :index]
 
   def new(conn, %{"album" => apple_album_id}) do
     data_for_page = %{
@@ -51,6 +51,8 @@ defmodule AlbumTagsWeb.ListController do
   end
 
   # creates new list and adds album on xhr POST
+  # returns message and new_list
+  # does not allow My Favorites list creation
   def create(conn, %{"title" => title, "private" => private, "currentAlbum" => apple_album_id}) do
     if title |> String.trim() |> String.upcase() == "MY FAVORITES" do
       message = "The 'My Favorites' list already exists"
@@ -77,6 +79,7 @@ defmodule AlbumTagsWeb.ListController do
   end
 
   # creates new list on xhr POST
+  # returns a message
   def create(conn, %{"title" => title, "private" => private}) do
     {status, message, new_list} = case Lists.create_list(%{
       title: title,
