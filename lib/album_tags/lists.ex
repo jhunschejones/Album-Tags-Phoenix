@@ -116,9 +116,13 @@ defmodule AlbumTags.Lists do
   Removes an album from a list without deleting the album or the list.
   """
   def remove_album_from_list(attrs) do
-    AlbumList
-    |> Repo.get_by(attrs)
-    |> Repo.delete()
+    try do
+      AlbumList
+      |> Repo.get_by(attrs)
+      |> Repo.delete()
+    rescue
+      FunctionClauseError -> {:error, "Unable to remove album from list"}
+    end
   end
 
   @doc """

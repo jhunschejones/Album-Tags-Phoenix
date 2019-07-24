@@ -3,7 +3,7 @@ defmodule AlbumTagsWeb.ListController do
   alias AlbumTags.{Albums, Lists}
   alias Plug.Conn
 
-  plug :authenticate_user when action in [:new, :create, :edit, :index]
+  plug :authenticate_user when action in [:new, :create, :edit, :update, :index]
 
   def new(conn, %{"album" => apple_album_id}) do
     data_for_page = %{
@@ -52,7 +52,7 @@ defmodule AlbumTagsWeb.ListController do
 
   # creates new list and adds album on xhr POST
   # returns message and new_list
-  # does not allow My Favorites list creation
+  # does not allow `My Favorites` list creation
   def create(conn, %{"title" => title, "private" => private, "currentAlbum" => apple_album_id}) do
     if title |> String.trim() |> String.upcase() == "MY FAVORITES" do
       message = "The 'My Favorites' list already exists"
@@ -144,13 +144,24 @@ defmodule AlbumTagsWeb.ListController do
   # remove album from list on xhr PATCH
   def update(conn, %{"action" => action} = params) when action == "remove_album" do
     %{"albumID" => album_id, "id" => list_id} = params
-    Lists.remove_album_from_list(%{
+
+    {status, message} = case Lists.remove_album_from_list(%{
       album_id: album_id,
       list_id: String.to_integer(list_id),
       user_id: conn.assigns.current_user.id,
-    })
+    }) do
+      {:error, _} ->
+        case Lists.get_list_by(%{id: list_id}).user_id == conn.assigns.current_user.id do
+          true ->
+            {:bad_request, "Unable to remove album from list"}
+          false ->
+            {:bad_request, "You can't remove an album from someone else's list"}
+        end
+      _ ->
+        {:ok, "Album successfully removed from list"}
+    end
 
-    render(conn, "show.json", message: "Album successfully removed from list")
+    render(Conn.put_status(conn, status), "show.json", message: message)
   end
 
   # update list name xhr PATCH
