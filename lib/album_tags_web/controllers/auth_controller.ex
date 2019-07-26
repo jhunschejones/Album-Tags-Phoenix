@@ -33,8 +33,8 @@ defmodule AlbumTagsWeb.AuthController do
     }
 
     # when a current user exists, it means the conn has already gone through the
-    # authenticate plug, meaning we have to recirect back farther to get to the
-    # origional page the user was requesting
+    # authenticate plug, meaning we have to redirect back farther to get to the
+    # original page the user was requesting
     login(conn, user_params, 5)
   end
 
