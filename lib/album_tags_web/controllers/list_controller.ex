@@ -150,15 +150,8 @@ defmodule AlbumTagsWeb.ListController do
       list_id: String.to_integer(list_id),
       user_id: conn.assigns.current_user.id,
     }) do
-      {:error, _} ->
-        case Lists.get_list_by(%{id: list_id}).user_id == conn.assigns.current_user.id do
-          true ->
-            {:bad_request, "Unable to remove album from list"}
-          false ->
-            {:bad_request, "You can't remove an album from someone else's list"}
-        end
-      _ ->
-        {:ok, "Album successfully removed from list"}
+      {:error, reason} -> {:bad_request, reason}
+      _ -> {:ok, "Album successfully removed from list"}
     end
 
     render(Conn.put_status(conn, status), "show.json", message: message)
@@ -173,6 +166,8 @@ defmodule AlbumTagsWeb.ListController do
     }) do
       {:ok, response} ->
         {:ok, "List title successfully updated", response.title}
+      {:update_error, reason} ->
+        {:bad_request, reason, nil}
       {:error, response} ->
         Tuple.append(handle_changeset_error(response), nil) # add nil for no new list title
     end
@@ -184,17 +179,19 @@ defmodule AlbumTagsWeb.ListController do
 
   # deletes a list on xhr DELETE
   def delete(conn, %{"id" => list_id}) do
-    {:ok, deleted_list} = Lists.delete_user_list(%{
+    case Lists.delete_user_list(%{
       list_id: String.to_integer(list_id),
       user_id: conn.assigns.current_user.id
-    })
-
-    # remove favorites_list_id from session if favorites list is deleted
-    case deleted_list.title do
-      "My Favorites" ->
-        render(Conn.put_session(conn, :favorites_list_id, nil), "show.json", message: "List successfully deleted")
-      _ ->
-        render(conn, "show.json", message: "List successfully deleted")
+    }) do
+      {:ok, deleted_list} ->
+        case deleted_list.title do
+          "My Favorites" ->
+            render(Conn.put_session(conn, :favorites_list_id, nil), "show.json", message: "List successfully deleted")
+          _ ->
+            render(conn, "show.json", message: "List successfully deleted")
+        end
+      {:error, reason} ->
+        render(Conn.put_status(conn, :bad_request), "show.json", message: reason)
     end
   end
 

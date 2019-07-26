@@ -97,10 +97,20 @@ defmodule AlbumTags.Lists do
 
   """
   def update_title(%{list_id: list_id, title: title, user_id: user_id}) do
-    List
-    |> Repo.get_by(%{id: list_id, user_id: user_id})
-    |> List.changeset(%{title: title})
-    |> Repo.update()
+    try do
+      List
+      |> Repo.get_by(%{id: list_id, user_id: user_id})
+      |> List.changeset(%{title: title})
+      |> Repo.update()
+    rescue
+      FunctionClauseError ->
+        case get_list_by(%{id: list_id}).user_id == user_id do
+          true ->
+            {:update_error, "Unable to update list title"}
+          false ->
+            {:update_error, "You can't change the title of someone else's list"}
+        end
+    end
   end
 
   @doc """
@@ -121,7 +131,13 @@ defmodule AlbumTags.Lists do
       |> Repo.get_by(attrs)
       |> Repo.delete()
     rescue
-      FunctionClauseError -> {:error, "Unable to remove album from list"}
+      FunctionClauseError ->
+        case get_list_by(%{id: attrs.list_id}).user_id == attrs.user_id do
+          true ->
+            {:error, "Unable to remove album from list"}
+          false ->
+            {:error, "You can't remove an album from someone else's list"}
+        end
     end
   end
 
@@ -137,9 +153,19 @@ defmodule AlbumTags.Lists do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_user_list(%{list_id: id, user_id: user_id}) do
-    List
-    |> Repo.get_by(%{id: id, user_id: user_id})
-    |> Repo.delete()
+  def delete_user_list(%{list_id: list_id, user_id: user_id}) do
+    try do
+      List
+      |> Repo.get_by(%{id: list_id, user_id: user_id})
+      |> Repo.delete()
+    rescue
+      FunctionClauseError ->
+        case get_list_by(%{id: list_id}).user_id == user_id do
+          true ->
+            {:error, "Unable to delete list list"}
+          false ->
+            {:error, "You can't delete someone else's list"}
+        end
+    end
   end
 end

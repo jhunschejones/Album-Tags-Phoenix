@@ -297,4 +297,110 @@ defmodule AlbumTagsWeb.ListControllerTest do
       assert List.first(updated_list.albums).apple_album_id == @album_attrs.apple_album_id
     end
   end
+
+  describe "update/2 when action == 'update_title'" do
+    setup do
+      user = user_fixture(@user_attrs)
+      list = list_fixture(%{title: @list_attrs.title, user_id: user.id})
+      {:ok, user: user, list: list}
+    end
+
+    test "redirects for user authentication", %{conn: conn, list: list} do
+      conn = patch(conn, Routes.list_path(conn, :update, list.id, %{"action" => "update_title", "newTitle" => "New Test List Title"}))
+      assert "/auth/google" = redirected_to(conn, 302)
+    end
+
+    test "updates title with valid input", %{conn: conn, user: user, list: list} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = patch(conn, Routes.list_path(conn, :update, list.id, %{"action" => "update_title", "newTitle" => "New test list  title "}))
+      updated_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 200)
+      assert response["message"] == "List title successfully updated"
+      assert response["list_title"] == "New Test List Title"
+      assert updated_list.title == "New Test List Title"
+    end
+
+    test "won't allow blank list titles", %{conn: conn, user: user, list: list} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = patch(conn, Routes.list_path(conn, :update, list.id, %{"action" => "update_title", "newTitle" => ""}))
+      updated_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 400)
+      assert response == "List titles must be at least two characters long"
+      assert updated_list.title == @list_attrs.title
+    end
+
+    test "won't allow short list titles", %{conn: conn, user: user, list: list} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = patch(conn, Routes.list_path(conn, :update, list.id, %{"action" => "update_title", "newTitle" => "b"}))
+      updated_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 400)
+      assert response == "List titles must be at least two characters long"
+      assert updated_list.title == @list_attrs.title
+    end
+
+    test "won't allow long list titles", %{conn: conn, user: user, list: list} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = patch(conn, Routes.list_path(conn, :update, list.id, %{"action" => "update_title", "newTitle" => "This title is so incredibly long, it's not entirely practical anymore in terms of display"}))
+      updated_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 400)
+      assert response == "List titles cannot be more than sixty characters long"
+      assert updated_list.title == @list_attrs.title
+    end
+
+    test "won't let user update another user's list", %{conn: conn, list: list} do
+      alt_user = user_fixture(@alt_user_attrs)
+      conn = Plug.Test.init_test_session(conn, user_id: alt_user.id)
+      conn = patch(conn, Routes.list_path(conn, :update, list.id, %{"action" => "update_title", "newTitle" => "New test list  title "}))
+      updated_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 400)
+      assert response == "You can't change the title of someone else's list"
+      assert updated_list.title == @list_attrs.title
+    end
+  end
+
+  describe "delete/2" do
+    setup do
+      user = user_fixture(@user_attrs)
+      list = list_fixture(%{title: @list_attrs.title, user_id: user.id})
+      {:ok, user: user, list: list}
+    end
+
+    test "deletes list", %{conn: conn, user: user, list: list} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = delete(conn, Routes.list_path(conn, :delete, list.id))
+      deleted_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 200)
+      assert response == "List successfully deleted"
+      assert deleted_list == nil
+    end
+
+    test "deletes 'My Favorites' and removes from session", %{conn: conn, user: user} do
+      list = list_fixture(%{title: "My Favorites", user_id: user.id})
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = delete(conn, Routes.list_path(conn, :delete, list.id))
+      deleted_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 200)
+      assert response == "List successfully deleted"
+      assert deleted_list == nil
+      assert get_session(conn, :favorites_list_id) == nil
+    end
+
+    test "doesn't delete another user's list", %{conn: conn, list: list} do
+      alt_user = user_fixture(@alt_user_attrs)
+      conn = Plug.Test.init_test_session(conn, user_id: alt_user.id)
+      conn = delete(conn, Routes.list_path(conn, :delete, list.id))
+      deleted_list = Lists.get_list_by(%{id: list.id})
+
+      assert response = json_response(conn, 400)
+      assert response == "You can't delete someone else's list"
+      assert deleted_list.title == @list_attrs.title
+    end
+  end
 end
