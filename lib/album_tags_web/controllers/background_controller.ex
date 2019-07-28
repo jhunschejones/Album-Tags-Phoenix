@@ -19,10 +19,6 @@ defmodule AlbumTagsWeb.BackgroundController do
   end
 
   defp authenticate_request(conn, _params) do
-    IO.puts "\n******\n"
-    IO.inspect List.first(get_req_header(conn, "api_key"))
-    IO.inspect @api_key
-    IO.puts "\n******\n"
     case List.first(get_req_header(conn, "api_key")) do
       @api_key ->
         conn
