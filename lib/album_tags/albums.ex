@@ -7,6 +7,7 @@ defmodule AlbumTags.Albums do
   alias AlbumTags.Repo
   alias AlbumTags.Albums.{Album, AlbumTag, AlbumConnection, Tag, Song}
   alias AlbumTags.Lists
+  alias AlbumTags.Lists.AlbumList
   alias HTTPotion
   alias Jason
 
@@ -310,5 +311,30 @@ defmodule AlbumTags.Albums do
         Repo.delete(connection)
         {:ok, "Connection deleted"}
     end
+  end
+
+  def delete_orphan_records do
+    album_results = Album
+    |> Repo.all()
+    |> Repo.preload([:tags, :lists])
+    |> Stream.map(fn album -> get_album_connections(album) end)
+    |> Stream.filter(fn album ->
+        album.connections == [] && album.lists == [] && album.tags == [] && more_than_one_day_old(album)
+      end)
+    |> Enum.map(fn album -> Repo.delete!(album) end)
+
+    tag_results = Tag
+    |> Repo.all()
+    |> Repo.preload([:albums])
+    |> Stream.filter(fn tag ->
+        tag.albums == [] && more_than_one_day_old(tag)
+      end)
+    |> Enum.map(fn tag -> Repo.delete!(tag) end)
+
+    "Deleted #{length(album_results)} orphan albums and #{length(tag_results)} orphan tags"
+  end
+
+  defp more_than_one_day_old(record) do
+    NaiveDateTime.compare(record.inserted_at, NaiveDateTime.add(NaiveDateTime.utc_now(), -86400, :second)) == :lt
   end
 end
