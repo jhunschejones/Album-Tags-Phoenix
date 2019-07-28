@@ -174,7 +174,6 @@
 
   document.addEventListener('DOMContentLoaded', function() {
     var tagSearchButton = document.getElementById("search-tags");
-    albumPage.spinner = document.getElementById("album-cover-spinner-container");
 
     albumPage.initializeAllFAB();
     albumPage.initlializeEditButtons();
@@ -237,6 +236,8 @@
   // ====== END UTILITY FUNCTIONS ======
 
   // ====== START SPINNER FUNCTIONALITY ======
+  albumPage.spinner = document.getElementById("album-cover-spinner-container");
+
   if (!document.getElementById("page-album-cover").complete) {
     albumPage.showSpinner();
   }
