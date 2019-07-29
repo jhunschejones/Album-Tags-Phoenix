@@ -95,7 +95,7 @@
     </div>
     <div id="tags" class="col s12">
       <%= for tag <- remove_duplicate_tags(@album.tags, @user) do %>
-        <div class="chip tag <%= if @user && tag.user_id == @user.id, do: 'user-tag' %>" data-value="<%= url_tag(tag) %>">
+        <div class="chip tag <%= if @user && tag.user_id == @user.id, do: 'user-tag' %>" data-value="<%= ~s(#{tag.text}) %>">
           <%= tag.text %>
         </div>
       <% end %>

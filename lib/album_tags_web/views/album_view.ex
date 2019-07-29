@@ -20,10 +20,6 @@ defmodule AlbumTagsWeb.AlbumView do
     "#{month}/#{day}/#{year}"
   end
 
-  def url_tag(tag) do
-    URI.encode(tag.text)
-  end
-
   def sort_songs(songs_map) do
     Enum.sort(songs_map, &(&1.track_number < &2.track_number))
   end
@@ -35,11 +31,11 @@ defmodule AlbumTagsWeb.AlbumView do
 
   def remove_duplicate_tags(tags, user) do
     if !user do
-      tags
+      Enum.uniq_by(tags, &(&1.text))
     else
-      user_tags = Enum.filter(tags, &(&1.user_id == user.id))
-      other_tags = Enum.filter(tags, &(&1.user_id != user.id))
-      deduped_other_tags = Enum.filter(other_tags, fn tag ->
+      user_tags = Stream.filter(tags, &(&1.user_id == user.id))
+      other_tags = Stream.filter(tags, &(&1.user_id != user.id))
+      deduped_other_tags = Stream.filter(other_tags, fn tag ->
         !Enum.any?(user_tags, &(&1.text == tag.text))
       end)
 
@@ -49,11 +45,11 @@ defmodule AlbumTagsWeb.AlbumView do
 
   def remove_duplicate_connections(connections, user) do
     if !user do
-      connections
+      Enum.uniq_by(connections, &(&1.apple_album_id))
     else
-      user_connections = Enum.filter(connections, &(&1.connection_owner == user.id))
-      other_connections = Enum.filter(connections, &(&1.connection_owner != user.id))
-      deduped_other_connections = Enum.filter(other_connections, fn connection ->
+      user_connections = Stream.filter(connections, &(&1.connection_owner == user.id))
+      other_connections = Stream.filter(connections, &(&1.connection_owner != user.id))
+      deduped_other_connections = Stream.filter(other_connections, fn connection ->
         !Enum.any?(user_connections, &(&1.apple_album_id == connection.apple_album_id))
       end)
 
