@@ -35,6 +35,11 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   client_id: System.get_env("UEBERAUTH_CLIENT_ID"),
   client_secret: System.get_env("UEBERAUTH_CLIENT_SECRET")
 
+config :exredis,
+  url: System.get_env("REDIS_URL") || "redis://127.0.0.1:6379",
+  reconnect: :no_reconnect,
+  max_queue: :infinity
+
 config :new_relic_agent, apdex_t: 0.015
 # The agent will automatically read this from environment variables
 #   app_name: System.get_env("NEW_RELIC_APP_NAME"),

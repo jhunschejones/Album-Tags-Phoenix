@@ -11,11 +11,26 @@ defmodule AlbumTagsWeb.BackgroundController do
   end
 
   def duplicates(conn, _params) do
-    render(conn, "show.json", message: "Duplicates function not yet implemented")
+    duplicate_albums = Albums.retrieve_duplicate_albums |> Enum.map(&(&1.apple_album_id))
+    message = "Found #{length(duplicate_albums)} duplicate albums: #{Enum.join(duplicate_albums, ", ")}"
+
+    render(conn, "show.json", message: message)
   end
 
-  def invalid(conn, _params) do
-    render(conn, "show.json", message: "Invalid function not yet implemented")
+  def cache_invalid(conn, _params) do
+    message = Albums.cache_invalid_apple_album_ids
+    render(conn, "show.json", message: message)
+  end
+
+  def fetch_invalid(conn, _params) do
+    message = case Albums.retrieve_invalid_apple_album_ids do
+      %{invalid_apple_album_ids: [""], timestamp: timestamp} ->
+        "#{timestamp} - No invalid Apple Album ID's found"
+      %{invalid_apple_album_ids: invalid_apple_album_ids, timestamp: timestamp} ->
+        "#{timestamp} - Invalid Apple Album ID's: #{invalid_apple_album_ids}"
+    end
+
+    render(conn, "show.json", message: message)
   end
 
   defp authenticate_request(conn, _params) do

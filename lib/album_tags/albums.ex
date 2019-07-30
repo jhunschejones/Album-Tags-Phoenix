@@ -7,7 +7,6 @@ defmodule AlbumTags.Albums do
   alias AlbumTags.Repo
   alias AlbumTags.Albums.{Album, AlbumTag, AlbumConnection, Tag, Song}
   alias AlbumTags.Lists
-  alias AlbumTags.Lists.AlbumList
   alias HTTPotion
   alias Jason
 
@@ -313,13 +312,17 @@ defmodule AlbumTags.Albums do
     end
   end
 
-  def delete_orphan_records do
+  # ====== Start methods for background controller & DB maintenance ======
+
+  def delete_orphan_records(cutoff_naive_date_time \\ nil) do
+    cutoff = cutoff_naive_date_time || one_day_ago()
+
     album_results = Album
     |> Repo.all()
     |> Repo.preload([:tags, :lists])
     |> Stream.map(fn album -> get_album_connections(album) end)
     |> Stream.filter(fn album ->
-        album.connections == [] && album.lists == [] && album.tags == [] && more_than_one_day_old(album)
+        album.connections == [] && album.lists == [] && album.tags == [] && older_than_cutoff?(album, cutoff)
       end)
     |> Enum.map(fn album -> Repo.delete!(album) end)
 
@@ -327,14 +330,96 @@ defmodule AlbumTags.Albums do
     |> Repo.all()
     |> Repo.preload([:albums])
     |> Stream.filter(fn tag ->
-        tag.albums == [] && more_than_one_day_old(tag)
+        tag.albums == [] && older_than_cutoff?(tag, cutoff)
       end)
     |> Enum.map(fn tag -> Repo.delete!(tag) end)
 
     "Deleted #{length(album_results)} orphan albums and #{length(tag_results)} orphan tags"
   end
 
-  defp more_than_one_day_old(record) do
-    NaiveDateTime.compare(record.inserted_at, NaiveDateTime.add(NaiveDateTime.utc_now(), -86400, :second)) == :lt
+  defp older_than_cutoff?(db_record, cutoff_naive_date_time) do
+    NaiveDateTime.compare(db_record.inserted_at, cutoff_naive_date_time) == :lt
+  end
+
+  defp one_day_ago do
+    NaiveDateTime.utc_now() |> NaiveDateTime.add(-86400, :second)
+  end
+
+  def cache_invalid_apple_album_ids do
+    Task.async(fn ->
+      {:ok, client} = Exredis.start_link
+      results = find_invalid_apple_album_ids()
+
+      Exredis.Api.set(client, "invalid_apple_album_ids", Enum.join(results, ", "))
+      Exredis.Api.set(client, "invalid_apple_album_ids:timestamp", NaiveDateTime.to_string(NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)))
+      Exredis.stop(client)
+    end)
+
+    "Searching for invalid Apple Album ID's"
+  end
+
+  def find_invalid_apple_album_ids do
+    Album
+    |> Repo.all()
+    |> Stream.filter(fn album ->
+        !valid_apple_album_id?(album.apple_album_id)
+      end)
+    |> Enum.map(fn album -> album.apple_album_id end)
+  end
+
+  def retrieve_invalid_apple_album_ids do
+    {:ok, client} = Exredis.start_link
+    invalid_ids = Exredis.Api.get(client, "invalid_apple_album_ids")
+    timestamp = Exredis.Api.get(client, "invalid_apple_album_ids:timestamp")
+    Exredis.stop(client)
+
+    %{invalid_apple_album_ids: String.split(invalid_ids, ", "), timestamp: timestamp}
+  end
+
+  defp valid_apple_album_id?(apple_album_id) do
+    HTTPotion.get("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", headers: [Accept: "application/json", Authorization: "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"]).status_code == 200
+  end
+
+  def retrieve_duplicate_albums do
+    Album
+    |> Repo.all()
+    |> collect_duplicate_albums([])
+  end
+
+  defp collect_duplicate_albums([], duplicate_albums), do: duplicate_albums
+
+  defp collect_duplicate_albums(remaining_albums, previous_duplicate_albums) do
+    [current_album | remaining_albums] = remaining_albums
+
+    duplicate_albums = remaining_albums
+    |> Enum.filter(fn album -> are_duplicates?(album, current_album) end)
+    |> add_current_album_if_duplicate(current_album)
+    |> Enum.concat(previous_duplicate_albums)
+
+    collect_duplicate_albums(remaining_albums, duplicate_albums)
+  end
+
+  defp add_current_album_if_duplicate(duplicate_albums, current_album) do
+    case length(duplicate_albums) do
+      0 ->
+        duplicate_albums
+      _ ->
+        [current_album | duplicate_albums]
+    end
+  end
+
+  defp are_duplicates?(album_one, album_two) do
+    same_title = comparable_string(album_one.title) == comparable_string(album_two.title)
+    same_artist = comparable_string(album_one.artist) == comparable_string(album_two.artist)
+
+    same_title && same_artist
+  end
+
+  defp comparable_string(input_string) do
+    input_string
+    |> String.upcase()
+    |> String.replace("A", "")
+    |> String.replace("AND", "")
+    |> String.replace("THE", "")
   end
 end

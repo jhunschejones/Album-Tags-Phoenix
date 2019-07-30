@@ -6,6 +6,7 @@ defmodule AlbumTags.AlbumsTest do
 
   @album_one_attrs %{apple_album_id: 716394623, apple_url: "https://itunes.apple.com/us/album/the-question/716394623", title: "The Question", artist: "Emery", release_date: "2005-08-02", record_company: "Tooth & Nail (TNN)", cover: "https://is3-ssl.mzstatic.com/image/thumb/Music4/v4/db/cd/a9/dbcda9bf-6551-a37d-0d57-3c4455b9d8dd/00724386060457.jpg/{w}x{h}bb.jpeg"}
   @album_two_attrs %{apple_album_id: 1135092935, apple_url: "https://itunes.apple.com/us/album/passengers/1135092935", title: "Passengers", artist: "Artifex Pereo", release_date: "2016-09-09", record_company: "Tooth & Nail Records", cover: "https://is2-ssl.mzstatic.com/image/thumb/Music20/v4/c5/64/ce/c564ce15-0e87-458c-cbb0-9941d65b5648/886446002583.jpg/{w}x{h}bb.jpeg"}
+  @invalid_album_attrs %{apple_album_id: 1, apple_url: "https://itunes.apple.com/us/album/the-question/716394623", title: "The Question", artist: "Emery", release_date: "2005-08-02", record_company: "Tooth & Nail (TNN)", cover: "https://is3-ssl.mzstatic.com/image/thumb/Music4/v4/db/cd/a9/dbcda9bf-6551-a37d-0d57-3c4455b9d8dd/00724386060457.jpg/{w}x{h}bb.jpeg"}
   @user_attrs %{name: "Carl Fox", email: "carl@dafox.com", provider: "google", token: "test token 1"}
 
   describe "get_album_with/2" do
@@ -134,6 +135,76 @@ defmodule AlbumTags.AlbumsTest do
 
       assert length(updated_tags) == 1
       assert List.first(updated_tags).text == "New Tag Two"
+    end
+  end
+
+  describe "delete_orphan_records/1" do
+    setup do
+      user = user_fixture(@user_attrs)
+      album = album_fixture(@album_one_attrs)
+      tag = tag_fixture(%{text: "New Tag", user_id: user.id, album_id: album.id})
+      {:ok, user: user, album: album, tag: tag}
+    end
+
+    test "deletes orphan records older than cutoff", %{user: user, album: album, tag: tag} do
+      Albums.remove_tag_from_album(%{tag_id: tag.id, user_id: user.id, album_id: album.id})
+      cutoff = NaiveDateTime.utc_now()
+      response = Albums.delete_orphan_records(cutoff)
+      db_album = Repo.get_by(Albums.Album, apple_album_id: album.apple_album_id)
+      db_tag = Repo.get_by(Albums.Tag, id: tag.id)
+
+      assert response == "Deleted 1 orphan albums and 1 orphan tags"
+      assert db_album == nil
+      assert db_tag == nil
+    end
+
+    test "doesn't delete orphan records newer than cutoff", %{user: user, album: album, tag: tag} do
+      Albums.remove_tag_from_album(%{tag_id: tag.id, user_id: user.id, album_id: album.id})
+      response = Albums.delete_orphan_records()
+      db_album = Repo.get_by(Albums.Album, apple_album_id: album.apple_album_id)
+      db_tag = Repo.get_by(Albums.Tag, id: tag.id)
+
+      assert response == "Deleted 0 orphan albums and 0 orphan tags"
+      refute db_album.id == nil
+      refute db_tag.id == nil
+    end
+
+    test "doesn't delete records with associations", %{album: album, tag: tag} do
+      response = Albums.delete_orphan_records()
+      db_album = Repo.get_by(Albums.Album, apple_album_id: album.apple_album_id)
+      db_tag = Repo.get_by(Albums.Tag, id: tag.id)
+
+      assert response == "Deleted 0 orphan albums and 0 orphan tags"
+      refute db_album.id == nil
+      refute db_tag.id == nil
+    end
+  end
+
+  describe "find_invalid_apple_album_ids/0" do
+    test "retrieves invalid apple album ids" do
+      album_fixture(@invalid_album_attrs)
+      results = Albums.find_invalid_apple_album_ids()
+
+      assert results == [@invalid_album_attrs.apple_album_id]
+    end
+
+    test "does not retrieve valid apple album ids" do
+      album_fixture(@album_one_attrs)
+      results = Albums.find_invalid_apple_album_ids()
+
+      assert results == []
+    end
+  end
+
+  describe "retrieve_duplicate_albums/0" do
+    test "returns albums with duplicate artist and title" do
+      album_fixture(@album_two_attrs)
+      duplicate_album_one = album_fixture(@album_one_attrs)
+      duplicate_album_two = album_fixture(@invalid_album_attrs)
+      results = Albums.retrieve_duplicate_albums()
+
+      assert List.first(results) == duplicate_album_one
+      assert List.last(results) == duplicate_album_two
     end
   end
 end

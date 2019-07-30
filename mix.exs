@@ -55,7 +55,8 @@ defmodule AlbumTags.MixProject do
       {:navigation_history, "~> 0.2.2"},
       {:poison, "~> 4.0"}, # required for `ueberauth_google`, using jason everywhere else
       {:new_relic_agent, "~> 1.9"},
-      {:new_relic_phoenix, "~> 0.2.0"}
+      {:new_relic_phoenix, "~> 0.2.0"},
+      {:exredis, "~> 0.3.0"}
     ]
   end
 

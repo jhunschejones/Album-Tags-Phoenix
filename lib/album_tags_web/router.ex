@@ -61,6 +61,7 @@ defmodule AlbumTagsWeb.Router do
 
     delete "/orphans", BackgroundController, :orphans
     get "/duplicates", BackgroundController, :duplicates
-    get "/invalid", BackgroundController, :invalid
+    post "/invalid", BackgroundController, :cache_invalid
+    get "/invalid", BackgroundController, :fetch_invalid
   end
 end
