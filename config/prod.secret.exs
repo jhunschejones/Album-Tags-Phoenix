@@ -15,7 +15,8 @@ database_url =
 config :album_tags, AlbumTags.Repo,
   ssl: true,
   url: database_url,
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "18")
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
+  queue_target: 250 # doubles if all connections fail within 1 second
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
