@@ -43,6 +43,18 @@ defmodule AlbumTagsWeb.ListControllerTest do
       assert html_response(conn, 200) =~ ~s(div id="listVueApp">)
       assert html_response(conn, 200) =~ ~s(<div id="edit-list-modal" class="modal">)
     end
+
+    test "gracefully handles invalid list id", %{conn: conn, user: user} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = get(conn, Routes.list_path(conn, :show, "boop"))
+      assert html_response(conn, 404) =~ "Not Found"
+    end
+
+    test "gracefully handles not-found list id", %{conn: conn, user: user} do
+      conn = Plug.Test.init_test_session(conn, user_id: user.id)
+      conn = get(conn, Routes.list_path(conn, :show, 0))
+      assert html_response(conn, 404) =~ "Not Found"
+    end
   end
 
   describe "edit/2" do

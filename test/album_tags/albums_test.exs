@@ -11,9 +11,14 @@ defmodule AlbumTags.AlbumsTest do
 
   describe "get_album_with/2" do
     test "returns apple api data for album not in the database" do
-      album = Albums.get_album_with(1113863913)
-      assert album.title == "Periphery III: Select Difficulty"
-      assert album.artist == "Periphery"
+      album = Albums.get_album_with(715622601)
+      assert album.title == "I'm Only a Man (Bonus Track Version)"
+      assert album.artist == "Emery"
+    end
+
+    test "gracefully handles invalid apple album id" do
+      assert Albums.get_album_with("boop") == {:error, nil}
+      assert Albums.get_album_with(1) == {:error, nil}
     end
 
     test "returns album with all resources when resource is not specified" do

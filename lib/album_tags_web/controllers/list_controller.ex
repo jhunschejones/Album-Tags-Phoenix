@@ -45,9 +45,16 @@ defmodule AlbumTagsWeb.ListController do
 
   # loads the list SPA
   def show(conn, %{"id" => list_id}) do
-    list = Lists.get_list_with_all_assoc(list_id)
-    data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
-    render(conn, "show.html", data_for_page)
+    case Lists.get_list_with_all_assoc(list_id) do
+      response when response in [{:error, nil}, nil] ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(AlbumTagsWeb.ErrorView)
+        |> render("404.html", %{page: "error"})
+      list ->
+        data_for_page = %{list: list, page: "show_lists", user: conn.assigns.current_user}
+        render(conn, "show.html", data_for_page)
+    end
   end
 
   # creates new list and adds album on xhr POST

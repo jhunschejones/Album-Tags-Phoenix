@@ -57,36 +57,40 @@ defmodule AlbumTags.Albums do
   end
 
   def get_album_with(apple_album_id, resources \\ []) do
-    case Repo.get_by(Album, apple_album_id: apple_album_id) do
-      nil ->
-        case resources do
-          # don't add the album to the database when it's just loaded on the album page
-          [] ->
-            get_apple_album_details(apple_album_id)
-          [_] ->
-            apple_data = get_apple_album_details(apple_album_id)
+    try do
+      case Repo.get_by(Album, apple_album_id: apple_album_id) do
+        nil ->
+          case resources do
+            # don't add the album to the database when it's just loaded on the album page
+            [] ->
+              get_apple_album_details(apple_album_id)
+            [_] ->
+              apple_data = get_apple_album_details(apple_album_id)
 
-            apple_data
-            |> Map.from_struct()
-            |> create_album!()
-            |> create_songs(apple_data.songs)
-            |> Map.put(:tags, [])
-            |> Map.put(:connections, [])
-            |> Map.put(:lists, [])
-        end
-      album ->
-        case resources do
-          [:tags] ->
-            album_with_tags(album)
-          [:connections] ->
-            album_with_connections(album)
-          [:lists] ->
-            album_with_lists(album)
-          [lists: [:albums]] ->
-            album_with_lists_and_albums(album)
-          _ ->
-            album_with_all_associations(album)
-        end
+              apple_data
+              |> Map.from_struct()
+              |> create_album!()
+              |> create_songs(apple_data.songs)
+              |> Map.put(:tags, [])
+              |> Map.put(:connections, [])
+              |> Map.put(:lists, [])
+          end
+        album ->
+          case resources do
+            [:tags] ->
+              album_with_tags(album)
+            [:connections] ->
+              album_with_connections(album)
+            [:lists] ->
+              album_with_lists(album)
+            [lists: [:albums]] ->
+              album_with_lists_and_albums(album)
+            _ ->
+              album_with_all_associations(album)
+          end
+      end
+    rescue
+      Ecto.Query.CastError -> {:error, nil}
     end
   end
 
@@ -99,24 +103,28 @@ defmodule AlbumTags.Albums do
   end
 
   defp map_raw_album_data_to_album_struct(apple_data) do
-    album = apple_data.body
-    |> Jason.decode!
-    |> Map.get("data")
-    |> List.first
+    try do
+      album = apple_data.body
+      |> Jason.decode!
+      |> Map.get("data")
+      |> List.first()
 
-    %Album{
-      apple_album_id: String.to_integer(album["id"]),
-      apple_url: album["attributes"]["url"],
-      title: album["attributes"]["name"],
-      artist: album["attributes"]["artistName"],
-      release_date: album["attributes"]["releaseDate"],
-      record_company: album["attributes"]["recordLabel"],
-      songs: isolate_song_data(album["relationships"]["tracks"]["data"]),
-      cover: album["attributes"]["artwork"]["url"],
-      tags: [],
-      connections: [],
-      lists: []
-    }
+      %Album{
+        apple_album_id: String.to_integer(album["id"]),
+        apple_url: album["attributes"]["url"],
+        title: album["attributes"]["name"],
+        artist: album["attributes"]["artistName"],
+        release_date: album["attributes"]["releaseDate"],
+        record_company: album["attributes"]["recordLabel"],
+        songs: isolate_song_data(album["relationships"]["tracks"]["data"]),
+        cover: album["attributes"]["artwork"]["url"],
+        tags: [],
+        connections: [],
+        lists: []
+      }
+    rescue
+      FunctionClauseError -> {:error, nil}
+    end
   end
 
   defp isolate_song_data(all_songs) when is_nil(all_songs), do: []

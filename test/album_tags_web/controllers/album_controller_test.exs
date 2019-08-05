@@ -15,5 +15,17 @@ defmodule AlbumTagsWeb.AlbumControllerTest do
       conn = get(conn, Routes.album_path(conn, :show, album_fixture(@album_attrs).apple_album_id))
       assert html_response(conn, 200) =~ "<h6 id=\"title\">The Question</h6>"
     end
+
+    test "gracefully handles invalid album id", %{conn: conn} do
+      conn = Plug.Test.init_test_session(conn, user_id: user_fixture(@user_attrs).id)
+      conn = get(conn, Routes.album_path(conn, :show, "boop"))
+      assert html_response(conn, 404) =~ "Not Found"
+    end
+
+    test "gracefully handles not-found album id", %{conn: conn} do
+      conn = Plug.Test.init_test_session(conn, user_id: user_fixture(@user_attrs).id)
+      conn = get(conn, Routes.album_path(conn, :show, 1))
+      assert html_response(conn, 404) =~ "Not Found"
+    end
   end
 end

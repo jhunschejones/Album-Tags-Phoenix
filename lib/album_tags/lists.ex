@@ -23,17 +23,21 @@ defmodule AlbumTags.Lists do
   end
 
   def get_list_with_all_assoc(list_id) do
-    # optimized to run as one SQL query
-    query =
-      from list in List,
-      where: list.id == ^list_id,
-      left_join: list_user in assoc(list, :user),
-      left_join: albums in assoc(list, :albums),
-      left_join: tags in assoc(albums, :tags),
-      left_join: user in assoc(tags, :user),
-      preload: [user: list_user, albums: {albums, tags: {tags, user: user}}]
+    try do
+      # optimized to run as one SQL query
+      query =
+        from list in List,
+        where: list.id == ^list_id,
+        left_join: list_user in assoc(list, :user),
+        left_join: albums in assoc(list, :albums),
+        left_join: tags in assoc(albums, :tags),
+        left_join: user in assoc(tags, :user),
+        preload: [user: list_user, albums: {albums, tags: {tags, user: user}}]
 
-    Repo.one(query)
+      Repo.one(query)
+    rescue
+      Ecto.Query.CastError -> {:error, nil}
+    end
   end
 
   @doc """

@@ -38,6 +38,10 @@ defmodule AlbumTags.ListsTest do
       assert Ecto.assoc_loaded?(List.first(found_list.albums).tags) == true
       assert Ecto.assoc_loaded?(List.first(List.first(found_list.albums).tags).user) == true
     end
+
+    test "gracefully handles invalid list id" do
+      assert Lists.get_list_with_all_assoc("boop") == {:error, nil}
+    end
   end
 
   describe "get_user_lists/1" do
