@@ -105,6 +105,7 @@ function createNewList() {
       M.toast({html: JSON.parse(xhr.responseText).message});
       addListtCardToUI(JSON.parse(xhr.responseText).new_list);
       window.newListModal.close();
+      removeSelectedElement("#no-lists-message");
     } else {
       M.toast({html: xhr.responseText.replace(/\"/g, "")});
     }

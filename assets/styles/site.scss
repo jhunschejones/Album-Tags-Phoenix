@@ -61,21 +61,26 @@
     }
   }
   #album-search-input {
-    margin-top: -11px; // this is as high up as this can go!
     width: calc(100% - 22px);
     &:focus{
       // override default materialize formatting for input focus behavior
       border-bottom: 1px solid#9e9e9e;
       box-shadow: 0 1px 0 0 #9e9e9e;
     }
+    @media screen and (min-width: 700px) {
+      margin-top: 20px;
+    }
   }
   #clear-album-search-input-btn {
     position: absolute;
     right: -4px;
-    padding-top: 2px;
+    padding-top: 15px;
     &:hover {
       cursor: pointer;
       color: #bdbdbd !important;
+    }
+    @media screen and (min-width: 700px) {
+      padding-top: 35px;
     }
   }
   /* ====== MODAL SCROLLBAR ====== */
@@ -130,7 +135,7 @@
 
 #search-results {
   padding: 10px 0px 15px 0px;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   display: inline-flex;
   overflow-x: scroll;
   max-width: 100%;

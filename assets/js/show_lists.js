@@ -432,6 +432,16 @@ var listPage = {
     let paramValue = url.searchParams.get(type);
 
     return paramValue ? decodeURIComponent(paramValue).split(",,") : [];
+  },
+  addNoAlbumMessage: function() {
+    document.getElementById("list-container").parentNode.appendChild(stringToNode(
+      `<div id="no-albums-message" class="center-align" style="padding:40px 15px">
+        <em class="grey-text">Looks like you haven't added any albums to this list! Click the floating action button in the bottom right corner of the screen to add an album.</em>
+      </div>`
+    ));
+  },
+  removeNoAlbumsMessage: function() {
+    removeSelectedElement("#no-albums-message");
   }
 };
 
@@ -502,6 +512,11 @@ var listVueApp = new Vue({
   },
   watch: {
     albums: function () {
+      if (this.albums.length === 0) {
+        listPage.addNoAlbumMessage();
+      } else {
+        listPage.removeNoAlbumsMessage();
+      }
       this.resetSelectedAlbums();
     },
     yearFilters: function(updatedValue) {
@@ -530,6 +545,10 @@ var listVueApp = new Vue({
     // vue app methods and data are not fully availible to external functions
     // until everything is fully loaded in the DOM
     document.addEventListener('DOMContentLoaded', listPage.filterAll);
+
+    if (this.albums.length === 0) {
+      listPage.addNoAlbumMessage();
+    }
   }
 });
 // ====== END VUE APP ======

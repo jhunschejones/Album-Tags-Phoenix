@@ -21,6 +21,11 @@
       </div>
     <% end %>
   </div>
+  <%= if length(@lists) == 0 do %>
+    <div id="no-lists-message" class="center-align" style="padding:40px 15px">
+      <em class="grey-text">Looks like you haven't created any lists yet! Click the floating action button in the bottom right corner of the screen to create a new list.</em>
+    </div>
+  <% end %>
 </div>
 
 <div id="new-list-modal" class="modal">

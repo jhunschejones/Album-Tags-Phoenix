@@ -115,7 +115,8 @@
 
 #year-filter-modal,
 #artist-filter-modal,
-#tag-filter-modal {
+#tag-filter-modal,
+#edit-list-modal {
   width: 95%;
   @media screen and (min-width: 700px) {
     width: 80%;
@@ -182,7 +183,6 @@
     margin-bottom: 40px;
   }
   #list-name-input {
-    margin-top: -11px; // this is as high up as this can go!
     width: calc(100% - 22px);
     &:focus{
       // override default materialize formatting for input focus behavior
@@ -193,12 +193,17 @@
   #clear-list-name-input-btn {
     position: absolute;
     right: -4px;
-    padding-top: 2px;
+    padding-top: 14px;
     &:hover {
       cursor: pointer;
       color: #bdbdbd !important;
     }
   }
+}
+
+.modal-title {
+  font-size:1.4em;
+  margin-top: 5px;
 }
 
 #add-album-modal {
@@ -220,7 +225,6 @@
     }
   }
   #add-album-input {
-    margin-top: -11px; // this is as high up as this can go!
     width: calc(100% - 22px);
     &:focus{
       // override default materialize formatting for input focus behavior
@@ -231,7 +235,7 @@
   #clear-add-album-input-btn {
     position: absolute;
     right: -4px;
-    padding-top: 2px;
+    padding-top: 14px;
     &:hover {
       cursor: pointer;
       color: #bdbdbd !important;

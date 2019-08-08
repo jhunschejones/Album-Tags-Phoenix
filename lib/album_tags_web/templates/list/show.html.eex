@@ -79,8 +79,8 @@
 <%= if @user && @list.user_id == @user.id do %>
   <div id="edit-list-modal" class="modal">
     <div class="modal-content">
-      <h6 class="grey-text"><em>Give your list a memorable name:</em></h6>
-      <div class="input-field">
+      <h6 class="modal-title light-blue-text text-accent-4">Give your list a memorable name</h6>
+      <div class="input-field" style="margin-top: 2rem;">
         <input id="list-name-input" type="text" placeholder="List title..." value="<%= @list.title %>">
         <a id="clear-list-name-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
       </div>
@@ -89,7 +89,7 @@
 
   <div id="add-album-modal" class="modal">
     <div class="modal-content">
-      <h6 class="grey-text"><em>Add an album to your list:</em></h6>
+      <h6 class="modal-title light-blue-text text-accent-4">Add an album to your list</h6>
       <div class="input-field">
         <input id="add-album-input" type="text" placeholder="Search by album or artist...">
         <a id="clear-add-album-input-btn" class="grey-text text-lighten-2"><i class="material-icons">cancel</i></a>
