@@ -12,7 +12,10 @@ defmodule AlbumTagsWeb.BackgroundController do
 
   def duplicates(conn, _params) do
     duplicate_albums = Albums.retrieve_duplicate_albums |> Enum.map(&(&1.apple_album_id))
-    message = "Found #{length(duplicate_albums)} duplicate albums: #{Enum.join(duplicate_albums, ", ")}"
+    message = case length(duplicate_albums) do
+      0 -> "No duplicate albums found"
+      count -> "Found #{count} duplicate albums: #{Enum.join(duplicate_albums, ", ")}"
+    end
 
     render(conn, "show.json", message: message)
   end
@@ -27,7 +30,7 @@ defmodule AlbumTagsWeb.BackgroundController do
       %{invalid_apple_album_ids: [""], timestamp: timestamp} ->
         "#{timestamp} - No invalid Apple Album ID's found"
       %{invalid_apple_album_ids: invalid_apple_album_ids, timestamp: timestamp} ->
-        "#{timestamp} - Invalid Apple Album ID's: #{invalid_apple_album_ids}"
+        "#{timestamp} - Invalid Apple Album ID's: #{Enum.join(invalid_apple_album_ids, ", ")}"
     end
 
     render(conn, "show.json", message: message)
