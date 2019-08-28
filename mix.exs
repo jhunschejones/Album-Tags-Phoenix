@@ -5,7 +5,7 @@ defmodule AlbumTags.MixProject do
     [
       app: :album_tags,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -39,7 +39,7 @@ defmodule AlbumTags.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.6"},
+      {:phoenix, "~> 1.4.9"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
@@ -51,12 +51,12 @@ defmodule AlbumTags.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:httpotion, "~> 3.1.2"},
       {:ueberauth, "~> 0.6.1"},
-      {:ueberauth_google, "~> 0.8.0"},
+      {:ueberauth_google, "~> 0.9.0"},
       {:navigation_history, "~> 0.2.2"},
-      {:poison, "~> 4.0"}, # required for `ueberauth_google`, using jason everywhere else
       {:new_relic_agent, "~> 1.9"},
       {:new_relic_phoenix, "~> 0.2.0"},
-      {:exredis, "~> 0.3.0"}
+      {:exredis, "~> 0.3.0"},
+      {:hackney, "~> 1.15.1"}
     ]
   end
 
