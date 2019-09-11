@@ -14,7 +14,7 @@ defmodule AlbumTagsWeb.Endpoint do
     at: "/",
     from: :album_tags,
     gzip: true,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt service-worker.min.js)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

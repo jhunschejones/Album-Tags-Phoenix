@@ -93,5 +93,11 @@
     <%= if @page do %>
       <script type="text/javascript" src="<%= Routes.static_path(@conn, ~s(/js/#{@page}.min.js)) %>"></script>
     <% end %>
+    <script>
+      // Register only one service worker for the whole app
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.min.js', {scope: '/'});
+      };
+    </script>
   </body>
 </html>

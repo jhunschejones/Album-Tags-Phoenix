@@ -19,6 +19,11 @@ class AssetBuilder
       end
       minify_css_file unless ["js", "scss"].include?(@params[:mode])
       compile_and_minify_sass_file unless ["js", "css"].include?(@params[:mode])
+
+      # place service worker script in the right directory
+      if file_name == "service-worker.js"
+        system("mv #{@config["js-output-dir"] + file_name.split('.')[0] + ".min.js"} #{"../priv/static/" + file_name.split('.')[0] + ".min.js"}")
+      end
     end
   end
 
@@ -55,7 +60,7 @@ class AssetBuilder
         file_name: file
       }
       # avoiding minifying files that are already minified
-      minified_file = case file.include?(".min.js") 
+      minified_file = case file.include?(".min.js")
                       when true
                         "./assets/materialize/js/#{file_info[:file_name]}"
                       when false
@@ -103,7 +108,7 @@ class AssetBuilder
   def compile_and_minify_sass_file
     # set up
     if @params[:assets] == "materialize"
-      from = "../assets/materialize/sass/materialize.scss" 
+      from = "../assets/materialize/sass/materialize.scss"
       to = @config["css-output-dir"] + "compiled_materialize.css"
     else
       from = @config["custom-styles-input-dir"] + @params[:assets] + ".scss"
