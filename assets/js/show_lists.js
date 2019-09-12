@@ -103,6 +103,10 @@ var listPage = {
       }
     });
   },
+  hideRemoveAlbumButtons: function() {
+    listPage.showRemoveAlbum = false;
+    hideClass("delete-button");
+  },
   toggleRemoveAlbumButtons: function() {
     if (!listPage.showRemoveAlbum) {
       listPage.showRemoveAlbum = true;
@@ -113,8 +117,7 @@ var listPage = {
         </span>
       `, displayLength: 2500});
     } else {
-      listPage.showRemoveAlbum = false;
-      hideClass("delete-button");
+      listPage.hideRemoveAlbumButtons();
     }
   },
   addAlbumToList: function(appleAlbumID) {
@@ -414,6 +417,9 @@ var listPage = {
     listPage.filterYears();
     listPage.filterArtists();
     listPage.filterTags();
+
+    // hide delete buttons any time albums are filtered
+    listPage.hideRemoveAlbumButtons();
   },
   setURIparams: function(type, filter) {
     let url = new URL(document.location);
