@@ -13,9 +13,16 @@
   var tagArray = JSON.parse(
     <%= raw Jason.encode!(tags_for_user(@album.tags, @user)) %>
   );
+  // format tags for use in page JavaScript
   var currentTags = []
   for (let i = 0; i < tagArray.length; i++) {
     currentTags.push({tag: tagArray[i].text});
   }
+  // sort tags
+  currentTags = currentTags.sort(function(a, b) {
+    if (a.tag > b.tag) { return 1; }
+    if (a.tag < b.tag) { return -1; }
+    return 0;
+  });
   var albumID = <%= raw Jason.encode!(@album.id) %>
 </script>
