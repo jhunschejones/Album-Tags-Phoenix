@@ -24,7 +24,7 @@
   <p id="albums-count" class="grey-text" v-cloak>{{ selectedAlbumsCount }} albums</p>
 
   <div id="list-container" class="row">
-    <div v-for="albumObject in selectedAlbums">
+    <div v-for="albumObject in selectedAlbums" v-cloak>
       <div v-bind:id="'album-' + albumObject.id" class="album">
         <%= if @user && @list.user_id == @user.id do %>
           <div class="delete-button hide" v-on:click="removeAlbum(albumObject.id)">
