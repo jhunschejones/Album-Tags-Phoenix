@@ -95,7 +95,7 @@
     <% end %>
     <script>
       // Register only one service worker for the whole app
-      if('serviceWorker' in navigator) {
+      if('serviceWorker' in navigator && location.hostname !== "localhost") {
         navigator.serviceWorker.register('/service-worker.min.js', {scope: '/'});
       };
     </script>
