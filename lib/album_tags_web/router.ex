@@ -40,13 +40,6 @@ defmodule AlbumTagsWeb.Router do
     get "/apple/details/:id", AppleMusicController, :details
   end
 
-  scope "/auth", AlbumTagsWeb do
-    pipe_through :browser
-
-    get "/:provider", AuthController, :request
-    get "/:provider/callback", AuthController, :callback
-  end
-
   # Ignore csrf tokens for logout route only. This prevents users from seeing an
   # error if they are authenticated in two windows, log out in one, then try to
   # log out in the second.
@@ -54,6 +47,17 @@ defmodule AlbumTagsWeb.Router do
     pipe_through :browser_no_csrf
 
     delete "/logout", AuthController, :logout
+    # This is not intended for use in default logout behavior, however a refresh
+    # during the logout process can result in this request being made as a `GET`
+    # This route helps handle that scenario in the least surprising way possible
+    get "/logout", AuthController, :logout
+  end
+
+  scope "/auth", AlbumTagsWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
   end
 
   scope "/background", AlbumTagsWeb do
