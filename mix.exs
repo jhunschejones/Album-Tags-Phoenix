@@ -39,24 +39,24 @@ defmodule AlbumTags.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.9"},
+      {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:ecto_sql, "~> 3.2"},
+      {:postgrex, "~> 0.15"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:httpotion, "~> 3.1.2"},
-      {:ueberauth, "~> 0.6.1"},
+      {:ueberauth, "~> 0.6.2"},
       {:ueberauth_google, "~> 0.9.0"},
-      {:navigation_history, "~> 0.2.2"},
+      {:navigation_history, "~> 0.3.0"},
       {:new_relic_agent, "~> 1.9"},
-      {:new_relic_phoenix, "~> 0.2.0"},
-      {:exredis, "~> 0.3.0"},
-      {:hackney, "~> 1.15.1"}
+      {:new_relic_phoenix, "~> 0.2"},
+      {:exredis, "~> 0.3"},
+      {:hackney, "~> 1.15"}
     ]
   end
 
