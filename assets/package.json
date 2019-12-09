@@ -13,8 +13,8 @@
   "license": "MIT",
   "devDependencies": {
     "google-closure-compiler": "~> 20190528.0.0",
-    "node-sass": "~> 4.12.0",
-    "onchange": "~> 6.0.0",
+    "node-sass": "~> 4.13.0",
+    "onchange": "~> 6.1.0",
     "uglifycss": "~> 0.0.29"
   }
 }
