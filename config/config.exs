@@ -40,7 +40,7 @@ config :exredis,
   reconnect: :no_reconnect,
   max_queue: :infinity
 
-config :new_relic_agent, apdex_t: 0.015
+config :new_relic_agent, apdex_t: 0.020
 # The agent will automatically read this from environment variables
 #   app_name: System.get_env("NEW_RELIC_APP_NAME"),
 #   license_key: System.get_env("NEW_RELIC_LICENSE_KEY")
