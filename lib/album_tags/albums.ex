@@ -7,7 +7,6 @@ defmodule AlbumTags.Albums do
   alias AlbumTags.Repo
   alias AlbumTags.Albums.{Album, AlbumTag, AlbumConnection, Tag, Song}
   alias AlbumTags.Lists
-  alias HTTPotion
   alias Jason
 
   @doc """
@@ -98,7 +97,7 @@ defmodule AlbumTags.Albums do
   Gets an album from the apple music api and returns an Album struct
   """
   def get_apple_album_details(apple_album_id) do
-    HTTPotion.get("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", headers: [Accept: "application/json", Authorization: "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"])
+    HTTPoison.get!("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", [{"Accept", "application/json"}, {"Authorization", "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"}])
     |> map_raw_album_data_to_album_struct()
   end
 
@@ -385,7 +384,7 @@ defmodule AlbumTags.Albums do
   end
 
   defp valid_apple_album_id?(apple_album_id) do
-    HTTPotion.get("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", headers: [Accept: "application/json", Authorization: "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"]).status_code == 200
+    HTTPoison.get!("https://api.music.apple.com/v1/catalog/us/albums/#{apple_album_id}", [{"Accept", "application/json"}, {"Authorization", "Bearer #{System.get_env("APPLE_MUSIC_TOKEN")}"}]).status_code == 200
   end
 
   def retrieve_duplicate_albums do
