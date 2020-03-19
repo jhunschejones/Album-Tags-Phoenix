@@ -106,8 +106,13 @@ $modern-blue: #0091ea;
   }
   .tab-scope-indicator {
     opacity: 0.3;
+    margin-left: 4px;
+    margin-right: -4px;
     vertical-align: middle;
-    margin-right: -7px;
+    i {
+      margin-top: 16px;
+      transform: scale(1.2);
+    }
   }
 }
 
@@ -164,6 +169,12 @@ $modern-blue: #0091ea;
   .album-cover {
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
+  }
+  .empty-connections-message {
+    padding: 10px 12px;
+    @media screen and (max-width: 500px) {
+      padding: 12px 12px;
+    }
   }
 }
 

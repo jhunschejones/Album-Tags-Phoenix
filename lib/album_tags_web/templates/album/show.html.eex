@@ -128,7 +128,7 @@
           </div>
         <% end %>
         <%= if length(remove_duplicate_connections(@album.connections, @user)) == 0 do %>
-          <div class="center-align" style="padding:12px 12px;"><em class="grey-text">Click the floating action button in the bottom right corner of the screen to add a connection to this album.</em></div>
+          <div class="center-align empty-connections-message"><em class="grey-text">Click the floating action button in the bottom right corner of the screen to add a connection to this album.</em></div>
         <% end %>
       </div>
       <div class="fixed-action-btn click-to-toggle hide">
