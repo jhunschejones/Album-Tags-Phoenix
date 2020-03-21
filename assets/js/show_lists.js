@@ -22,6 +22,9 @@ var listPage = {
       listPage.tagFilterModal.close();
       listPage.artistFilterModal.close();
       listPage.yearFilterModal.close();
+
+      listPage.clearArtistFilterInput();
+      listPage.clearTagFilterInput();
     }
   },
   closeToast: function() {
@@ -70,7 +73,6 @@ var listPage = {
     listPage.hilightSelectedArtistFilters();
     listPage.hilightSelectedTagFilters();
     listPage.hilightSelectedYearFilters();
-    document.getElementById("bottom-filters").classList.add("hide");
     M.toast({html: "All filters cleared", displayLength: 2500});
   },
   initializeYearFilterModal: function() {
@@ -298,12 +300,23 @@ var listPage = {
     var index = listVueApp.artistFilters.indexOf(e.target.dataset.artist);
     if (index == -1) {
       listVueApp.artistFilters.push(e.target.dataset.artist);
+      if (document.getElementById("artist-filter-input")) {
+        // clean up manually entered partial band names
+        var searchedValue = document.getElementById("artist-filter-input").value.trim();
+        var searchedNameIndex = listVueApp.artistFilters.indexOf(searchedValue);
+        if (searchedNameIndex != -1) {
+          listVueApp.artistFilters.splice(searchedNameIndex, 1);
+        }
+      }
     } else {
       listVueApp.artistFilters.splice(index, 1);
     }
+
+    listPage.clearArtistFilterInput();
   },
   selectTagFilter: function(e) {
     listPage.toggleChipSelect(e.target);
+    listPage.clearTagFilterInput();
 
     var index = listVueApp.tagFilters.indexOf(e.target.dataset.tag);
     if (index == -1) {
@@ -381,14 +394,22 @@ var listPage = {
   filterArtists: function() {
     if (listVueApp.artistFilters.length === 0) { return; }
     listVueApp.selectedAlbums = listVueApp.selectedAlbums.filter(album =>
-      listVueApp.artistFilters.includes(album.artist)
+      // PREVIOUS EXACT STRING MATCHING
+      // listVueApp.artistFilters.includes(album.artist)
+      // NEW CASE INSENSITIVE SUBSTRING MATCHING
+      listVueApp.artistFilters.filter(artistFilter =>
+        album.artist.toUpperCase().includes(artistFilter.toUpperCase())).length > 0
     );
   },
   filterTags: function() {
     if (listVueApp.tagFilters.length === 0) { return; }
     listVueApp.selectedAlbums = listVueApp.selectedAlbums.filter(album =>
-      listVueApp.tagFilters.every(tag =>
-        album.tags.map(t => t.text).includes(tag)
+      listVueApp.tagFilters.every(tagFilter =>
+        // PREVIOUS EXACT STRING MATCHING
+        // album.tags.map(t => t.text).includes(tag)
+        // NEW CASE INSENSITIVE SUBSTRING MATCHING
+        album.tags.map(albumTag => albumTag.text).filter(tagText =>
+          tagText.toUpperCase().includes(tagFilter.toUpperCase())).length > 0
       )
     );
   },
@@ -400,10 +421,12 @@ var listPage = {
         break;
       case "artist":
         listVueApp.artistFilters = [];
+        listPage.clearArtistFilterInput();
         M.toast({html: "Artist filters cleared", displayLength: 2500});
         break;
       case "tag":
         listVueApp.tagFilters = [];
+        listPage.clearTagFilterInput();
         M.toast({html: "Tag filters cleared", displayLength: 2500});
     }
     listVueApp.resetSelectedAlbums();
@@ -420,6 +443,16 @@ var listPage = {
 
     // hide delete buttons any time albums are filtered
     listPage.hideRemoveAlbumButtons();
+  },
+  clearTagFilterInput: function() {
+    if (document.getElementById("tag-filter-input")) {
+      document.getElementById("tag-filter-input").value = "";
+    }
+  },
+  clearArtistFilterInput: function() {
+    if (document.getElementById("artist-filter-input")) {
+      document.getElementById("artist-filter-input").value = "";
+    }
   },
   setURIparams: function(type, filter) {
     let url = new URL(document.location);
@@ -608,6 +641,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var openYearFiltersBtn = document.getElementById("year-filter-btn");
   var openArtistFiltersBtn = document.getElementById("artist-filter-btn");
   var openTagFiltersBtn = document.getElementById("tag-filter-btn");
+  var tagFilterInput = document.getElementById("tag-filter-input");
+  var toggleTagFilterInputBtn = document.getElementById("toggle-filter-tag-input-btn");
+  var artistFilterInput = document.getElementById("artist-filter-input");
+  var toggleArtistFilterInputBtn = document.getElementById("toggle-filter-artist-input-btn");
   listPage.showRemoveAlbum = false;
 
   listPage.initializeMainFloatingActionButton();
@@ -619,6 +656,32 @@ document.addEventListener('DOMContentLoaded', function() {
   closeFilterMenuBtn.addEventListener("click", listPage.closeFilterMenu);
   clearAllFiltersBtn.addEventListener("click", listPage.clearAllFilters);
   menuHambergerBtn.addEventListener("click", listPage.closeFilterMenu);
+  toggleTagFilterInputBtn.addEventListener("click", function() {
+    tagFilterInput.classList.toggle("hide");
+    listPage.clearTagFilterInput();
+  });
+  tagFilterInput.addEventListener("keyup", function(e) {
+    const filterValue = e.target.value.trim().replace(/\b\w+/g, function(txt){
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+    listVueApp.tagFilters = filterValue.length > 0 ? [filterValue] : [];
+
+    listVueApp.resetSelectedAlbums();
+    listPage.filterAll();
+    setTimeout(function(){ listPage.hilightSelectedTagFilters(); }, 100);
+  });
+  toggleArtistFilterInputBtn.addEventListener("click", function() {
+    artistFilterInput.classList.toggle("hide");
+    listPage.clearArtistFilterInput();
+  });
+  artistFilterInput.addEventListener("keyup", function(e) {
+    const filterValue = e.target.value.trim();
+    listVueApp.artistFilters = filterValue.length > 0 ? [filterValue] : [];
+
+    listVueApp.resetSelectedAlbums();
+    listPage.filterAll();
+    setTimeout(function(){ listPage.hilightSelectedArtistFilters(); }, 100);
+  });
   openYearFiltersBtn.addEventListener("click", function() {
     listPage.hilightSelectedYearFilters();
     listPage.yearFilterModal.open();

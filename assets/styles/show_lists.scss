@@ -121,6 +121,25 @@
   @media screen and (min-width: 700px) {
     width: 80%;
   }
+  #toggle-filter-artist-input-btn,
+  #toggle-filter-tag-input-btn {
+    display: flex;
+    opacity: 0.15;
+    float: right;
+    margin-top: -35px;
+    user-select: none;
+    transform: scale(1.35);
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .filter-input {
+    &:focus{
+      // override default materialize formatting for input focus behavior
+      border-bottom: 1px solid#9e9e9e;
+      box-shadow: 0 1px 0 0 #9e9e9e;
+    }
+  }
 }
 
 // distance between main FAB and next button up in expanded menu
