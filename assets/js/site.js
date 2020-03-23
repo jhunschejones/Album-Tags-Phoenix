@@ -65,6 +65,9 @@ var albumTags = {
         </div>`
       ));
     }
+    addEventListenerToClass("search-album-cover", "error", function(e) {
+      e.target.src = "/images/headphones_500_not_found.png";
+    });
   },
   showNoResultsWarning: function() {
     albumTags.hideSearchSpinner();
@@ -135,6 +138,19 @@ function removeSelectedElement(selector) {
     if (e) { e.parentNode.removeChild(e); }
   } else {
     console.error("removeSelectedElement() was passed an invalid selector");
+  }
+}
+
+/**
+ * Add an event listener to each element on the page matching a given class
+ * @param  {string} class class to select
+ * @param  {string} event event to trigger callback
+ * @param  {function} callback function to call on event
+ */
+function addEventListenerToClass(className, event, callback) {
+  var elems = document.getElementsByClassName(className);
+  for (var i = 0; i < elems.length; i++) {
+    elems[i].addEventListener(event, callback);
   }
 }
 // ====== END UTILITIES ======

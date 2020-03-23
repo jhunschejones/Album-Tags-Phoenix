@@ -245,5 +245,16 @@
   document.getElementById("page-album-cover").addEventListener("load", function() {
     albumPage.hideSpinner();
   });
+
+  // detect album cover loading errors and replace with default image
+  document.getElementById("page-album-cover").addEventListener("error", function() {
+    document.getElementById("page-album-cover").src = "/images/headphones_500_not_found.png";
+    albumPage.hideSpinner();
+  });
+
+  // detect broken album cover already loaded from cache
+  if (document.getElementById("page-album-cover").naturalWidth === 0) {
+    document.getElementById("page-album-cover").src = "/images/headphones_500_not_found.png";
+  }
   // ====== END SPINNER FUNCTIONALITY ======
 })();
