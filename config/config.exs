@@ -15,8 +15,7 @@ config :album_tags, AlbumTagsWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: AlbumTagsWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: AlbumTags.PubSub, adapter: Phoenix.PubSub.PG2],
-  instrumenters: [NewRelic.Phoenix.Instrumenter]
+  pubsub_server: AlbumTags.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,

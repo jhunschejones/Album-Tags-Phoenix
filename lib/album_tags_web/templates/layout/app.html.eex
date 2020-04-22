@@ -86,7 +86,7 @@
     </div>
 
     <!-- LOAD PAGE TEMPLATE -->
-    <%= render @view_module, @view_template, assigns %>
+    <%= @inner_content %>
 
     <!-- MATERIALIZE AND CUSTOM JS FOR COMPONENTS IN TEMPLATE -->
     <script type="text/javascript" src="<%= Routes.static_path(@conn, ~s(/js/compiled_materialize.js)) %>"></script>

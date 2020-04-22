@@ -11,9 +11,10 @@ defmodule AlbumTags.Application do
       # Start the Ecto repository
       AlbumTags.Repo,
       # Start the endpoint when the application starts
-      AlbumTagsWeb.Endpoint
+      AlbumTagsWeb.Endpoint,
       # Starts a worker by calling: AlbumTags.Worker.start_link(arg)
       # {AlbumTags.Worker, arg},
+      {Phoenix.PubSub, [name: AlbumTags.PubSub, adapter: Phoenix.PubSub.PG2]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
