@@ -253,8 +253,8 @@
   });
 
   // detect broken album cover already loaded from cache
-  if (document.getElementById("page-album-cover").naturalWidth === 0) {
-    document.getElementById("page-album-cover").src = "/images/headphones_500_not_found.png";
-  }
+  // if (document.getElementById("page-album-cover").naturalWidth === 0) {
+  //   document.getElementById("page-album-cover").src = "/images/headphones_500_not_found.png";
+  // }
   // ====== END SPINNER FUNCTIONALITY ======
 })();
