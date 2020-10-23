@@ -12,9 +12,9 @@
   "author": "Joshua Hunsche Jones",
   "license": "MIT",
   "devDependencies": {
-    "google-closure-compiler": "~> 20190528.0.0",
+    "google-closure-compiler": "~> 20201006.0.0",
     "node-sass": "^4.14.1",
-    "onchange": "~> 6.1.0",
+    "onchange": "~> 7.1",
     "uglifycss": "~> 0.0.29"
   }
 }
