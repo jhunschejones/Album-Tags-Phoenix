@@ -5,7 +5,7 @@ defmodule AlbumTags.MixProject do
     [
       app: :album_tags,
       version: "0.1.0",
-      elixir: "~> 1.10.3",
+      elixir: "~> 1.11.1",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -51,7 +51,7 @@ defmodule AlbumTags.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.6"},
       {:ueberauth, "~> 0.6.2"},
-      {:ueberauth_google, "~> 0.9.0"},
+      {:ueberauth_google, "~> 0.10"},
       {:navigation_history, "~> 0.3.0"},
       {:new_relic_agent, "~> 1.9"},
       {:new_relic_phoenix, "~> 0.2"},
