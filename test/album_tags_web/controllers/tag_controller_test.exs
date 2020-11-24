@@ -115,7 +115,7 @@ defmodule AlbumTagsWeb.TagControllerTest do
       conn = delete(conn, Routes.tag_path(conn, :delete, tag.id, %{"albumID" => album.id}))
       deleted_tag = Repo.get_by(Tag, %{text: "New Tag", user_id: user.id, custom_genre: false})
 
-      assert response = json_response(conn, 200)
+      assert _response = json_response(conn, 200)
       assert deleted_tag.id == tag.id
     end
 
