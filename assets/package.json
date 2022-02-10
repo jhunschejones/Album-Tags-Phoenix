@@ -13,7 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "google-closure-compiler": "~> 20201006.0.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "onchange": "~> 7.1",
     "uglifycss": "~> 0.0.29"
   }
